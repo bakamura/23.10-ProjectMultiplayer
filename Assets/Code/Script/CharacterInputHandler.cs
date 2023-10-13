@@ -8,6 +8,7 @@ public class CharacterInputHandler : MonoBehaviour
     private Vector2 _mousePosition;
     private CharacterMovmentHandler _movmentHandler;
     private bool _isJumping;
+    private NetworkInputData _dataPack = new NetworkInputData();
 
     private void Awake()
     {
@@ -29,14 +30,12 @@ public class CharacterInputHandler : MonoBehaviour
 
     public NetworkInputData GetInputData()
     {
-        NetworkInputData temp = new NetworkInputData();
+        _dataPack.RotationYAxis = _mousePosition.x;
 
-        temp.RotationYAxis = _mousePosition.x;
+        _dataPack.MovmentDirection = _movmentDirection;
 
-        temp.MovmentDirection = _movmentDirection;
+        _dataPack.IsJumpPressed = _isJumping;
 
-        temp.IsJumpPressed = _isJumping;
-
-        return temp;
+        return _dataPack;
     }
 }

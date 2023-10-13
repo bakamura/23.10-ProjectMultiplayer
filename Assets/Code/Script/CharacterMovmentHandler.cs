@@ -6,20 +6,19 @@ using Fusion;
 public class CharacterMovmentHandler : NetworkBehaviour
 {
     private NetworkCharacterControllerPrototypeCustom _playerMovment;
-    private Camera _camera;
+    [SerializeField] private Camera _camera;
     private Vector2 _viewInput;
     private float _currentCamRotation;
 
     private void Awake()
     {
         _playerMovment = GetComponent<NetworkCharacterControllerPrototypeCustom>();
-        _camera = FindObjectOfType<Camera>();
     }
 
     private void Update()
     {
         _currentCamRotation += Time.deltaTime * _viewInput.y;
-        _currentCamRotation = Mathf.Clamp(_currentCamRotation, -90f, 90f);
+        //_currentCamRotation = Mathf.Clamp(_currentCamRotation, -90f, 90f);
 
         _camera.transform.localRotation = Quaternion.Euler(0, _currentCamRotation, 0);
     }
