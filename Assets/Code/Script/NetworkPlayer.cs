@@ -8,7 +8,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public static NetworkPlayer LocalPlayer;
 
     public override void Spawned()
-    {
+    {        
         if (Object.HasInputAuthority)
         {
             LocalPlayer = this;

@@ -8,19 +8,27 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 
-[RequireComponent(typeof(NetworkRunner), typeof(NetworkSceneManagerDefault))]
 public class NetworkRunnerHandler : MonoBehaviour
 {
+    [SerializeField] private GameObject _networkSetupPrefab;
     private static NetworkRunner _networkRunner;
-    private NetworkSceneManagerDefault _networkSceneManager;
+    private static NetworkSceneManagerDefault _networkSceneManager;
     private static List<INetworkRunnerCallbacks> _callbacksRequested = new List<INetworkRunnerCallbacks>();
     private static Queue<INetworkRunnerCallbacks> _requestedCallbacks =  new Queue<INetworkRunnerCallbacks>();
+    private static bool _gameStarted;
     public static NetworkRunner NetworkRunner => _networkRunner;
-    //SceneUtility.GetBuildIndexByScenePath($"Assets/Game/Scene/{sceneName}");
+    public static bool GameStarted => _gameStarted;
+    public static PlayerRef LocalPlayerRef;
+    public NetworkSceneManagerDefault NetworkSceneManager => _networkSceneManager;
+    
     private void Awake()
     {
-        _networkRunner = GetComponent<NetworkRunner>();
-        _networkSceneManager = GetComponent<NetworkSceneManagerDefault>();
+        if (!_networkRunner)
+        {
+            GameObject temp = Instantiate(_networkSetupPrefab, null);
+            _networkRunner = temp.GetComponent<NetworkRunner>();
+            _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
+        }
     }
 
     public static void AddCallbackToNetworkRunner(INetworkRunnerCallbacks request)
@@ -65,7 +73,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
     {
         //sempre enviar a cena correta q é para todos os jogadores estarem
-        INetworkSceneManager sceneManager = _networkSceneManager;
+        Debug.Log("Start Game");
         runner.ProvideInput = true;
 
         return runner.StartGame(new StartGameArgs
@@ -75,7 +83,7 @@ public class NetworkRunnerHandler : MonoBehaviour
             Scene = sceneRef,
             SessionName = SessionName,
             Initialized = initialized,
-            SceneManager = sceneManager,
+            SceneManager = _networkSceneManager
         });
     }   
 

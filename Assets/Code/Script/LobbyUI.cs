@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
-using UnityEngine.UI;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Linq;
 
 public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -15,7 +15,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     [Header("UI Client Components")]
     [SerializeField] private GameObject _sessionOptionsPrefab;
     [SerializeField] private RectTransform _sessionList;
-    [SerializeField] private InputField _seessionNameToFind;
+    [SerializeField] private InputField _sessionNameToFind;
     [SerializeField] private GameObject _findGameUI;
     [SerializeField] private GameObject _waitForServerUI;
 
@@ -28,82 +28,89 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     [Header("Network Components")]
     [SerializeField] private NetworkRunnerHandler _networkHandler;
     private byte _playerCount;
-    private void Awake()
+    private string _sceneToLoadWhenLobbyReady = "TestScene";
+    private Dictionary<string, SessionInfo> _currentSessions = new Dictionary<string, SessionInfo>();
+    private void Start()
     {
         NetworkRunnerHandler.AddCallbackToNetworkRunner(this);
     }
     #region FusionCallbacks
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnConnectedToServer");
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnConnectFailed");
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnConnectRequest");
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnCustomAuthenticationResponse");
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnDisconnectedFromServer");
     }
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnHostMigration");
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnInput");
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnInputMissing");
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (!runner.IsServer)
-        {
+        //if (!runner.IsServer)
+        //{
             _playerCount++;
-            _playerCountText.text = $"Clients: {_playerCount}";
+            _playerCountText.text = $"Players: {_playerCount}";
+        if (!NetworkRunnerHandler.LocalPlayerRef.IsValid)
+        {
+            NetworkRunnerHandler.LocalPlayerRef = player;
         }
+        //}
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnPlayerLeft");
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnReliableDataReceived");
     }
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnSceneLoadDone");
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnSceneLoadStart");
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        Debug.Log($"New session Created");
         if(sessionList.Count > 0)
         {
             ClearSessionOptions();
@@ -120,12 +127,12 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnShutdown");
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
-        throw new NotImplementedException();
+        Debug.Log("LobbyUIOnUserSimulationMessage");
     }
 #endregion
     public void CreateMatch()
@@ -147,6 +154,29 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         LobbyOptionUI temp = Instantiate(_sessionOptionsPrefab, _sessionList).GetComponent<LobbyOptionUI>();
         temp.SetSessionInfo(info);
         temp.OnJoinSession += OnJoinSessionCallback;
+        _currentSessions.Add(info.Name, info);
+    }
+    private void ClearSessionOptions()
+    {
+        _currentSessions.Clear();
+        if(_sessionList.GetComponentsInChildren<RectTransform>().Length > 0)
+        {
+            RectTransform[] childs = _sessionList.GetComponentsInChildren<RectTransform>();
+            for (int i = 0; i < childs.Length; i++)
+            {
+                Destroy(childs[i].gameObject);
+            }
+        }
+    }
+
+    public void UpdateSessionsList()
+    {
+        ClearSessionOptions();
+        SessionInfo[] temp = _currentSessions.Values.ToArray();
+        for (int i = 0; i < temp.Length; i++)
+        {
+            AddSessionOption(temp[i]);
+        }
     }
 
     private void OnJoinSessionCallback(SessionInfo info)
@@ -158,25 +188,17 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    private void ClearSessionOptions()
-    {
-        RectTransform[] childs = _sessionList.GetComponentsInChildren<RectTransform>();
-        for (int i = 0; i < childs.Length; i++)
-        {
-            Destroy(childs[i].gameObject);
-        }
-    }
 
     public void FindMatch()
     {
-        if (!string.IsNullOrEmpty(_seessionNameToFind.text))
+        ClearSessionOptions();
+        if (!string.IsNullOrEmpty(_sessionNameToFind.text) && _currentSessions.ContainsKey(_sessionNameToFind.text))
         {
-            //mostra só a partida
+            AddSessionOption(_currentSessions[_sessionNameToFind.text]);
         }
         else
         {
-            //mostra todas as partidas disponiveis
-            //_feedbackText.text = "Insert a session name";
+            UpdateSessionsList();
         }
     }
 
@@ -187,7 +209,9 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         //    n++;
         if (_playerCount > 0)
         {
-            //_networkHandler.
+            //só funciona para caso o jogo tenha sempre apenas 1 cena ativa, caso tenha mais, criar uma classe q implementa INetworkSceneManager
+            NetworkRunnerHandler.NetworkRunner.SetActiveScene(_sceneToLoadWhenLobbyReady);
+            //_networkHandler.NetworkRunner.SetActiveScene(SceneUtility.GetBuildIndexByScenePath($"Assets/Game/Scene/{_sceneToLoadWhenLobbyReady}"));
         }
         else
         {

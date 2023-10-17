@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -327,10 +327,6 @@ GameObject:
   m_Component:
   - component: {fileID: 183687647}
   - component: {fileID: 183687646}
-  - component: {fileID: 183687645}
-  - component: {fileID: 183687644}
-  - component: {fileID: 183687643}
-  - component: {fileID: 183687642}
   m_Layer: 0
   m_Name: Network Runner Handler
   m_TagString: Untagged
@@ -338,65 +334,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &183687642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 183687641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90a93abf1a391964a94e5c139605105b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowHierarchyWindowOverlay: 1
-  PostLoadDelayFrames: 1
---- !u!114 &183687643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 183687641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &183687644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 183687641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7330819e8f84e1d48b1c367b1c06cf5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spawnPoints:
-  - {x: -6.34, y: 3, z: 0}
-  - {x: 12.14, y: 3, z: 0}
-  - {x: -6.34, y: 3, z: 14.46}
-  _debugMode: 1
-  _debugColor: {r: 0, g: 0, b: 0, a: 1}
-  _debugGizmosSize: 1
---- !u!114 &183687645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 183687641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a83ca2dbb40cde84e8af689117100f5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 6735380917374311618, guid: 01191b7b5ca7ba646acc0055b303b636, type: 3}
-  _spawnPoints: {fileID: 183687644}
 --- !u!114 &183687646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,6 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9faccb0b23fa9142bdc38e45e97c60e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _networkSetupPrefab: {fileID: 7990992854300923651, guid: 15b52f6e24ae46048a0948472c390655, type: 3}
 --- !u!4 &183687647
 Transform:
   m_ObjectHideFlags: 0
@@ -2611,7 +2549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1496800168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3610,7 +3548,7 @@ MonoBehaviour:
   _feedbackText: {fileID: 0}
   _sessionOptionsPrefab: {fileID: 216944709529341871, guid: 54411560fa5910640988c341621305f4, type: 3}
   _sessionList: {fileID: 1363488025}
-  _seessionNameToFind: {fileID: 1532614861}
+  _sessionNameToFind: {fileID: 1532614861}
   _findGameUI: {fileID: 1586173791}
   _waitForServerUI: {fileID: 1350134734}
   _playerCountText: {fileID: 111860030}
@@ -4025,6 +3963,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1894776146}
+        m_TargetAssemblyTypeName: LobbyUI, Assembly-CSharp
+        m_MethodName: UpdateSessionsList
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

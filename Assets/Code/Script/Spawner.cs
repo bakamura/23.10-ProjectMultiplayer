@@ -11,19 +11,21 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private SpawnPoints _spawnPoints;
     private CharacterInputHandler _inputHandler;
 
-    private void Awake()
+    private void Start()
     {
         NetworkRunnerHandler.AddCallbackToNetworkRunner(this);
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer)
-        {
-            Debug.Log("OnPlayerJoined this is server. Spawning player");
-            runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, player);
-        }
-        else Debug.Log("OnPlayerJoined");
+
+        //if (runner.IsServer)
+        //{
+        //    Debug.Log("OnPlayerJoined this is server. Spawning player");
+        //    runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, player);
+        //}
+        //else Debug.Log("OnPlayerJoined");
+
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
@@ -32,7 +34,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             _inputHandler = NetworkPlayer.LocalPlayer.GetComponent<CharacterInputHandler>();
         }
 
-        if(_inputHandler != null)
+        if (_inputHandler != null)
         {
             input.Set(_inputHandler.GetInputData());
         }
@@ -86,7 +88,20 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        Debug.Log("OnSceneLoadDone");
+        //if (NetworkRunnerHandler.GameStarted)
+        //{
+        //    if (runner.IsServer)
+        //    {
+        //        Debug.Log("OnPlayerJoined this is server. Spawning player");
+        //        runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, player);
+        //    }
+        //    else Debug.Log("OnPlayerJoined");
+        //}
+        if (!runner.LocalPlayer.IsValid)
+        {
+            runner.SetPlayerObject(NetworkRunnerHandler.LocalPlayerRef, runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.LocalPlayerRef).GetComponent<NetworkObject>());
+        }
+        //runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity);
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
