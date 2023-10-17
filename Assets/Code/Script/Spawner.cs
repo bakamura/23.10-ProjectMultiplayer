@@ -108,4 +108,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("OnUserSimulationMessage");
     }
+
+    private void OnDestroy()
+    {
+        NetworkRunnerHandler.RemoveCallbackToNetworkRunner(this);
+    }
 }

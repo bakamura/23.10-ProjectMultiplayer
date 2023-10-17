@@ -16,7 +16,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     private static List<INetworkRunnerCallbacks> _callbacksRequested = new List<INetworkRunnerCallbacks>();
     private static Queue<INetworkRunnerCallbacks> _requestedCallbacks =  new Queue<INetworkRunnerCallbacks>();
     public static NetworkRunner NetworkRunner => _networkRunner;
-
+    //SceneUtility.GetBuildIndexByScenePath($"Assets/Game/Scene/{sceneName}");
     private void Awake()
     {
         _networkRunner = GetComponent<NetworkRunner>();
@@ -40,6 +40,14 @@ public class NetworkRunnerHandler : MonoBehaviour
         }
     }
 
+    public static void RemoveCallbackToNetworkRunner(INetworkRunnerCallbacks request)
+    {
+        if (_callbacksRequested.Contains(request))
+        {
+            _callbacksRequested.Remove(request);
+        }
+    }
+
     private static void UpdateCallbacks()
     {
         int currentSize = _requestedCallbacks.Count;
@@ -52,22 +60,11 @@ public class NetworkRunnerHandler : MonoBehaviour
     void Start()
     {
         UpdateCallbacks();
-        Task clientTask = InitializeNetworkRunner(_networkRunner, GameMode.AutoHostOrClient, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
-        //_networkRunner = Instantiate(_networkRunnerPrefab);
-        //_networkRunner.name = "Network Runner";
-
-
-        //Debug.Log("Server Netwrok Runner Started");
     }
 
-    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, Action<NetworkRunner> initialized)
+    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
     {
-        //INetworkSceneManager sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
-
-        //if (sceneManager == null)
-        //{
-        //    sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
-        //}
+        //sempre enviar a cena correta q é para todos os jogadores estarem
         INetworkSceneManager sceneManager = _networkSceneManager;
         runner.ProvideInput = true;
 
@@ -76,9 +73,36 @@ public class NetworkRunnerHandler : MonoBehaviour
             GameMode = gameMode,
             Address = netAddress,
             Scene = sceneRef,
-            SessionName = "TestRoom",
+            SessionName = SessionName,
             Initialized = initialized,
-            SceneManager = sceneManager
+            SceneManager = sceneManager,
         });
+    }   
+
+    public void CreateMatch(string sessionName, SceneRef sceneRef)
+    {
+        InitializeNetworkRunner(_networkRunner, GameMode.Host, NetAddress.Any(), sceneRef, sessionName, null);
+    }
+
+    public void JoinMacth(SessionInfo info)
+    {        
+        //para os clientes n é necessário ter o id da cena correta pois eles sempre irão para a cena em q o servdor estiver
+        InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
+    }
+
+    public bool JoinLobby(string sessionName)
+    {
+       return JoinLobbyTask(sessionName) != null;
+    }
+
+    private async Task JoinLobbyTask(string sessionName)
+    {
+        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.Custom, sessionName);
+
+        if (!operation.Ok)
+        {
+            Debug.LogError($"Not possible to Join loby {sessionName}");
+            operation = null;
+        }
     }
 }
