@@ -1,18 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class RMarker : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+public class RMarker : MonoBehaviour {
+
+    [Header("Cache")]
+
+    private Camera _cam;
+
+    void Start() {
+        _cam = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            if (Physics.Raycast(_cam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit)) {
+                RMarkable rObj = hit.transform.GetComponent<RMarkable>();
+                if (rObj) {
+                    rObj.Mark();
+                    return;
+                }
+            }
+            Debug.Log("Can't be Marked");
+        }
     }
 }
