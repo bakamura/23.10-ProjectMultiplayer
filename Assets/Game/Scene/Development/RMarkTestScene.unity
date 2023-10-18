@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 44786041}
   - component: {fileID: 44786040}
   m_Layer: 0
-  m_Name: Tri-Cube
+  m_Name: R-Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,8 +355,6 @@ GameObject:
   - component: {fileID: 564223577}
   - component: {fileID: 564223576}
   - component: {fileID: 564223575}
-  - component: {fileID: 564223579}
-  - component: {fileID: 564223578}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -429,30 +427,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 22.5, y: 0, z: 0}
---- !u!114 &564223578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 564223574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df306a75191c4ff40b67546a9b7a6f21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &564223579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 564223574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a5b31b8848977a498c3196b24d225c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &833551635
 GameObject:
   m_ObjectHideFlags: 0
