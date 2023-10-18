@@ -19,7 +19,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private GameObject _findGameUI;
     [SerializeField] private GameObject _waitForServerUI;
 
-    [Header("UI Client Server Components")]    
+    [Header("UI Client Server Components")]
     [SerializeField] private Text _playerCountText;
     [SerializeField] private InputField _sessionNameText;
     [SerializeField] private GameObject _startGameUI;
@@ -27,8 +27,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
 
     [Header("Network Components")]
     [SerializeField] private NetworkRunnerHandler _networkHandler;
-    private byte _playerCount;
-    private string _sceneToLoadWhenLobbyReady = "TestScene";
+    [SerializeField] private string _sceneToLoadWhenLobbyReady;
     private Dictionary<string, SessionInfo> _currentSessions = new Dictionary<string, SessionInfo>();
     private void Start()
     {
@@ -79,17 +78,14 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     {
         //if (!runner.IsServer)
         //{
-            _playerCount++;
-            _playerCountText.text = $"Players: {_playerCount}";
-        if (!NetworkRunnerHandler.LocalPlayerRef.IsValid)
-        {
-            NetworkRunnerHandler.LocalPlayerRef = player;
-        }
+        NetworkRunnerHandler.PlayersRefs.Add(player);
+        _playerCountText.text = $"Players: {NetworkRunnerHandler.PlayersRefs.Count}";
         //}
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        if (NetworkRunnerHandler.PlayersRefs.Contains(player)) NetworkRunnerHandler.PlayersRefs.Remove(player);
         Debug.Log("LobbyUIOnPlayerLeft");
     }
 
@@ -111,10 +107,10 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         Debug.Log($"New session Created");
-        if(sessionList.Count > 0)
+        if (sessionList.Count > 0)
         {
             ClearSessionOptions();
-            for(int i = 0; i < sessionList.Count; i++)
+            for (int i = 0; i < sessionList.Count; i++)
             {
                 AddSessionOption(sessionList[i]);
             }
@@ -134,7 +130,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("LobbyUIOnUserSimulationMessage");
     }
-#endregion
+    #endregion
     public void CreateMatch()
     {
         if (!string.IsNullOrEmpty(_sessionNameText.text))
@@ -159,7 +155,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     private void ClearSessionOptions()
     {
         _currentSessions.Clear();
-        if(_sessionList.GetComponentsInChildren<RectTransform>().Length > 0)
+        if (_sessionList.GetComponentsInChildren<RectTransform>().Length > 0)
         {
             RectTransform[] childs = _sessionList.GetComponentsInChildren<RectTransform>();
             for (int i = 0; i < childs.Length; i++)
@@ -207,7 +203,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         //int n = 0;
         //foreach (PlayerRef p in NetworkRunnerHandler.NetworkRunner.ActivePlayers)
         //    n++;
-        if (_playerCount > 0)
+        if (NetworkRunnerHandler.PlayersRefs.Count > 0)
         {
             //só funciona para caso o jogo tenha sempre apenas 1 cena ativa, caso tenha mais, criar uma classe q implementa INetworkSceneManager
             NetworkRunnerHandler.NetworkRunner.SetActiveScene(_sceneToLoadWhenLobbyReady);

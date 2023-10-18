@@ -18,7 +18,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     private static bool _gameStarted;
     public static NetworkRunner NetworkRunner => _networkRunner;
     public static bool GameStarted => _gameStarted;
-    public static PlayerRef LocalPlayerRef;
+    public static List<PlayerRef> PlayersRefs =  new List<PlayerRef>();
     public NetworkSceneManagerDefault NetworkSceneManager => _networkSceneManager;
     
     private void Awake()
@@ -105,7 +105,7 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     private async Task JoinLobbyTask(string sessionName)
     {
-        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.Custom, sessionName);
+        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.ClientServer, sessionName);
 
         if (!operation.Ok)
         {

@@ -27,6 +27,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         //envia uma mensagem para o server para ele ser destruido
         if (player == Object.InputAuthority)
             Runner.Despawn(Object);
+        if(NetworkRunnerHandler.PlayersRefs.Contains(player)) NetworkRunnerHandler.PlayersRefs.Remove(player);
     }
     
     private void HandleMultipleCameras()

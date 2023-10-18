@@ -7,7 +7,7 @@ using System;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [SerializeField] private NetworkPlayer _playerPrefab;
+    [SerializeField] private NetworkPlayer[] _playersPrefabs;
     [SerializeField] private SpawnPoints _spawnPoints;
     private CharacterInputHandler _inputHandler;
 
@@ -97,11 +97,16 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         //    }
         //    else Debug.Log("OnPlayerJoined");
         //}
-        if (!runner.LocalPlayer.IsValid)
-        {
-            runner.SetPlayerObject(NetworkRunnerHandler.LocalPlayerRef, runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.LocalPlayerRef).GetComponent<NetworkObject>());
-        }
+        //if (!runner.LocalPlayer.IsValid)
+        //{
+        //    runner.SetPlayerObject(NetworkRunnerHandler.PlayersRefs, runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.PlayersRefs).GetComponent<NetworkObject>());
+        //}
         //runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity);
+
+        for (int i = 0; i < NetworkRunnerHandler.PlayersRefs.Count; i++)
+        {
+            runner.Spawn(_playersPrefabs[i], _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.PlayersRefs[i]);
+        }
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
