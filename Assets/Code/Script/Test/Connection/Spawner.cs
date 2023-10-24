@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkPlayer[] _playersPrefabs;
     [SerializeField] private SpawnPoints _spawnPoints;
-    private CharacterInputHandler _inputHandler;
+    [HideInInspector] public CharacterInputHandler _inputHandler;
 
     private void Start()
     {
@@ -18,7 +18,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-
+        
         //if (runner.IsServer)
         //{
         //    Debug.Log("OnPlayerJoined this is server. Spawning player");
@@ -29,11 +29,16 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        //if(runner == NetworkRunnerHandler.NetworkRunner)
+        //{
+        //    input.Set(_inputHandler.GetInputData());
+        //}
+
         if (_inputHandler == null && NetworkPlayer.LocalPlayer != null)
         {
             _inputHandler = NetworkPlayer.LocalPlayer.GetComponent<CharacterInputHandler>();
         }
-
+        
         if (_inputHandler != null)
         {
             input.Set(_inputHandler.GetInputData());
@@ -105,7 +110,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
         for (int i = 0; i < NetworkRunnerHandler.PlayersRefs.Count; i++)
         {
-            runner.Spawn(_playersPrefabs[i], _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.PlayersRefs[i]);
+            runner.Spawn(_playersPrefabs[i], _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.PlayersRefs[i]).GetComponent<NetworkObject>();
+            //NetworkObject player = runner.Spawn(_playersPrefabs[i], _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, NetworkRunnerHandler.PlayersRefs[i]).GetComponent<NetworkObject>();
+            //runner.SetPlayerObject(NetworkRunnerHandler.PlayersRefs[i], player);
         }
     }
 

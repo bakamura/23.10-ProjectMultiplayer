@@ -78,6 +78,8 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     {
         //if (!runner.IsServer)
         //{
+        //runner.SetPlayerObject(player, null);
+        
         NetworkRunnerHandler.PlayersRefs.Add(player);
         _playerCountText.text = $"Players: {NetworkRunnerHandler.PlayersRefs.Count}";
         //}
