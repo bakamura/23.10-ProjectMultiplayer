@@ -137,12 +137,9 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!string.IsNullOrEmpty(_sessionNameText.text))
         {
-            var result = _networkHandler.CreateMatch(_sessionNameText.text, SceneManager.GetActiveScene().buildIndex);
-            if (result.IsCompleted)
-            {
-                _createMatchUI.SetActive(false);
-                _startGameUI.SetActive(true);
-            }
+            _networkHandler.CreateMatch(_sessionNameText.text, SceneManager.GetActiveScene().buildIndex);
+            _createMatchUI.SetActive(false);
+            _startGameUI.SetActive(true);
         }
         else
         {

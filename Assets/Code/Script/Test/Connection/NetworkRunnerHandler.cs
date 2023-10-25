@@ -70,98 +70,32 @@ public class NetworkRunnerHandler : MonoBehaviour
         UpdateCallbacks();
     }
 
-    protected async Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
+    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
     {
-        //sempre enviar a cena correta q é para todos os jogadores estarem        
+        //sempre enviar a cena correta q é para todos os jogadores estarem
+        Debug.Log("Start Game");
         runner.ProvideInput = true;
-        var result = await runner.StartGame(new StartGameArgs
+
+        return runner.StartGame(new StartGameArgs
         {
             GameMode = gameMode,
             Address = netAddress,
             Scene = sceneRef,
             SessionName = SessionName,
             Initialized = initialized,
-            CustomLobbyName = SessionName,
             SceneManager = _networkSceneManager
         });
-        if (result.Ok)
-        {
-            Debug.Log("Start Game");
-            return result;
-        }
-        else
-        {
-            Debug.LogError($"Faield to start game {result.ShutdownReason}");
-            return null;
-        }
-        //return runner.StartGame(new StartGameArgs
-        //{
-        //    GameMode = gameMode,
-        //    Address = netAddress,
-        //    Scene = sceneRef,
-        //    //SessionName = SessionName,
-        //    Initialized = initialized,
-        //    CustomLobbyName = SessionName,
-        //    SceneManager = _networkSceneManager
-        //});
-    }
-    protected async Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, string SessionName)
+    }   
+
+    public void CreateMatch(string sessionName, SceneRef sceneRef)
     {
-        //sempre enviar a cena correta q é para todos os jogadores estarem        
-        runner.ProvideInput = true;
-        var result = await runner.StartGame(new StartGameArgs
-        {
-            GameMode = gameMode,
-            SessionName = SessionName,
-            SceneManager = _networkSceneManager
-        });
-        if (result.Ok)
-        {
-            Debug.Log("Start Game");
-            return result;
-        }
-        else
-        {
-            Debug.LogError($"Faield to start game {result.ShutdownReason}");
-            return null;
-        }
-        //return runner.StartGame(new StartGameArgs
-        //{
-        //    GameMode = gameMode,
-        //    Address = netAddress,
-        //    Scene = sceneRef,
-        //    //SessionName = SessionName,
-        //    Initialized = initialized,
-        //    CustomLobbyName = SessionName,
-        //    SceneManager = _networkSceneManager
-        //});
+        InitializeNetworkRunner(_networkRunner, GameMode.Host, NetAddress.Any(), sceneRef, sessionName, null);
     }
 
-    public async Task CreateMatch(string sessionName, SceneRef sceneRef)
-    {
-        var result = await InitializeNetworkRunner(_networkRunner, GameMode.Host, NetAddress.Any(), sceneRef, sessionName, null);
-        if (result.Ok)
-        {
-            Debug.Log("Start Game");
-        }
-        else
-        {
-            Debug.LogError($"Faield to start game {result.ShutdownReason}");
-        }
-    }
-
-    public async Task JoinMacth(SessionInfo info)
-    {
+    public void JoinMacth(SessionInfo info)
+    {        
         //para os clientes n é necessário ter o id da cena correta pois eles sempre irão para a cena em q o servdor estiver
-        var result = await InitializeNetworkRunner(_networkRunner, GameMode.Client, info.Name);
-        if (result.Ok)
-        {
-            Debug.Log("Start Game");
-        }
-        else
-        {
-            Debug.LogError($"Faield to start game {result.ShutdownReason}");
-        }
+        InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
     }
 
     public bool JoinLobby(string sessionName)
@@ -171,7 +105,7 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     private async Task JoinLobbyTask(string sessionName)
     {
-        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.Custom, sessionName);
+        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.ClientServer, sessionName);
 
         if (!operation.Ok)
         {
