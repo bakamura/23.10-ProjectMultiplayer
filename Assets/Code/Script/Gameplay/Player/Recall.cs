@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Recall : PlayerAction {
 
-    public override void DoAction() {
-
+    public override void DoAction(InputAction.CallbackContext input) {
+        Recallable.Recall();
     }
+
+    public override void StopAction(InputAction.CallbackContext input) { }
 
 }

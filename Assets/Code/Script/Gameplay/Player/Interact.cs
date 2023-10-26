@@ -1,11 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Interact : PlayerAction {
 
-    public override void DoAction() {
+    [Header("Parameters")]
 
+    [SerializeField] private float _actionRange;
+
+    public override void DoAction(InputAction.CallbackContext input) {
+        if (Physics.Raycast(_player.Camera.ScreenPointToRay(_player.ScreenSize), out RaycastHit hit) && Vector3.Distance(transform.position, hit.point) < _actionRange) hit.transform.GetComponent<IInteractable>()?.Interact();
+        
     }
+
+    public override void StopAction(InputAction.CallbackContext input) {}
 
 }
