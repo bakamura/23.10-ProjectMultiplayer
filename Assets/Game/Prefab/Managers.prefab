@@ -56,7 +56,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4495959692480944903}
   - component: {fileID: 8449270017260281996}
-  - component: {fileID: 2200073563984043722}
+  - component: {fileID: 4137158828093161825}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -90,11 +90,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc43719b6e7688499c39d69f3aa66e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   _networkSetupPrefab: {fileID: 1341332747727758942, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
   _networkRunner: {fileID: 1625279953805928441}
   _networkSceneManager: {fileID: 2608956907870247209}
---- !u!114 &2200073563984043722
+--- !u!114 &4137158828093161825
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,20 +102,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1066851395468821190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 257f6b6f166646249a1f67e124501f6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 0
-  NetworkGuid:
-    RawGuidValue: 00000000000000000000000000000000
-  NestedObjects: []
-  NetworkedBehaviours: []
-  SimulationBehaviours: []
 --- !u!1 &6647570592841246331
 GameObject:
   m_ObjectHideFlags: 0

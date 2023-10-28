@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerSelectionUI : MonoBehaviour
+public class CharacterSelection : MonoBehaviour
 {
-    private MainScreen _mainScreen;
     private CanvasGroup _canvasGroup 
     {
         get
@@ -23,10 +22,9 @@ public class PlayerSelectionUI : MonoBehaviour
 
     private void Awake()
     {
-        _mainScreen = FindObjectOfType<MainScreen>();
         for(int i = 0; i < _characterOptions.Length; i++)
         {
-            _characterOptions[i].MainScreen = _mainScreen;
+            _characterOptions[i].UpdatePlayerSelectionScript = FindObjectOfType<UpdatePlayerSelectionScript>();
             _characterOptions[i].Button.onClick.AddListener(_characterOptions[i].UpdateCharacterSelected);
         }
     }

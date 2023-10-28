@@ -10,29 +10,42 @@ using System.Linq;
 
 public class NetworkManager : NetworkBehaviour
 {
-
-    private static NetworkManager _instance;
-    public static NetworkManager Instance
-    {
-        get
-        {
-            // se ainda n tiver uma referência da instancia, procura ela no GameObject
-            if (_instance == null) _instance = GameObject.FindObjectOfType<NetworkManager>();
-            // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
-            if (_instance == null) _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
-            return _instance;
-        }
-    }
+    //private static NetworkManager _instance;
+    //public static NetworkManager Instance
+    //{
+    //    get
+    //    {
+    //        // se ainda n tiver uma referência da instancia, procura ela no GameObject
+    //        if (_instance == null)
+    //        {
+    //            NetworkManager[] results = GameObject.FindObjectsOfType<NetworkManager>();
+    //            if (results.Length > 0)
+    //            {
+    //                if(results.Length > 1) Debug.Log($"Multiple Instances of NetworkManager found, destroing extras");
+    //                for (int i = 1; i < results.Length; i++)
+    //                {
+    //                    Destroy(results[i]);
+    //                }
+    //                _instance = results[0];
+    //            }
+    //        }
+    //        // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
+    //        //if (_instance == null)
+    //        //    _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
+    //        return _instance;
+    //    }
+    //}
     [SerializeField] private GameObject _networkSetupPrefab;
     [SerializeField] private NetworkRunner _networkRunner;
     [SerializeField] private NetworkSceneManagerDefault _networkSceneManager;
     private List<INetworkRunnerCallbacks> _callbacksRequested = new List<INetworkRunnerCallbacks>();
     private Queue<INetworkRunnerCallbacks> _requestedCallbacks = new Queue<INetworkRunnerCallbacks>();
 
-    /*[Networked]*/
-    public Dictionary<int, PlayerData> PlayersData = new Dictionary<int, PlayerData>();/*{ get; set; }*/
+    public const byte MaxPlayerCount = 3;
+    [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.InputAuthority), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersData => default;
     public NetworkSceneManagerDefault NetworkSceneManager => _networkSceneManager;
     public NetworkRunner NetworkRunner => _networkRunner;
+    public Action OnPlayersDataChangedCallback;
     public enum PlayerType
     {
         Heavy,
@@ -52,24 +65,36 @@ public class NetworkManager : NetworkBehaviour
         }
     }
 
-    private void Awake()
+    public override void Spawned()
     {
+        base.Spawned();
         if (!_networkRunner)
         {
             GameObject temp = Instantiate(_networkSetupPrefab, null);
             _networkRunner = temp.GetComponent<NetworkRunner>();
             _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
         }
-        if (_instance != this)
-        {
-            Destroy(this);
-            return;
-        }
-    }
-    private void Start()
-    {
         UpdateCallbacks();
     }
+
+    //private void Awake()
+    //{
+    //    if (!_networkRunner)
+    //    {
+    //        GameObject temp = Instantiate(_networkSetupPrefab, null);
+    //        _networkRunner = temp.GetComponent<NetworkRunner>();
+    //        _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
+    //    }
+    //    //if (_instance != this)
+    //    //{
+    //    //    Destroy(this);
+    //    //    return;
+    //    //}
+    //}
+    //private void Start()
+    //{
+    //    UpdateCallbacks();
+    //}
 
     /// <summary>
     /// add a script with INetworkRunnerCallbacks to have callbacks from NetworkRunner, add it in the Start method. Remember to call RemoveCallbackToNetworkRunner once it is not necessary anymore
@@ -155,6 +180,15 @@ public class NetworkManager : NetworkBehaviour
         var task = await InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, sessionName, OnMatchCreated);
     }
 
+    public static void OnPlayersDataChanged(Changed<NetworkManager> changed)
+    {
+        changed.Behaviour.OnPlayersDataChanged();
+    }
+
+    private void OnPlayersDataChanged()
+    {
+        OnPlayersDataChangedCallback?.Invoke();
+    }
     //public bool JoinLobby(string sessionName)
     //{
     //    return JoinLobbyTask(sessionName) != null;

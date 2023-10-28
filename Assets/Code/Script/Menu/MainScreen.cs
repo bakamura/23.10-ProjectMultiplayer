@@ -14,7 +14,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 {
     [Header("General Components")]
     [SerializeField] private CanvasGroup _selectCharacterUI;
-    [SerializeField] private PlayerSelectionUI[] _playerSelectionUIs;
+    [SerializeField] private CharacterSelection[] _playerSelectionUIs;
 
     [Header("Server Components")]
     [SerializeField] private TMP_InputField _serverInputField;
@@ -29,7 +29,8 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     private void Start()
     {
-        NetworkManager.Instance.AddCallbackToNetworkRunner(this);
+        NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
+        NetworkManagerReference.Instance.OnPlayersDataChangedCallback += UpdateSelectPlayerUIInteractions;
     }
 
     private void OnEnable()
@@ -40,7 +41,8 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     private void OnDisable()
     {
         InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
-        NetworkManager.Instance.RemoveCallbackToNetworkRunner(this);
+        NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUIInteractions;
+        NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
     }
 
     private void ReturnToPreviousCanvas(InputAction.CallbackContext ctx)
@@ -60,7 +62,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     {
         if (!string.IsNullOrEmpty(_clientInputField.text))
         {
-            NetworkManager.Instance.JoinMacth(_clientInputField.text, OnMatchResult);            
+            NetworkManagerReference.Instance.JoinMacth(_clientInputField.text, OnMatchResult);            
         }
         else
         {
@@ -72,7 +74,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     {
         if (!string.IsNullOrEmpty(_serverInputField.text))
         {
-            NetworkManager.Instance.CreateMatch(_serverInputField.text, SceneManager.GetActiveScene().buildIndex, OnMatchResult);
+            NetworkManagerReference.Instance.CreateMatch(_serverInputField.text, SceneManager.GetActiveScene().buildIndex, OnMatchResult);
         }
         else
         {
@@ -82,60 +84,91 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     public void StartMatch()
     {
-
+        //TO DO get the chose level from server to open
+        NetworkManagerReference.Instance.NetworkRunner.SetActiveScene("MatchTestScene");
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void Rpc_UpdatePlayerTypeUI(int playerId, NetworkManager.PlayerType playerType)
+    //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    //public void Rpc_UpdatePlayerTypeUI(int playerId, NetworkManager.PlayerType playerType)
+    //{
+    //    if (NetworkManagerReference.Instance.PlayersData.ContainsKey(playerId))
+    //    {
+    //        NetworkManagerReference.Instance.PlayersData.Add(playerId, new NetworkManager.PlayerData(NetworkManagerReference.Instance.PlayersData[playerId].PlayerRef, playerType));
+    //        _playerSelectionUIs[NetworkManagerReference.Instance.PlayersData.Keys.ToList().IndexOf(playerId)].UpdateSelectedPlayer(playerType);
+    //    }
+    //    //need to ask to Rogerio if there is a way to get the max player count from NetwrokConfigs
+    //    if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
+    //    {
+    //        //checks if all players chose a different character
+    //        List<NetworkManager.PlayerType> tempList = (List<NetworkManager.PlayerType>)NetworkManagerReference.Instance.PlayersData.Values.Select(x => x.PlayerType);
+    //        var tempHashSet = new HashSet<NetworkManager.PlayerType>();
+    //        _startGameBtn.interactable = tempList.All(tempHashSet.Add) && NetworkManagerReference.Instance.PlayersData.Keys.Count == NetworkManager.MaxPlayerCount;
+    //    }
+    //}
+    /// <summary>
+    /// updates the CharacterSelectionUI visuals
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="playerType"></param>
+    public void UpdateSelectedPlayer(int index, NetworkManager.PlayerType playerType)
     {
-        if (NetworkManager.Instance.PlayersData.ContainsKey(playerId))
-        {
-            NetworkManager.Instance.PlayersData.Add(playerId, new NetworkManager.PlayerData(NetworkManager.Instance.PlayersData[playerId].PlayerRef, playerType));
-            _playerSelectionUIs[NetworkManager.Instance.PlayersData.Keys.ToList().IndexOf(playerId)].UpdateSelectedPlayer(playerType);
-        }
-        if (NetworkManager.Instance.NetworkRunner.IsServer)
-        {
-            //checks if all players chose a different character
-            List<NetworkManager.PlayerType> tempList = (List<NetworkManager.PlayerType>)NetworkManager.Instance.PlayersData.Values.Select(x => x.PlayerType);
-            var tempHashSet = new HashSet<NetworkManager.PlayerType>();
-            _startGameBtn.interactable = tempList.All(tempHashSet.Add);
-        }
+        _playerSelectionUIs[index].UpdateSelectedPlayer(playerType);
     }
-
+    /// <summary>
+    /// activates/deactivates the start game buttton
+    /// </summary>
+    /// <param name="isInteractable"></param>
+    public void UpdateStartGameInteractableState(bool isInteractable)
+    {
+        _startGameBtn.interactable = isInteractable;
+    }
+    /// <summary>
+    /// callback when Photon sucsessfully started the lobby
+    /// </summary>
+    /// <param name="runner"></param>
     private void OnMatchResult(NetworkRunner runner)
     {
         ChangeCurrentCanvas(_selectCharacterUI);
-        UpdateSelectPlayerUIInteractions();
+        //UpdateSelectPlayerUIInteractions();
         ClearFeedbackText();
     }
-
+    /// <summary>
+    /// activates only the Character selection UI that the local player can interact with
+    /// </summary>
     private void UpdateSelectPlayerUIInteractions()
     {
         //for(int i = 0; i < _playerSelectionUIs.Length; i++)
         //{
         //    _playerSelectionUIs[i].SetIsInteractable(false);
         //}
-        _playerSelectionUIs[NetworkManager.Instance.PlayersData.Keys.ToList().IndexOf(NetworkManager.Instance.NetworkRunner.LocalPlayer.PlayerId)].SetIsInteractable(true);
+        int index = 0;
+        foreach (var values in NetworkManagerReference.Instance.PlayersData)
+        {
+            if (values.Key == NetworkManagerReference.Instance.NetworkRunner.LocalPlayer.PlayerId) break;
+            index++;
+        }
+        _playerSelectionUIs[index].SetIsInteractable(true);
     }
 
     private void ClearFeedbackText()
     {
         _feedbackText.text = "";
     }
+
     #region Fusion Callbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (runner.IsServer)
         {
-            NetworkManager.Instance.PlayersData.Add(player.PlayerId, new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
+            NetworkManagerReference.Instance.PlayersData.Add(player.PlayerId, new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
         }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer && NetworkManager.Instance.PlayersData.ContainsKey(player.PlayerId))
+        if (runner.IsServer && NetworkManagerReference.Instance.PlayersData.ContainsKey(player.PlayerId))
         {
-            NetworkManager.Instance.PlayersData.Remove(player.PlayerId);
+            NetworkManagerReference.Instance.PlayersData.Remove(player.PlayerId);
         }
     }
 
@@ -161,7 +194,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        if (runner.IsServer) NetworkManager.Instance.PlayersData.Clear();
+        if (runner.IsServer) NetworkManagerReference.Instance.PlayersData.Clear();
         ChangeCurrentCanvas(_clientUI);
     }
 

@@ -6,31 +6,29 @@ using UnityEngine.UI;
 public class PlayerOptionButton : MonoBehaviour
 {
     [SerializeField] private NetworkManager.PlayerType _playerType;
-    [HideInInspector] public MainScreen MainScreen;
-    [HideInInspector]
+    [HideInInspector] public UpdatePlayerSelectionScript UpdatePlayerSelectionScript;
+    private UnityEngine.UI.Button _button;
+    private Image _image;
     public Image Image
     {
         get
         {
-            if (!Image) Image = GetComponent<Image>();
-            return Image;
+            if (_image == null) _image = GetComponent<Image>();
+            return _image;
         }
-        private set { }
     }
 
-    [HideInInspector]
     public UnityEngine.UI.Button Button
     {
         get
         {
-            if (!Button) Button = GetComponent<UnityEngine.UI.Button>();
-            return Button;
+            if (!_button) _button = GetComponent<UnityEngine.UI.Button>();
+            return _button;
         }
-        private set { }
     }
 
     public void UpdateCharacterSelected()
     {
-        MainScreen.Rpc_UpdatePlayerTypeUI(NetworkManager.Instance.NetworkRunner.LocalPlayer.PlayerId, _playerType);
+        UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.Instance.NetworkRunner.LocalPlayer.PlayerId, _playerType);
     }
 }
