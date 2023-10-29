@@ -35,6 +35,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     {
         NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
         NetworkManagerReference.Instance.OnPlayersDataChangedCallback += UpdateSelectPlayerUIInteractions;
+        NetworkManagerReference.Instance.OnFixedNetworkUpdate += UpdatePlayersDataDictionary;
     }
 
     private void OnEnable()
@@ -46,6 +47,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     {
         InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
         NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUIInteractions;
+        NetworkManagerReference.Instance.OnFixedNetworkUpdate -= UpdatePlayersDataDictionary;
         NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
     }
 
@@ -55,11 +57,6 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         {
             ChangeCurrentCanvas(temp);
         }
-    }
-
-    private void Update()
-    {
-        UpdatePlayersDataDictionary();
     }
 
     private void UpdatePlayersDataDictionary()
@@ -77,6 +74,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
             _playerDataCacheToAdd.Clear();
             _playerDataCacheToRemove.Clear();
             _updatePlayerDataDictionary = false;
+            Debug.Log("Dictionary updated");
         }
     }
 
@@ -102,6 +100,8 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         if (!string.IsNullOrEmpty(_serverInputField.text))
         {
             NetworkManagerReference.Instance.CreateMatch(_serverInputField.text, SceneManager.GetActiveScene().buildIndex, OnMatchResult);
+            _feedbackText.text = "CREATING MATCH...";
+            currentCanvasOpened.Peek().interactable = false;
         }
         else
         {

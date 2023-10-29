@@ -46,6 +46,7 @@ public class NetworkManager : NetworkBehaviour
     public NetworkSceneManagerDefault NetworkSceneManager => _networkSceneManager;
     public NetworkRunner NetworkRunner => _networkRunner;
     public Action OnPlayersDataChangedCallback;
+    public Action OnFixedNetworkUpdate;
     public enum PlayerType
     {
         Heavy,
@@ -68,12 +69,12 @@ public class NetworkManager : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-        if (!_networkRunner)
-        {
-            GameObject temp = Instantiate(_networkSetupPrefab, null);
-            _networkRunner = temp.GetComponent<NetworkRunner>();
-            _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
-        }
+        //if (!_networkRunner)
+        //{
+        //    GameObject temp = Instantiate(_networkSetupPrefab, null);
+        //    _networkRunner = temp.GetComponent<NetworkRunner>();
+        //    _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
+        //}
         UpdateCallbacks();
     }
 
@@ -95,6 +96,13 @@ public class NetworkManager : NetworkBehaviour
     //{
     //    UpdateCallbacks();
     //}
+
+    public override void FixedUpdateNetwork()
+    {
+        base.FixedUpdateNetwork();
+        OnFixedNetworkUpdate?.Invoke();
+        Debug.Log("fixednetworkupdate");
+    }
 
     /// <summary>
     /// add a script with INetworkRunnerCallbacks to have callbacks from NetworkRunner, add it in the Start method. Remember to call RemoveCallbackToNetworkRunner once it is not necessary anymore
