@@ -4266,7 +4266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a52e72ee7f137d54a940412910f93861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _openDuration: 1.5
+  _openDuration: 0.2
   _alwaysStayOnThisUI: {fileID: 1771838620}
   _selectCharacterUI: {fileID: 916293265}
   _playerSelectionUIs:
@@ -6550,6 +6550,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1499047106}
   m_CullTransparentMesh: 1
+--- !u!114 &1510511388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8449270017260281996, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+  m_PrefabInstance: {fileID: 6647570593079556238}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc43719b6e7688499c39d69f3aa66e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1526251200
 GameObject:
   m_ObjectHideFlags: 0
@@ -10286,6 +10297,26 @@ PrefabInstance:
     - target: {fileID: 2200073563984043722, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
       value: 5184416686665174201
+      objectReference: {fileID: 0}
+    - target: {fileID: 2497153202132820087, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+      propertyPath: Flags
+      value: 2561
+      objectReference: {fileID: 0}
+    - target: {fileID: 2497153202132820087, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2497153202132820087, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+      propertyPath: NetworkedBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 1510511388}
+    - target: {fileID: 2497153202132820087, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
+      value: 6001950668715303927
+      objectReference: {fileID: 0}
+    - target: {fileID: 2497153202132820087, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
+      value: -1641960560265259123
       objectReference: {fileID: 0}
     - target: {fileID: 8562592334441707345, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
       propertyPath: m_RootOrder
