@@ -53,7 +53,7 @@ public class NetworkManager : NetworkBehaviour
         Navi
     }
     [Serializable]
-    public struct PlayerData
+    public struct PlayerData : INetworkStruct
     {
         public PlayerRef PlayerRef;
         public PlayerType PlayerType;
@@ -135,7 +135,7 @@ public class NetworkManager : NetworkBehaviour
     }
 
     protected async Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
-    {
+    {        
         runner.ProvideInput = true;
         var task = await runner.StartGame(new StartGameArgs
         {

@@ -10,8 +10,8 @@ public class Menu : MonoBehaviour
     [SerializeField] private float _openDuration;
     [SerializeField, Tooltip("if contais something and the player tries to return on the UI, this Canvas will never close if is the only one open")] private CanvasGroup _alwaysStayOnThisUI;
     private Coroutine _canvasTransitionCoroutine = null;
-    private WaitForSeconds _delay = new WaitForSeconds(_canvasTick);
-    private const float _canvasTick = .02f;
+    //private WaitForSeconds _delay = new WaitForSeconds(_canvasTick);
+    //private const float _canvasTick = .02f;
     protected Stack<CanvasGroup> currentCanvasOpened = new Stack<CanvasGroup>();
 
     protected virtual void Awake()
@@ -47,7 +47,7 @@ public class Menu : MonoBehaviour
 
     private IEnumerator CanvasTransition(CanvasGroup newCanvas, float targetAlpha)
     {
-        float step = _canvasTick / targetAlpha;
+        float step = Time.deltaTime / _openDuration;
         float currentStep = 0;
         float currentAlpha;
 
@@ -59,8 +59,9 @@ public class Menu : MonoBehaviour
             {
                 temp.alpha = Mathf.Lerp(currentAlpha, 0f, currentStep);
                 currentStep += step;
-                yield return _delay;
+                yield return null;
             }
+            temp.alpha = 0f;
             temp.blocksRaycasts = false;
             temp.interactable = false;
         }
@@ -81,9 +82,9 @@ public class Menu : MonoBehaviour
         {
             newCanvas.alpha = Mathf.Lerp(currentAlpha, targetAlpha, currentStep);
             currentStep += step;
-            yield return _delay;
+            yield return null;
         }
-
+        newCanvas.alpha = targetAlpha;
         newCanvas.blocksRaycasts = true;
         newCanvas.interactable = true;
 

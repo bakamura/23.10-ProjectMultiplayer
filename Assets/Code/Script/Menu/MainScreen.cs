@@ -27,6 +27,10 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     [Header("Debug")]
     [SerializeField] private Text _feedbackText;
 
+    private bool _updatePlayerDataDictionary;
+    List<NetworkManager.PlayerData> _playerDataCacheToAdd = new List<NetworkManager.PlayerData>();
+    List<NetworkManager.PlayerData> _playerDataCacheToRemove = new List<NetworkManager.PlayerData>();
+
     private void Start()
     {
         NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
@@ -50,6 +54,29 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         if (ctx.ReadValue<float>() == 1 && GetPreviousCanvasGroup(out CanvasGroup temp))
         {
             ChangeCurrentCanvas(temp);
+        }
+    }
+
+    private void Update()
+    {
+        UpdatePlayersDataDictionary();
+    }
+
+    private void UpdatePlayersDataDictionary()
+    {
+        if (_updatePlayerDataDictionary)
+        {
+            for (int i = 0; i < _playerDataCacheToAdd.Count; i++)
+            {
+                NetworkManagerReference.Instance.PlayersData.Add(_playerDataCacheToAdd[i].PlayerRef.PlayerId, _playerDataCacheToAdd[i]);
+            }
+            for (int i = 0; i < _playerDataCacheToRemove.Count; i++)
+            {
+                NetworkManagerReference.Instance.PlayersData.Remove(_playerDataCacheToRemove[i].PlayerRef.PlayerId);
+            }
+            _playerDataCacheToAdd.Clear();
+            _playerDataCacheToRemove.Clear();
+            _updatePlayerDataDictionary = false;
         }
     }
 
@@ -88,23 +115,6 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         NetworkManagerReference.Instance.NetworkRunner.SetActiveScene("MatchTestScene");
     }
 
-    //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    //public void Rpc_UpdatePlayerTypeUI(int playerId, NetworkManager.PlayerType playerType)
-    //{
-    //    if (NetworkManagerReference.Instance.PlayersData.ContainsKey(playerId))
-    //    {
-    //        NetworkManagerReference.Instance.PlayersData.Add(playerId, new NetworkManager.PlayerData(NetworkManagerReference.Instance.PlayersData[playerId].PlayerRef, playerType));
-    //        _playerSelectionUIs[NetworkManagerReference.Instance.PlayersData.Keys.ToList().IndexOf(playerId)].UpdateSelectedPlayer(playerType);
-    //    }
-    //    //need to ask to Rogerio if there is a way to get the max player count from NetwrokConfigs
-    //    if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
-    //    {
-    //        //checks if all players chose a different character
-    //        List<NetworkManager.PlayerType> tempList = (List<NetworkManager.PlayerType>)NetworkManagerReference.Instance.PlayersData.Values.Select(x => x.PlayerType);
-    //        var tempHashSet = new HashSet<NetworkManager.PlayerType>();
-    //        _startGameBtn.interactable = tempList.All(tempHashSet.Add) && NetworkManagerReference.Instance.PlayersData.Keys.Count == NetworkManager.MaxPlayerCount;
-    //    }
-    //}
     /// <summary>
     /// updates the CharacterSelectionUI visuals
     /// </summary>
@@ -160,7 +170,9 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
-            NetworkManagerReference.Instance.PlayersData.Add(player.PlayerId, new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
+            _updatePlayerDataDictionary = true;
+            //NetworkManagerReference.Instance.PlayersData.Add(player.PlayerId, new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
+            _playerDataCacheToAdd.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
         }
     }
 
@@ -168,7 +180,9 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     {
         if (runner.IsServer && NetworkManagerReference.Instance.PlayersData.ContainsKey(player.PlayerId))
         {
-            NetworkManagerReference.Instance.PlayersData.Remove(player.PlayerId);
+            _updatePlayerDataDictionary = true;
+            _playerDataCacheToRemove.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
+            //NetworkManagerReference.Instance.PlayersData.Remove(player.PlayerId);
         }
     }
 
