@@ -7,11 +7,12 @@ using System.Linq;
 public class UpdatePlayerSelectionScript : NetworkBehaviour
 {
     private MainScreen _mainScreen;
-    public override void Spawned()
+
+    private void Awake()
     {
-        base.Spawned();
         _mainScreen = FindObjectOfType<MainScreen>();
     }
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.InputAuthority)]
     public void Rpc_UpdatePlayerTypeUI(int playerId, NetworkManager.PlayerType playerType)
     {
