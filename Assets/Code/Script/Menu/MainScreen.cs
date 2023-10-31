@@ -40,12 +40,12 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     private void OnEnable()
     {
-        InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed += ReturnToPreviousCanvas;
+        //InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed += ReturnToPreviousCanvas;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
+        //InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
         NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUIInteractions;
         NetworkManagerReference.Instance.OnFixedNetworkUpdate -= UpdatePlayersDataDictionary;
         NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
@@ -151,6 +151,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         //{
         //    _playerSelectionUIs[i].SetIsInteractable(false);
         //}
+        Debug.Log("UpdateUiInteractions");
         int index = 0;
         foreach (var values in NetworkManagerReference.Instance.PlayersData)
         {

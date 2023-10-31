@@ -25,11 +25,11 @@ public class NetworkManagerReference : MonoBehaviour
                 }
             }
             // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
-            if (_instance == null)
-            {
-                _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
-                _instance.Spawned();
-            }
+            //if (_instance == null)
+            //{
+            //    _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
+            //    _instance.Spawned();
+            //}
             return _instance;
         }
     }

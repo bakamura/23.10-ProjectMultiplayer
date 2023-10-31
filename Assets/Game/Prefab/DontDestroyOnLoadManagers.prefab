@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8562592334441707345}
   - component: {fileID: 1122762692462770708}
   m_Layer: 0
-  m_Name: Managers
+  m_Name: DontDestroyOnLoadManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6647570592841246329}
-  - {fileID: 4495959692480944903}
   - {fileID: 4463868798073976642}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -46,92 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfe6bf630772874e81c2433d6c85e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1066851395468821190
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4495959692480944903}
-  - component: {fileID: 8449270017260281996}
-  - component: {fileID: 4137158828093161825}
-  - component: {fileID: 2497153202132820087}
-  m_Layer: 0
-  m_Name: NetworkManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4495959692480944903
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066851395468821190}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8562592334441707345}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8449270017260281996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066851395468821190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebc43719b6e7688499c39d69f3aa66e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  _networkSetupPrefab: {fileID: 1341332747727758942, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
-  _networkRunner: {fileID: 1625279953805928441}
-  _networkSceneManager: {fileID: 2608956907870247209}
-  _PlayersData:
-    _items: []
---- !u!114 &4137158828093161825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066851395468821190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 257f6b6f166646249a1f67e124501f6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2497153202132820087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066851395468821190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 0
-  NetworkGuid:
-    RawGuidValue: 00000000000000000000000000000000
-  NestedObjects: []
-  NetworkedBehaviours: []
-  SimulationBehaviours: []
 --- !u!1 &6647570592841246331
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +54,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6647570592841246329}
-  - component: {fileID: 6647570592841246328}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -163,18 +75,6 @@ Transform:
   m_Father: {fileID: 8562592334441707345}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6647570592841246328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6647570592841246331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcc7ea0ae290dba40a67a0235aa53697, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8567167771003166735
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -188,7 +88,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5410627137939412813, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5410627137939412813, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
       propertyPath: m_LocalPosition.x
@@ -237,25 +137,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5410627137939412813, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
   m_PrefabInstance: {fileID: 8567167771003166735}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1625279953805928441 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6947530523828537334, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
-  m_PrefabInstance: {fileID: 8567167771003166735}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2608956907870247209 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5967359453454530854, guid: 54b63fe12c2dad44c8a701986b825c83, type: 3}
-  m_PrefabInstance: {fileID: 8567167771003166735}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90a93abf1a391964a94e5c139605105b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

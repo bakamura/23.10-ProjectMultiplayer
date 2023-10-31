@@ -10,31 +10,6 @@ using System.Linq;
 
 public class NetworkManager : NetworkBehaviour
 {
-    //private static NetworkManager _instance;
-    //public static NetworkManager Instance
-    //{
-    //    get
-    //    {
-    //        // se ainda n tiver uma referência da instancia, procura ela no GameObject
-    //        if (_instance == null)
-    //        {
-    //            NetworkManager[] results = GameObject.FindObjectsOfType<NetworkManager>();
-    //            if (results.Length > 0)
-    //            {
-    //                if(results.Length > 1) Debug.Log($"Multiple Instances of NetworkManager found, destroing extras");
-    //                for (int i = 1; i < results.Length; i++)
-    //                {
-    //                    Destroy(results[i]);
-    //                }
-    //                _instance = results[0];
-    //            }
-    //        }
-    //        // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
-    //        //if (_instance == null)
-    //        //    _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
-    //        return _instance;
-    //    }
-    //}
     [SerializeField] private GameObject _networkSetupPrefab;
     [SerializeField] private NetworkRunner _networkRunner;
     [SerializeField] private NetworkSceneManagerDefault _networkSceneManager;
@@ -42,11 +17,58 @@ public class NetworkManager : NetworkBehaviour
     private Queue<INetworkRunnerCallbacks> _requestedCallbacks = new Queue<INetworkRunnerCallbacks>();
 
     public const byte MaxPlayerCount = 3;
-    [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.InputAuthority), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersData => default;
-    public NetworkSceneManagerDefault NetworkSceneManager => _networkSceneManager;
-    public NetworkRunner NetworkRunner => _networkRunner;
+    [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersData => default;
+    public NetworkSceneManagerDefault NetworkSceneManager
+    {
+        get
+        {
+            // se ainda n tiver uma referência da instancia, procura ela no GameObject
+            if (_networkSceneManager == null)
+            {
+                NetworkSceneManagerDefault[] results = GameObject.FindObjectsOfType<NetworkSceneManagerDefault>();
+                if (results.Length > 0)
+                {
+                    if (results.Length > 1) Debug.Log($"Multiple Instances of NetworkManager found, destroing extras");
+                    for (int i = 1; i < results.Length; i++)
+                    {
+                        Destroy(results[i]);
+                    }
+                    _networkSceneManager = results[0];
+                }
+            }
+            // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
+            //if (_instance == null)
+            //    _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
+            return _networkSceneManager;
+        }
+    }
+    public NetworkRunner NetworkRunner
+    {
+        get
+        {
+            // se ainda n tiver uma referência da instancia, procura ela no GameObject
+            if (_networkRunner == null)
+            {
+                NetworkRunner[] results = GameObject.FindObjectsOfType<NetworkRunner>();
+                if (results.Length > 0)
+                {
+                    if (results.Length > 1) Debug.Log($"Multiple Instances of NetworkManager found, destroing extras");
+                    for (int i = 1; i < results.Length; i++)
+                    {
+                        Destroy(results[i]);
+                    }
+                    _networkRunner = results[0];
+                }
+            }
+            // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
+            //if (_instance == null)
+            //    _instance = new GameObject($"Instance of Type: {typeof(NetworkManager)}").AddComponent<NetworkManager>();
+            return _networkRunner;
+        }
+    }
     public Action OnPlayersDataChangedCallback;
     public Action OnFixedNetworkUpdate;
+    private bool _transferedDataFromStaticDictionary;
     public enum PlayerType
     {
         Heavy,
@@ -66,25 +88,36 @@ public class NetworkManager : NetworkBehaviour
         }
     }
 
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        foreach (var value in PlayersData)
+        {
+            if (!PlayersDictionaryContainer.PlayersData.ContainsKey(value.Key))
+                PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
+            else
+                PlayersDictionaryContainer.PlayersData[value.Key] = value.Value;
+        }
+    }
+
     public override void Spawned()
     {
-        base.Spawned();
-        //if (!_networkRunner)
+        //if (!NetworkRunnerRef)
         //{
         //    GameObject temp = Instantiate(_networkSetupPrefab, null);
-        //    _networkRunner = temp.GetComponent<NetworkRunner>();
-        //    _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
+        //    NetworkRunnerRef = temp.GetComponent<NetworkRunner>();
+        //    NetworkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
         //}
+        
         UpdateCallbacks();
     }
 
     //private void Awake()
     //{
-    //    if (!_networkRunner)
+    //    if (!NetworkRunnerRef)
     //    {
     //        GameObject temp = Instantiate(_networkSetupPrefab, null);
-    //        _networkRunner = temp.GetComponent<NetworkRunner>();
-    //        _networkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
+    //        NetworkRunnerRef = temp.GetComponent<NetworkRunner>();
+    //        NetworkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
     //    }
     //    //if (_instance != this)
     //    //{
@@ -99,11 +132,31 @@ public class NetworkManager : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        base.FixedUpdateNetwork();
+        UpdatePlayersDictionary();
         OnFixedNetworkUpdate?.Invoke();
-        Debug.Log("fixednetworkupdate");
     }
 
+    private void UpdatePlayersDictionary()
+    {
+        if (!_transferedDataFromStaticDictionary)
+        {
+            PlayersDictionaryContainer.StartClass();
+            bool isEmpty = true;
+            foreach (var value in PlayersDictionaryContainer.PlayersData)
+            {
+                isEmpty = false;
+                break;
+            }
+            if (!isEmpty)
+            {
+                foreach (var value in PlayersDictionaryContainer.PlayersData)
+                {
+                    PlayersData.Add(value.Key, value.Value);
+                }
+            }
+            _transferedDataFromStaticDictionary = true;
+        }
+    }
     /// <summary>
     /// add a script with INetworkRunnerCallbacks to have callbacks from NetworkRunner, add it in the Start method. Remember to call RemoveCallbackToNetworkRunner once it is not necessary anymore
     /// </summary>
@@ -114,7 +167,7 @@ public class NetworkManager : NetworkBehaviour
         {
             _requestedCallbacks.Enqueue(request);
             _callbacksRequested.Add(request);
-            if (_networkRunner)
+            if (NetworkRunner)
             {
                 UpdateCallbacks();
             }
@@ -143,7 +196,7 @@ public class NetworkManager : NetworkBehaviour
     }
 
     protected async Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
-    {        
+    {
         runner.ProvideInput = true;
         var task = await runner.StartGame(new StartGameArgs
         {
@@ -153,7 +206,7 @@ public class NetworkManager : NetworkBehaviour
             SessionName = SessionName,
             Initialized = initialized,
             CustomLobbyName = SessionName,
-            SceneManager = _networkSceneManager
+            SceneManager = NetworkSceneManager
         });
         if (!task.Ok)
         {
@@ -168,7 +221,7 @@ public class NetworkManager : NetworkBehaviour
         //    SessionName = SessionName,
         //    Initialized = initialized,
         //    CustomLobbyName = SessionName,
-        //    SceneManager = _networkSceneManager
+        //    SceneManager = NetworkSceneManager
         //});
     }
 
@@ -180,7 +233,7 @@ public class NetworkManager : NetworkBehaviour
     //public void JoinMacth(SessionInfo info)
     //{
     //    //para os clientes n é necessário ter o id da cena correta pois eles sempre irão para a cena em q o servdor estiver
-    //    InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
+    //    InitializeNetworkRunner(NetworkRunnerRef, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
     //}
 
     public async void JoinMacth(string sessionName, Action<NetworkRunner> OnMatchCreated = null)
@@ -197,6 +250,7 @@ public class NetworkManager : NetworkBehaviour
     {
         OnPlayersDataChangedCallback?.Invoke();
     }
+
     //public bool JoinLobby(string sessionName)
     //{
     //    return JoinLobbyTask(sessionName) != null;
@@ -204,7 +258,7 @@ public class NetworkManager : NetworkBehaviour
 
     //private async Task JoinLobbyTask(string sessionName)
     //{
-    //    StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.Custom, sessionName);
+    //    StartGameResult operation = await NetworkRunnerRef.JoinSessionLobby(SessionLobby.Custom, sessionName);
 
     //    if (!operation.Ok)
     //    {
