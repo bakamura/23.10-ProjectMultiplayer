@@ -90,12 +90,21 @@ public class NetworkManager : NetworkBehaviour
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        foreach (var value in PlayersData)
+        bool isEmpty = true;
+        foreach (var value in PlayersDictionaryContainer.PlayersData)
         {
-            if (!PlayersDictionaryContainer.PlayersData.ContainsKey(value.Key))
-                PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
-            else
-                PlayersDictionaryContainer.PlayersData[value.Key] = value.Value;
+            isEmpty = false;
+            break;
+        }
+        if (!isEmpty)
+        {
+            foreach (var value in PlayersData)
+            {
+                if (!PlayersDictionaryContainer.PlayersData.ContainsKey(value.Key))
+                    PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
+                else
+                    PlayersDictionaryContainer.PlayersData[value.Key] = value.Value;
+            }
         }
     }
 

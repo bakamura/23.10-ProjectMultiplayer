@@ -5,23 +5,24 @@ using UnityEngine.UI;
 
 public class CharacterSelection : MonoBehaviour
 {
-    private CanvasGroup _canvasGroup 
-    {
-        get
-        {
-            if (!_canvasGroup)
-            {
-                _canvasGroup = GetComponent<CanvasGroup>();
-            }
-            return _canvasGroup;
-        }
-        set { }
-    }
+    private CanvasGroup _canvasGroup;
+    //{
+    //    get
+    //    {
+    //        if (!_canvasGroup)
+    //        {
+    //            _canvasGroup = GetComponent<CanvasGroup>();
+    //        }
+    //        return _canvasGroup;
+    //    }
+    //    set { }
+    //}
     [SerializeField] private PlayerOptionButton[] _characterOptions;
     private PlayerOptionButton _currentlySelected;
 
     private void Awake()
     {
+        _canvasGroup = GetComponent<CanvasGroup>();
         for(int i = 0; i < _characterOptions.Length; i++)
         {
             _characterOptions[i].UpdatePlayerSelectionScript = FindObjectOfType<UpdatePlayerSelectionScript>();
