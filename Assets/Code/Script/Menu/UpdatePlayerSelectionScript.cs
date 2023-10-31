@@ -13,7 +13,7 @@ public class UpdatePlayerSelectionScript : NetworkBehaviour
         _mainScreen = FindObjectOfType<MainScreen>();
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.InputAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_UpdatePlayerTypeUI(int playerId, NetworkManager.PlayerType playerType)
     {
         if (NetworkManagerReference.Instance.PlayersData.ContainsKey(playerId))

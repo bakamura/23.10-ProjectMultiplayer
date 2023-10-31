@@ -90,13 +90,13 @@ public class NetworkManager : NetworkBehaviour
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        bool isEmpty = true;
+        bool isNull = true;
         foreach (var value in PlayersDictionaryContainer.PlayersData)
         {
-            isEmpty = false;
+            isNull = false;
             break;
         }
-        if (!isEmpty)
+        if (!isNull)
         {
             foreach (var value in PlayersData)
             {
@@ -116,7 +116,7 @@ public class NetworkManager : NetworkBehaviour
         //    NetworkRunnerRef = temp.GetComponent<NetworkRunner>();
         //    NetworkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
         //}
-        
+
         UpdateCallbacks();
     }
 
@@ -150,13 +150,13 @@ public class NetworkManager : NetworkBehaviour
         if (!_transferedDataFromStaticDictionary)
         {
             PlayersDictionaryContainer.StartClass();
-            bool isEmpty = true;
+            bool isNull = true;
             foreach (var value in PlayersDictionaryContainer.PlayersData)
             {
-                isEmpty = false;
+                isNull = false;
                 break;
             }
-            if (!isEmpty)
+            if (!isNull)
             {
                 foreach (var value in PlayersDictionaryContainer.PlayersData)
                 {
