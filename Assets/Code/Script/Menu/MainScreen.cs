@@ -9,12 +9,13 @@ using System;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class MainScreen : Menu, INetworkRunnerCallbacks
 {
     [Header("General Components")]
     [SerializeField] private CanvasGroup _selectCharacterUI;
-    [SerializeField] private CharacterSelection[] _playerSelectionUIs;
+    [SerializeField] private CharacterSelection[] _characterSelectionUIs;
 
     [Header("Server Components")]
     [SerializeField] private TMP_InputField _serverInputField;
@@ -28,13 +29,14 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     [SerializeField] private Text _feedbackText;
 
     private bool _updatePlayerDataDictionary;
+    private bool _alreadyAssignedWithCharacterUI;
     List<NetworkManager.PlayerData> _playerDataCacheToAdd = new List<NetworkManager.PlayerData>();
     List<NetworkManager.PlayerData> _playerDataCacheToRemove = new List<NetworkManager.PlayerData>();
 
     private void Start()
     {
         NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
-        NetworkManagerReference.Instance.OnPlayersDataChangedCallback += UpdateSelectPlayerUIInteractions;
+        NetworkManagerReference.Instance.OnPlayersDataChangedCallback += UpdateSelectPlayerUI;
         NetworkManagerReference.Instance.OnFixedNetworkUpdate += UpdatePlayersDataDictionary;
     }
 
@@ -46,7 +48,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     private void OnDestroy()
     {
         //InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
-        NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUIInteractions;
+        NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUI;
         NetworkManagerReference.Instance.OnFixedNetworkUpdate -= UpdatePlayersDataDictionary;
         NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
     }
@@ -74,7 +76,6 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
             _playerDataCacheToAdd.Clear();
             _playerDataCacheToRemove.Clear();
             _updatePlayerDataDictionary = false;
-            Debug.Log("Dictionary updated");
         }
     }
 
@@ -83,11 +84,18 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         Application.Quit();
     }
 
-    public void JoinMatch()
+    public async void JoinMatch()
     {
         if (!string.IsNullOrEmpty(_clientInputField.text))
         {
-            NetworkManagerReference.Instance.JoinMacth(_clientInputField.text, OnMatchResult);            
+            _feedbackText.text = "JOINING MATCH...";
+            currentCanvasOpened.Peek().interactable = false;
+            var task = await NetworkManagerReference.Instance.JoinMacth(_clientInputField.text, OnMatchResult);
+            if (!task.Ok)
+            {
+                _feedbackText.text = $"FAIELD TO JOIN MACTH, REASON: {task.ShutdownReason}";
+                currentCanvasOpened.Peek().interactable = true;
+            }
         }
         else
         {
@@ -95,13 +103,18 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         }
     }
 
-    public void CreateMatch()
+    public async void CreateMatch()
     {
         if (!string.IsNullOrEmpty(_serverInputField.text))
         {
-            NetworkManagerReference.Instance.CreateMatch(_serverInputField.text, SceneManager.GetActiveScene().buildIndex, OnMatchResult);
             _feedbackText.text = "CREATING MATCH...";
             currentCanvasOpened.Peek().interactable = false;
+            var task = await NetworkManagerReference.Instance.CreateMatch(_serverInputField.text, SceneManager.GetActiveScene().buildIndex, OnMatchResult);
+            if (!task.Ok)
+            {
+                _feedbackText.text = $"FAIELD TO CREATE MACTH, REASON: {task.ShutdownReason}";
+                currentCanvasOpened.Peek().interactable = true;
+            }
         }
         else
         {
@@ -120,10 +133,10 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     /// </summary>
     /// <param name="index"></param>
     /// <param name="playerType"></param>
-    public void UpdateSelectedPlayer(int index, NetworkManager.PlayerType playerType)
-    {
-        _playerSelectionUIs[index].UpdateSelectedPlayer(playerType);
-    }
+    //private void UpdateSelectedPlayerUiVisual(int index, NetworkManager.PlayerType playerType)
+    //{
+    //    _playerSelectionUIs[index].UpdateSelectedPlayer(playerType);
+    //}
     /// <summary>
     /// activates/deactivates the start game buttton
     /// </summary>
@@ -138,27 +151,29 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     /// <param name="runner"></param>
     private void OnMatchResult(NetworkRunner runner)
     {
+        currentCanvasOpened.Peek().interactable = true;
         ChangeCurrentCanvas(_selectCharacterUI);
-        //UpdateSelectPlayerUIInteractions();
+        //UpdateSelectPlayerUI();
         ClearFeedbackText();
     }
     /// <summary>
-    /// activates only the Character selection UI that the local player can interact with
+    /// Makes the Local Player can interact only with its respective Character Selection UI and updates all Character Selection UIs visual
     /// </summary>
-    private void UpdateSelectPlayerUIInteractions()
+    private void UpdateSelectPlayerUI()
     {
-        //for(int i = 0; i < _playerSelectionUIs.Length; i++)
-        //{
-        //    _playerSelectionUIs[i].SetIsInteractable(false);
-        //}
-        Debug.Log("UpdateUiInteractions");
-        int index = 0;
+        //Enables Interaction of local player to its respective SelectCharacter UI 
+        if (!_alreadyAssignedWithCharacterUI)
+        {
+            _characterSelectionUIs[NetworkManagerReference.Instance.PlayersData.Count - 1].SetIsInteractable(true);
+            _alreadyAssignedWithCharacterUI = true;
+        }
+        //updates visual for all UIs
+        int currentIndex = NetworkManagerReference.Instance.PlayersData.Count - 1;
         foreach (var values in NetworkManagerReference.Instance.PlayersData)
         {
-            if (values.Key == NetworkManagerReference.Instance.NetworkRunner.LocalPlayer.PlayerId) break;
-            index++;
+            _characterSelectionUIs[currentIndex].UpdateSelectedPlayer(values.Value.PlayerType);
+            currentIndex--;
         }
-        _playerSelectionUIs[index].SetIsInteractable(true);
     }
 
     private void ClearFeedbackText()
@@ -189,73 +204,74 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        
+
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
     {
-        
+
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        
+        NetworkManagerReference.Instance.PlayersData.Clear();
+        ReturnToDefaultUI();
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        
+
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
         if (runner.IsServer) NetworkManagerReference.Instance.PlayersData.Clear();
-        ChangeCurrentCanvas(_clientUI);
+        ReturnToDefaultUI();
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
     {
-        
+
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        
+
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
-        
+
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        
+
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
     {
-        
+
     }
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        
+
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
     {
-        
+
     }
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        
+
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        
+
     }
     #endregion
 }

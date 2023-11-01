@@ -13,7 +13,7 @@ public class UpdatePlayerSelectionScript : NetworkBehaviour
         _mainScreen = FindObjectOfType<MainScreen>();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_UpdatePlayerTypeUI(int playerId, NetworkManager.PlayerType playerType)
     {
         if (NetworkManagerReference.Instance.PlayersData.ContainsKey(playerId))
@@ -25,16 +25,19 @@ public class UpdatePlayerSelectionScript : NetworkBehaviour
                 index++;
             }
             
-            if(Object.HasStateAuthority) NetworkManagerReference.Instance.PlayersData.Add(playerId, new NetworkManager.PlayerData(NetworkManagerReference.Instance.PlayersData[playerId].PlayerRef, playerType));
-            _mainScreen.UpdateSelectedPlayer(index, playerType);
+            if(Object.HasStateAuthority) NetworkManagerReference.Instance.PlayersData.Set(playerId, new NetworkManager.PlayerData(NetworkManagerReference.Instance.PlayersData[playerId].PlayerRef, playerType));
+            //_mainScreen.UpdateSelectedPlayerUiVisual(index, playerType);
         }
         //need to ask to Rogerio if there is a way to get the max player count from NetwrokConfigs
         if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
         {
             //checks if all players chose a different character
-            List<NetworkManager.PlayerType> tempList = (List<NetworkManager.PlayerType>)NetworkManagerReference.Instance.PlayersData.Select(x => x.Value.PlayerType);
-            var tempHashSet = new HashSet<NetworkManager.PlayerType>();
-            _mainScreen.UpdateStartGameInteractableState(tempList.All(tempHashSet.Add) && NetworkManagerReference.Instance.PlayersData.Count == NetworkManager.MaxPlayerCount);
+            List<NetworkManager.PlayerType> tempList = new List<NetworkManager.PlayerType>();
+            foreach (var playerData in NetworkManagerReference.Instance.PlayersData)
+            {
+                tempList.Add(playerData.Value.PlayerType);
+            }
+            _mainScreen.UpdateStartGameInteractableState(tempList.Distinct().Count() == tempList.Count && NetworkManagerReference.Instance.PlayersData.Count == NetworkManager.MaxPlayerCount);
         }
     }
 }

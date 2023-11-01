@@ -234,9 +234,10 @@ public class NetworkManager : NetworkBehaviour
         //});
     }
 
-    public async void CreateMatch(string sessionName, SceneRef sceneRef, Action<NetworkRunner> OnMatchCreated = null)
+    public async Task<StartGameResult> CreateMatch(string sessionName, SceneRef sceneRef, Action<NetworkRunner> OnMatchCreated = null)
     {
         var task = await InitializeNetworkRunner(_networkRunner, GameMode.Host, NetAddress.Any(), sceneRef, sessionName, OnMatchCreated);
+        return task;
     }
 
     //public void JoinMacth(SessionInfo info)
@@ -245,9 +246,10 @@ public class NetworkManager : NetworkBehaviour
     //    InitializeNetworkRunner(NetworkRunnerRef, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
     //}
 
-    public async void JoinMacth(string sessionName, Action<NetworkRunner> OnMatchCreated = null)
+    public async Task<StartGameResult> JoinMacth(string sessionName, Action<NetworkRunner> OnMatchCreated = null)
     {
         var task = await InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, sessionName, OnMatchCreated);
+        return task;
     }
 
     public static void OnPlayersDataChanged(Changed<NetworkManager> changed)

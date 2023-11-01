@@ -30,6 +30,24 @@ public class Menu : MonoBehaviour
         if ((currentCanvasOpened.Count == 1 && _alwaysStayOnThisUI && canvasCurrentNew == currentCanvasOpened.First()) || _canvasTransitionCoroutine != null) return;
         _canvasTransitionCoroutine = StartCoroutine(CanvasTransition(canvasCurrentNew, 1f));
     }
+    /// <summary>
+    /// clears all the stack of UIs and opens AlwaysStayOnThisUI canvas, if AlwaysStayOnThisUI is null needs to recive a canvas to open
+    /// </summary>
+    /// <param name="canvasToReturn"></param>
+    protected void ReturnToDefaultUI(CanvasGroup canvasToReturn = null)
+    {
+        if (_alwaysStayOnThisUI)
+        {
+            ChangeCurrentCanvas(_alwaysStayOnThisUI);
+            currentCanvasOpened.Clear();
+            currentCanvasOpened.Push(_alwaysStayOnThisUI);
+        }
+        else
+        {
+            currentCanvasOpened.Clear();
+            ChangeCurrentCanvas(canvasToReturn);
+        }
+    }
 
     protected CanvasGroup GetPreviousCanvasGroup(out CanvasGroup result)
     {

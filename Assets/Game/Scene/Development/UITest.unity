@@ -4269,7 +4269,7 @@ MonoBehaviour:
   _openDuration: 0.2
   _alwaysStayOnThisUI: {fileID: 1771838620}
   _selectCharacterUI: {fileID: 916293265}
-  _playerSelectionUIs:
+  _characterSelectionUIs:
   - {fileID: 5935885530292076476}
   - {fileID: 1577904375}
   - {fileID: 1797779508}
@@ -6330,7 +6330,7 @@ MonoBehaviour:
         m_MethodName: ChangeCurrentCanvas
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1435078980}
+          m_ObjectArgument: {fileID: 720149925}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -9815,7 +9815,7 @@ MonoBehaviour:
         m_MethodName: ChangeCurrentCanvas
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1435078980}
+          m_ObjectArgument: {fileID: 720149925}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
