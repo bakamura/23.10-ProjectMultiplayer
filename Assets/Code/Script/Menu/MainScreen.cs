@@ -16,6 +16,8 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     [Header("General Components")]
     [SerializeField] private CanvasGroup _selectCharacterUI;
     [SerializeField] private CharacterSelection[] _characterSelectionUIs;
+    [SerializeField] private UpdatePlayerSelectionScript _updatePlayerSelectionScript;
+    [SerializeField] private TMP_Text _serverNameText;
 
     [Header("Server Components")]
     [SerializeField] private TMP_InputField _serverInputField;
@@ -61,23 +63,6 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
         }
     }
 
-    private void UpdatePlayersDataDictionary()
-    {
-        if (_updatePlayerDataDictionary)
-        {
-            for (int i = 0; i < _playerDataCacheToAdd.Count; i++)
-            {
-                NetworkManagerReference.Instance.PlayersData.Add(_playerDataCacheToAdd[i].PlayerRef.PlayerId, _playerDataCacheToAdd[i]);
-            }
-            for (int i = 0; i < _playerDataCacheToRemove.Count; i++)
-            {
-                NetworkManagerReference.Instance.PlayersData.Remove(_playerDataCacheToRemove[i].PlayerRef.PlayerId);
-            }
-            _playerDataCacheToAdd.Clear();
-            _playerDataCacheToRemove.Clear();
-            _updatePlayerDataDictionary = false;
-        }
-    }
 
     public void QuitGame()
     {
@@ -152,27 +137,76 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     private void OnMatchResult(NetworkRunner runner)
     {
         currentCanvasOpened.Peek().interactable = true;
+        _serverNameText.text = $"Session Name: {runner.SessionInfo.Name}";
         ChangeCurrentCanvas(_selectCharacterUI);
         //UpdateSelectPlayerUI();
         ClearFeedbackText();
     }
+
     /// <summary>
     /// Makes the Local Player can interact only with its respective Character Selection UI and updates all Character Selection UIs visual
     /// </summary>
     private void UpdateSelectPlayerUI()
     {
+        //NetworkManagerReference.Instance.SavePlayerServerIDToLocalPlayer();
         //Enables Interaction of local player to its respective SelectCharacter UI 
         if (!_alreadyAssignedWithCharacterUI)
         {
-            _characterSelectionUIs[NetworkManagerReference.Instance.PlayersData.Count - 1].SetIsInteractable(true);
+            _characterSelectionUIs[_updatePlayerSelectionScript.RecentlyJoinedPlayer.PlayerId].SetIsInteractable(true);
+            NetworkManagerReference.LocalPlayerIDInServer = _updatePlayerSelectionScript.RecentlyJoinedPlayer.PlayerId;
             _alreadyAssignedWithCharacterUI = true;
+            //foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
+            //{
+            //    if (!_updatePlayerSelectionScript.RecentlyJoinedPlayer.Contains(player.Key))
+            //    {
+            //        Debug.Log("found the new");
+            //        _characterSelectionUIs[player.Key.PlayerId].SetIsInteractable(true);
+            //        NetworkManagerReference.LocalPlayerIDInServer = player.Key.PlayerId;
+            //        _alreadyAssignedWithCharacterUI = true;
+            //        willUpdatePreviousPlayersInDictionary = true;
+            //        break;
+            //    }
+            //}
         }
+        
         //updates visual for all UIs
-        int currentIndex = NetworkManagerReference.Instance.PlayersData.Count - 1;
-        foreach (var values in NetworkManagerReference.Instance.PlayersData)
+        foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
         {
-            _characterSelectionUIs[currentIndex].UpdateSelectedPlayer(values.Value.PlayerType);
-            currentIndex--;
+            //Debug.Log($"the user {values.Key} is now {values.Value.PlayerType}");
+            _characterSelectionUIs[player.Key.PlayerId].UpdateSelectedPlayer(player.Value.PlayerType);
+        }
+        //Debug.Log($"new previous size is {_updatePlayerSelectionScript.PreviousPlayersInDictionary.Count}");
+    }
+
+    [ContextMenu("PrintPlayers")]
+    private void PrintPlayers()
+    {
+        foreach (var values in NetworkManagerReference.Instance.PlayersDictionary)
+        {
+            Debug.Log($"the player id is {values.Key.PlayerId}");
+        }
+    }
+
+    private void UpdatePlayersDataDictionary()
+    {
+        if (_updatePlayerDataDictionary)
+        {
+            for (int i = 0; i < _playerDataCacheToAdd.Count; i++)
+            {
+                //Debug.Log("addning new player to Dictionary");
+                //if (NetworkManagerReference.Instance.PlayersData.ContainsKey(_playerDataCacheToAdd[i].PlayerRef))
+                //{
+                //    Debug.Log($"the user that just joined is already in the dictionary");
+                //}
+                NetworkManagerReference.Instance.PlayersDictionary.Add(_playerDataCacheToAdd[i].PlayerRef, _playerDataCacheToAdd[i]);
+            }
+            for (int i = 0; i < _playerDataCacheToRemove.Count; i++)
+            {
+                NetworkManagerReference.Instance.PlayersDictionary.Remove(_playerDataCacheToRemove[i].PlayerRef);
+            }
+            _playerDataCacheToAdd.Clear();
+            _playerDataCacheToRemove.Clear();
+            _updatePlayerDataDictionary = false;
         }
     }
 
@@ -184,21 +218,22 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
     #region Fusion Callbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"the player joined has the ID off {player.PlayerId}");
         if (runner.IsServer)
         {
+            _updatePlayerSelectionScript.RecentlyJoinedPlayer = player;
+            //Debug.Log($"the player that joined is {player.PlayerId}");
             _updatePlayerDataDictionary = true;
-            //NetworkManagerReference.Instance.PlayersData.Add(player.PlayerId, new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
-            _playerDataCacheToAdd.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
+            _playerDataCacheToAdd.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy/*, player.PlayerId*/));
         }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer && NetworkManagerReference.Instance.PlayersData.ContainsKey(player.PlayerId))
+        if (runner.IsServer && NetworkManagerReference.Instance.PlayersDictionary.ContainsKey(player))
         {
             _updatePlayerDataDictionary = true;
-            _playerDataCacheToRemove.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy));
-            //NetworkManagerReference.Instance.PlayersData.Remove(player.PlayerId);
+            _playerDataCacheToRemove.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy/*, player.PlayerId*/));
         }
     }
 
@@ -214,7 +249,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        NetworkManagerReference.Instance.PlayersData.Clear();
+        NetworkManagerReference.Instance.PlayersDictionary.Clear();
         ReturnToDefaultUI();
     }
 
@@ -225,7 +260,7 @@ public class MainScreen : Menu, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        if (runner.IsServer) NetworkManagerReference.Instance.PlayersData.Clear();
+        if (runner.IsServer) NetworkManagerReference.Instance.PlayersDictionary.Clear();
         ReturnToDefaultUI();
     }
 

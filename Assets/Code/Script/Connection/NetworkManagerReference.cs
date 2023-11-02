@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class NetworkManagerReference : MonoBehaviour
 {
+    public static int LocalPlayerIDInServer;
+    //public static bool AlreadySavedId;
+
     private static NetworkManager _instance;
+    //private static List<byte> _playerKeysAlreadyUsed = new List<byte>();
+    //private static System.Random _randomGenerator = new System.Random();
+    //private static byte[] _byteArrayCached = new byte[1];
+
     public static NetworkManager Instance
     {
         get
@@ -33,4 +40,20 @@ public class NetworkManagerReference : MonoBehaviour
             return _instance;
         }
     }
+
+    //public static byte GenerateRandomPlayerID()
+    //{
+    //    _randomGenerator.NextBytes(_byteArrayCached);
+    //    while (_playerKeysAlreadyUsed.Contains(_byteArrayCached[0]))
+    //    {
+    //        _randomGenerator.NextBytes(_byteArrayCached);
+    //    }
+    //    _playerKeysAlreadyUsed.Add(_byteArrayCached[0]);
+    //    return _byteArrayCached[0];
+    //}
+
+    //public static void RemoveKeyFromList(byte key)
+    //{
+    //    _playerKeysAlreadyUsed.Remove(key);
+    //}
 }

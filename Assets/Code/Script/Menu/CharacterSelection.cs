@@ -23,9 +23,10 @@ public class CharacterSelection : MonoBehaviour
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
-        for(int i = 0; i < _characterOptions.Length; i++)
+        UpdatePlayerSelectionScript temp = FindObjectOfType<UpdatePlayerSelectionScript>();
+        for (int i = 0; i < _characterOptions.Length; i++)
         {
-            _characterOptions[i].UpdatePlayerSelectionScript = FindObjectOfType<UpdatePlayerSelectionScript>();
+            _characterOptions[i].UpdatePlayerSelectionScript = temp;
             _characterOptions[i].Button.onClick.AddListener(_characterOptions[i].UpdateCharacterSelected);
         }
     }

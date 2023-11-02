@@ -17,7 +17,7 @@ public class NetworkManager : NetworkBehaviour
     private Queue<INetworkRunnerCallbacks> _requestedCallbacks = new Queue<INetworkRunnerCallbacks>();
 
     public const byte MaxPlayerCount = 3;
-    [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersData => default;
+    [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<PlayerRef, PlayerData> PlayersDictionary => default;
     public NetworkSceneManagerDefault NetworkSceneManager
     {
         get
@@ -78,66 +78,34 @@ public class NetworkManager : NetworkBehaviour
     [Serializable]
     public struct PlayerData : INetworkStruct
     {
+        //public byte PlayerID;
         public PlayerRef PlayerRef;
         public PlayerType PlayerType;
 
-        public PlayerData(PlayerRef playerRef, PlayerType playerType)
+        public PlayerData(PlayerRef playerRef, PlayerType playerType/*, byte playerId*/)
         {
             PlayerRef = playerRef;
             PlayerType = playerType;
+            //PlayerID = playerId;
         }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        bool isNull = true;
-        foreach (var value in PlayersDictionaryContainer.PlayersData)
+        foreach (var value in PlayersDictionary)
         {
-            isNull = false;
-            break;
-        }
-        if (!isNull)
-        {
-            foreach (var value in PlayersData)
-            {
-                if (!PlayersDictionaryContainer.PlayersData.ContainsKey(value.Key))
-                    PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
-                else
-                    PlayersDictionaryContainer.PlayersData[value.Key] = value.Value;
-            }
-        }
+            //if (!PlayersDictionaryContainer.CanReadFromDictionary()) PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
+            //else if(!PlayersDictionaryContainer.PlayersData.ContainsKey(value.Key)) PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
+            //else PlayersDictionaryContainer.PlayersData.Set(value.Key, value.Value);
+            if (!PlayersDictionaryContainer.PlayersData.ContainsKey(value.Key)) PlayersDictionaryContainer.PlayersData.Add(value.Key, value.Value);
+            else PlayersDictionaryContainer.PlayersData[value.Key] = value.Value;
+        }        
     }
 
     public override void Spawned()
     {
-        //if (!NetworkRunnerRef)
-        //{
-        //    GameObject temp = Instantiate(_networkSetupPrefab, null);
-        //    NetworkRunnerRef = temp.GetComponent<NetworkRunner>();
-        //    NetworkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
-        //}
-
         UpdateCallbacks();
     }
-
-    //private void Awake()
-    //{
-    //    if (!NetworkRunnerRef)
-    //    {
-    //        GameObject temp = Instantiate(_networkSetupPrefab, null);
-    //        NetworkRunnerRef = temp.GetComponent<NetworkRunner>();
-    //        NetworkSceneManager = temp.GetComponent<NetworkSceneManagerDefault>();
-    //    }
-    //    //if (_instance != this)
-    //    //{
-    //    //    Destroy(this);
-    //    //    return;
-    //    //}
-    //}
-    //private void Start()
-    //{
-    //    UpdateCallbacks();
-    //}
 
     public override void FixedUpdateNetwork()
     {
@@ -149,18 +117,12 @@ public class NetworkManager : NetworkBehaviour
     {
         if (!_transferedDataFromStaticDictionary)
         {
-            PlayersDictionaryContainer.StartClass();
-            bool isNull = true;
-            foreach (var value in PlayersDictionaryContainer.PlayersData)
-            {
-                isNull = false;
-                break;
-            }
-            if (!isNull)
+            PlayersDictionaryContainer.StartDictionary();
+            if (PlayersDictionaryContainer.PlayersData != null)
             {
                 foreach (var value in PlayersDictionaryContainer.PlayersData)
                 {
-                    PlayersData.Add(value.Key, value.Value);
+                    PlayersDictionary.Add(value.Key, value.Value);
                 }
             }
             _transferedDataFromStaticDictionary = true;
@@ -222,16 +184,6 @@ public class NetworkManager : NetworkBehaviour
             Debug.LogError($"Erron on Initializing Game Match, Reason: {task.ShutdownReason}");
         }
         return task;
-        //return runner.StartGame(new StartGameArgs
-        //{
-        //    GameMode = gameMode,
-        //    Address = netAddress,
-        //    Scene = sceneRef,
-        //    SessionName = SessionName,
-        //    Initialized = initialized,
-        //    CustomLobbyName = SessionName,
-        //    SceneManager = NetworkSceneManager
-        //});
     }
 
     public async Task<StartGameResult> CreateMatch(string sessionName, SceneRef sceneRef, Action<NetworkRunner> OnMatchCreated = null)
@@ -254,6 +206,7 @@ public class NetworkManager : NetworkBehaviour
 
     public static void OnPlayersDataChanged(Changed<NetworkManager> changed)
     {
+        Debug.Log("Dictionary Changed");
         changed.Behaviour.OnPlayersDataChanged();
     }
 
@@ -261,7 +214,19 @@ public class NetworkManager : NetworkBehaviour
     {
         OnPlayersDataChangedCallback?.Invoke();
     }
-
+    //public void SavePlayerServerIDToLocalPlayer()
+    //{
+    //    //when a player joins the match he is always the first element in the dictionary
+    //    if(!NetworkManagerReference.AlreadySavedId)
+    //    {
+    //        foreach(var player in PlayersDictionary)
+    //        {
+    //            NetworkManagerReference.LocalPlayerIDInServer = player.Key;
+    //            NetworkManagerReference.AlreadySavedId = true;
+    //            break;
+    //        }
+    //    }
+    //}
     //public bool JoinLobby(string sessionName)
     //{
     //    return JoinLobbyTask(sessionName) != null;

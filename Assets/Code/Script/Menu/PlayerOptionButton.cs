@@ -28,7 +28,8 @@ public class PlayerOptionButton : MonoBehaviour
     }
 
     public void UpdateCharacterSelected()
-    {
-        UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.Instance.NetworkRunner.LocalPlayer.PlayerId, _playerType);
+    {        
+        UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.Instance.NetworkRunner.LocalPlayer, _playerType);
+        //UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.LocalPlayerIDInServer, _playerType);
     }
 }
