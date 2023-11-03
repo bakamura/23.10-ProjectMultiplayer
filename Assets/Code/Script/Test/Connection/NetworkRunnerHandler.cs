@@ -53,6 +53,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         if (_callbacksRequested.Contains(request))
         {
             _callbacksRequested.Remove(request);
+            _networkRunner.RemoveCallbacks(request);
         }
     }
 
@@ -83,6 +84,7 @@ public class NetworkRunnerHandler : MonoBehaviour
             Scene = sceneRef,
             SessionName = SessionName,
             Initialized = initialized,
+            CustomLobbyName = SessionName,
             SceneManager = _networkSceneManager
         });
     }   
@@ -98,6 +100,12 @@ public class NetworkRunnerHandler : MonoBehaviour
         InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
     }
 
+    public void JoinMacth(string sessionName)
+    {
+        //para os clientes n é necessário ter o id da cena correta pois eles sempre irão para a cena em q o servdor estiver
+        InitializeNetworkRunner(_networkRunner, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, sessionName, null);
+    }
+
     public bool JoinLobby(string sessionName)
     {
        return JoinLobbyTask(sessionName) != null;
@@ -105,7 +113,7 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     private async Task JoinLobbyTask(string sessionName)
     {
-        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.ClientServer, sessionName);
+        StartGameResult operation = await _networkRunner.JoinSessionLobby(SessionLobby.Custom, sessionName);
 
         if (!operation.Ok)
         {

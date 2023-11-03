@@ -19,12 +19,12 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         
-        //if (runner.IsServer)
-        //{
-        //    Debug.Log("OnPlayerJoined this is server. Spawning player");
-        //    runner.Spawn(_playerPrefab, _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, player);
-        //}
-        //else Debug.Log("OnPlayerJoined");
+        if (runner.IsServer)
+        {
+            Debug.Log("OnPlayerJoined this is server. Spawning player");
+            runner.Spawn(_playersPrefabs[0], _spawnPoints.GetRandomSpawnPoint(), Quaternion.identity, player);
+        }
+        else Debug.Log("OnPlayerJoined");
 
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -33,7 +33,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         //{
         //    input.Set(_inputHandler.GetInputData());
         //}
-
+        Debug.Log($"Input recieved form {runner.LocalPlayer.PlayerId} Local Player is {NetworkRunnerHandler.NetworkRunner.LocalPlayer.PlayerId} this callback is playing ion server {NetworkRunnerHandler.NetworkRunner.IsServer}");
         if (_inputHandler == null && NetworkPlayer.LocalPlayer != null)
         {
             _inputHandler = NetworkPlayer.LocalPlayer.GetComponent<CharacterInputHandler>();
@@ -128,7 +128,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        Debug.Log("OnShutdown");
+        Debug.Log($"OnShutdown {shutdownReason}");
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)

@@ -31,7 +31,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     private Dictionary<string, SessionInfo> _currentSessions = new Dictionary<string, SessionInfo>();
     private void Start()
     {
-        NetworkRunnerHandler.AddCallbackToNetworkRunner(this);
+        //NetworkRunnerHandler.AddCallbackToNetworkRunner(this);
     }
     #region FusionCallbacks
     public void OnConnectedToServer(NetworkRunner runner)
@@ -79,9 +79,11 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         //if (!runner.IsServer)
         //{
         //runner.SetPlayerObject(player, null);
-        
-        NetworkRunnerHandler.PlayersRefs.Add(player);
-        _playerCountText.text = $"Players: {NetworkRunnerHandler.PlayersRefs.Count}";
+        if (runner.IsServer)
+        {
+            NetworkRunnerHandler.PlayersRefs.Add(player);
+            _playerCountText.text = $"Players: {NetworkRunnerHandler.PlayersRefs.Count}";
+        }
         //}
     }
 
@@ -137,6 +139,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!string.IsNullOrEmpty(_sessionNameText.text))
         {
+            NetworkRunnerHandler.AddCallbackToNetworkRunner(this);
             _networkHandler.CreateMatch(_sessionNameText.text, SceneManager.GetActiveScene().buildIndex);
             _createMatchUI.SetActive(false);
             _startGameUI.SetActive(true);
@@ -200,6 +203,11 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    public void EnterMatch()
+    {
+        _networkHandler.JoinMacth(_sessionNameToFind.text);
+    }
+
     public void StartMatch()
     {
         //int n = 0;
@@ -217,7 +225,7 @@ public class LobbyUI : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         NetworkRunnerHandler.RemoveCallbackToNetworkRunner(this);
     }
