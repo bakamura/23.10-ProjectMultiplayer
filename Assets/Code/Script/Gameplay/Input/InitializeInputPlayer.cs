@@ -45,7 +45,7 @@ public class InitializeInputPlayer : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
-        //NetworkManagerReference.Instance.NetworkRunner.AddCalbacks(this);
+        NetworkManagerReference.Instance.NetworkRunner.AddCalbacks(this);
         if (_instance != this)
         {
             Destroy(this);

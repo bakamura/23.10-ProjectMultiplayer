@@ -2,91 +2,143 @@ using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
+using System.Collections.Generic;
+using UnityEditor;
 
-public class SpawnAnchor : MonoBehaviour, INetworkRunnerCallbacks {
-    
-    public Vector3 GetSpawnPosition(NetworkManager.PlayerType playerType)
+public class SpawnAnchor : MonoBehaviour, INetworkRunnerCallbacks
+{
+    [SerializeField] private PlayersPrefabList _playersPrefabList;
+    [SerializeField] private SpawnPointData[] _spawnPoints;
+    private Vector3 _initialPosition;
+    [Serializable]
+    private struct SpawnPointData
     {
-        return Vector3.zero;
+        public NetworkManager.PlayerType PlayerType;
+        public Vector3 SpawnPoint;
     }
 
+#if UNITY_EDITOR
+    [Header("Debug")]
+    [SerializeField] private float _debugGizmoSize;
+    [SerializeField] private Vector3 _textOffset = Vector3.up;
+    [SerializeField] private Color _debugGizmoColor;
+#endif
+
+    private void Awake()
+    {
+        _initialPosition = transform.position;
+    }
+
+    public Vector3 GetSpawnPosition(NetworkManager.PlayerType playerType)
+    {
+        for (int i = 0; i < _spawnPoints.Length; i++)
+        {
+            if (_spawnPoints[i].PlayerType == playerType)
+                return _spawnPoints[i].SpawnPoint + _initialPosition;
+        }
+        Debug.LogError($"the player type {playerType} does not have a spawn point defined");
+        return Vector3.zero;
+    }
+    #region Photon Callbacks
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        if (runner.IsServer)
+        {
+            foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
+            {
+                runner.Spawn(_playersPrefabList.GetPlayerPrefab(player.Value.PlayerType), GetSpawnPosition(player.Value.PlayerType), Quaternion.identity, player.Key);
+            }
+        }
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
-        throw new NotImplementedException();
+        
     }
+    #endregion
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if(_spawnPoints != null)
+        {
+            Gizmos.color = _debugGizmoColor;
+            for (int i = 0; i < _spawnPoints.Length; i++)
+            {
+                Gizmos.DrawSphere(_spawnPoints[i].SpawnPoint + transform.position, _debugGizmoSize);
+                Handles.Label(_spawnPoints[i].SpawnPoint + transform.position + _textOffset, _spawnPoints[i].PlayerType.ToString());
+            }
+        }
+    }
+#endif
 }
