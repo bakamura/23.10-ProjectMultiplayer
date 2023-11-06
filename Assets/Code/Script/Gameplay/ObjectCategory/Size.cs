@@ -1,5 +1,4 @@
 using Fusion;
-using System.Collections;
 using UnityEngine;
 
 namespace ObjectCategory.Size {
@@ -28,6 +27,7 @@ namespace ObjectCategory.Size {
         private float _progressC;
         private Vector3 _sizeInitialC;
         private Vector3 _sizeFinalC;
+        [Networked] private TickTimer _sizeChangeTimer { get; set; }
 
         // Access
         public SizeType Type { get { return _sizeType; } }
@@ -39,33 +39,35 @@ namespace ObjectCategory.Size {
             transform.localScale = _sizeScalesVector[(int)_sizeType];
         }
 
-        public void ChangeSize(bool isGrowing) {
-            if(!_isTransitioning) StartCoroutine(ChangeSizeRoutine(isGrowing));
-        }
-
-        private IEnumerator ChangeSizeRoutine(bool isGrowing) {
-            _isTransitioning = true;
-
-            if (isGrowing) {
-                if (_sizeType != SizeType.B) _sizeType++;
-            }
-            else {
-                if (_sizeType != SizeType.S) _sizeType--;
-            }
-
-            _progressC = 0;
-            _sizeInitialC = transform.localScale;
-            _sizeFinalC = _sizeScalesVector[(int)_sizeType];
-
-            while (_progressC < 1) {
-                _progressC += Time.deltaTime / _triPhaseTransitionDuration;
+        public override void FixedUpdateNetwork() {
+            if (_sizeChangeTimer.IsRunning) {
+                _progressC += Time.fixedDeltaTime / _triPhaseTransitionDuration;
                 transform.localScale = Vector3.Lerp(_sizeInitialC, _sizeFinalC, _progressC);
 
-                yield return null;
+                if (_sizeChangeTimer.RemainingTicks(Runner) <= 1) {
+                    _sizeChangeTimer = TickTimer.None;
+                    transform.localScale = _sizeFinalC;
+                    _isTransitioning = false;
+                }
             }
-            transform.localScale = _sizeFinalC;
+        }
 
-            _isTransitioning = false;
+        public void ChangeSize(bool isGrowing) {
+            if (!_isTransitioning) {
+                _isTransitioning = true;
+
+                if (isGrowing) {
+                    if (_sizeType != SizeType.B) _sizeType++;
+                }
+                else {
+                    if (_sizeType != SizeType.S) _sizeType--;
+                }
+
+                _progressC = 0;
+                _sizeInitialC = transform.localScale;
+                _sizeFinalC = _sizeScalesVector[(int)_sizeType];
+                _sizeChangeTimer = TickTimer.CreateFromSeconds(Runner, _triPhaseTransitionDuration);
+            }
         }
 
     }
