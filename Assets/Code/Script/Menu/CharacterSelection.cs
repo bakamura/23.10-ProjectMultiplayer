@@ -2,44 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class CharacterSelection : MonoBehaviour
+namespace ProjectMultiplayer.UI
 {
-    private CanvasGroup _canvasGroup;
-    //{
-    //    get
-    //    {
-    //        if (!_canvasGroup)
-    //        {
-    //            _canvasGroup = GetComponent<CanvasGroup>();
-    //        }
-    //        return _canvasGroup;
-    //    }
-    //    set { }
-    //}
-    [SerializeField] private PlayerOptionButton[] _characterOptions;
-    private PlayerOptionButton _currentlySelected;
-
-    private void Awake()
+    public class CharacterSelection : MonoBehaviour
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
-        UpdatePlayerSelectionScript temp = FindObjectOfType<UpdatePlayerSelectionScript>();
-        for (int i = 0; i < _characterOptions.Length; i++)
+        private CanvasGroup _canvasGroup;
+        //{
+        //    get
+        //    {
+        //        if (!_canvasGroup)
+        //        {
+        //            _canvasGroup = GetComponent<CanvasGroup>();
+        //        }
+        //        return _canvasGroup;
+        //    }
+        //    set { }
+        //}
+        [SerializeField] private PlayerOptionButton[] _characterOptions;
+        private PlayerOptionButton _currentlySelected;
+
+        private void Awake()
         {
-            _characterOptions[i].UpdatePlayerSelectionScript = temp;
-            _characterOptions[i].Button.onClick.AddListener(_characterOptions[i].UpdateCharacterSelected);
+            _canvasGroup = GetComponent<CanvasGroup>();
+            UpdatePlayerSelectionScript temp = FindObjectOfType<UpdatePlayerSelectionScript>();
+            for (int i = 0; i < _characterOptions.Length; i++)
+            {
+                _characterOptions[i].UpdatePlayerSelectionScript = temp;
+                _characterOptions[i].Button.onClick.AddListener(_characterOptions[i].UpdateCharacterSelected);
+            }
+        }
+
+        public void UpdateSelectedPlayer(NetworkManager.PlayerType playerType)
+        {
+            if (_currentlySelected) _currentlySelected.Image.color = Color.white;
+            _characterOptions[(int)playerType].Image.color = Color.green;
+            _currentlySelected = _characterOptions[(int)playerType];
+        }
+
+        public void SetIsInteractable(bool isInteractable)
+        {
+            _canvasGroup.interactable = isInteractable;
         }
     }
-
-    public void UpdateSelectedPlayer(NetworkManager.PlayerType playerType)
-    {
-        if (_currentlySelected) _currentlySelected.Image.color = Color.white;
-        _characterOptions[(int)playerType].Image.color = Color.green;
-        _currentlySelected = _characterOptions[(int)playerType];
-    }
-
-    public void SetIsInteractable(bool isInteractable)
-    {
-        _canvasGroup.interactable = isInteractable;
-    }    
 }

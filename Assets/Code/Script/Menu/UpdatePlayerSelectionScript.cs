@@ -4,46 +4,49 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 
-public class UpdatePlayerSelectionScript : NetworkBehaviour
+namespace ProjectMultiplayer.UI
 {
-    private MainScreen _mainScreen;
-    [Networked] public PlayerRef RecentlyJoinedPlayer { get; set; }
-
-    private void Awake()
+    public class UpdatePlayerSelectionScript : NetworkBehaviour
     {
-        _mainScreen = FindObjectOfType<MainScreen>();
-    }
+        private MainScreen _mainScreen;
+        [Networked] public PlayerRef RecentlyJoinedPlayer { get; set; }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void Rpc_UpdatePlayerTypeUI(PlayerRef playerID, NetworkManager.PlayerType playerType)
-    {
-        Debug.Log($"the user {playerID} is changing to {playerType}");
-        if (NetworkManagerReference.Instance.PlayersDictionary.ContainsKey(playerID))
+        private void Awake()
         {
-            //int index = NetworkManagerReference.Instance.PlayersData.Count - 1;
-            //foreach (var values in NetworkManagerReference.Instance.PlayersData)
-            //{
-            //    if (values.Key == playerId) break;
-            //    index--;
-            //}
-            NetworkManagerReference.Instance.PlayersDictionary.Set(playerID, new NetworkManager.PlayerData(playerID, playerType));
-            //NetworkManagerReference.Instance.PlayersDictionary.Set(playerID, new NetworkManager.PlayerData(NetworkManagerReference.Instance.PlayersDictionary[playerID].PlayerRef, playerType, playerID));
-            //_mainScreen.UpdateSelectedPlayerUiVisual(index, playerType);
+            _mainScreen = FindObjectOfType<MainScreen>();
         }
-        else
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        public void Rpc_UpdatePlayerTypeUI(PlayerRef playerID, NetworkManager.PlayerType playerType)
         {
-            Debug.LogWarning($"the user {playerID} is not in the dictionary");
-        }
-        //need to ask to Rogerio if there is a way to get the max player count from NetwrokConfigs
-        if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
-        {
-            //checks if all players chose a different character
-            List<NetworkManager.PlayerType> tempList = new List<NetworkManager.PlayerType>();
-            foreach (var playerData in NetworkManagerReference.Instance.PlayersDictionary)
+            Debug.Log($"the user {playerID} is changing to {playerType}");
+            if (NetworkManagerReference.Instance.PlayersDictionary.ContainsKey(playerID))
             {
-                tempList.Add(playerData.Value.PlayerType);
+                //int index = NetworkManagerReference.Instance.PlayersData.Count - 1;
+                //foreach (var values in NetworkManagerReference.Instance.PlayersData)
+                //{
+                //    if (values.Key == playerId) break;
+                //    index--;
+                //}
+                NetworkManagerReference.Instance.PlayersDictionary.Set(playerID, new NetworkManager.PlayerData(playerID, playerType));
+                //NetworkManagerReference.Instance.PlayersDictionary.Set(playerID, new NetworkManager.PlayerData(NetworkManagerReference.Instance.PlayersDictionary[playerID].PlayerRef, playerType, playerID));
+                //_mainScreen.UpdateSelectedPlayerUiVisual(index, playerType);
             }
-            _mainScreen.UpdateStartGameInteractableState(tempList.Distinct().Count() == tempList.Count && NetworkManagerReference.Instance.PlayersDictionary.Count == NetworkManager.MaxPlayerCount);
+            else
+            {
+                Debug.LogWarning($"the user {playerID} is not in the dictionary");
+            }
+            //need to ask to Rogerio if there is a way to get the max player count from NetwrokConfigs
+            if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
+            {
+                //checks if all players chose a different character
+                List<NetworkManager.PlayerType> tempList = new List<NetworkManager.PlayerType>();
+                foreach (var playerData in NetworkManagerReference.Instance.PlayersDictionary)
+                {
+                    tempList.Add(playerData.Value.PlayerType);
+                }
+                _mainScreen.UpdateStartGameInteractableState(tempList.Distinct().Count() == tempList.Count && NetworkManagerReference.Instance.PlayersDictionary.Count == NetworkManager.MaxPlayerCount);
+            }
         }
     }
 }

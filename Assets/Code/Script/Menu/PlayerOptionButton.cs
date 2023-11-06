@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerOptionButton : MonoBehaviour
+namespace ProjectMultiplayer.UI
 {
-    [SerializeField] private NetworkManager.PlayerType _playerType;
-    [HideInInspector] public UpdatePlayerSelectionScript UpdatePlayerSelectionScript;
-    private UnityEngine.UI.Button _button;
-    private Image _image;
-    public Image Image
+    public class PlayerOptionButton : MonoBehaviour
     {
-        get
+        [SerializeField] private NetworkManager.PlayerType _playerType;
+        [HideInInspector] public UpdatePlayerSelectionScript UpdatePlayerSelectionScript;
+        private UnityEngine.UI.Button _button;
+        private Image _image;
+        public Image Image
         {
-            if (_image == null) _image = GetComponent<Image>();
-            return _image;
+            get
+            {
+                if (_image == null) _image = GetComponent<Image>();
+                return _image;
+            }
         }
-    }
 
-    public UnityEngine.UI.Button Button
-    {
-        get
+        public UnityEngine.UI.Button Button
         {
-            if (!_button) _button = GetComponent<UnityEngine.UI.Button>();
-            return _button;
+            get
+            {
+                if (!_button) _button = GetComponent<UnityEngine.UI.Button>();
+                return _button;
+            }
         }
-    }
 
-    public void UpdateCharacterSelected()
-    {        
-        UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.Instance.NetworkRunner.LocalPlayer, _playerType);
-        //UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.LocalPlayerIDInServer, _playerType);
+        public void UpdateCharacterSelected()
+        {
+            UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.Instance.NetworkRunner.LocalPlayer, _playerType);
+            //UpdatePlayerSelectionScript.Rpc_UpdatePlayerTypeUI(NetworkManagerReference.LocalPlayerIDInServer, _playerType);
+        }
     }
 }
