@@ -27,6 +27,7 @@ public class SpawnAnchor : MonoBehaviour, INetworkRunnerCallbacks
     private void Awake()
     {
         _initialPosition = transform.position;
+        NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
     }
 
     public Vector3 GetSpawnPosition(NetworkManager.PlayerType playerType)
@@ -38,6 +39,11 @@ public class SpawnAnchor : MonoBehaviour, INetworkRunnerCallbacks
         }
         Debug.LogError($"the player type {playerType} does not have a spawn point defined");
         return Vector3.zero;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
     }
     #region Photon Callbacks
     public void OnConnectedToServer(NetworkRunner runner)
