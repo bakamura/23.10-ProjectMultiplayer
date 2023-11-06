@@ -1,8 +1,7 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Player.Actions {
+namespace ProjectMultiplayer.Player.Actions {
     public class Lift : PlayerAction {
 
         [Header("Parameters")]
@@ -17,11 +16,11 @@ namespace Player.Actions {
 
         private Transform _liftedObject;
 
-        public override void Spawned() {
+        private void Awake() {
             _friendThrowupForce = Vector3.up * _friendThrowupVelocity;
         }
 
-        public override void DoAction(InputAction.CallbackContext input) {
+        public override void DoAction(Ray cameraRay) {
             if (!_liftedObject) {
                 Size sizeCache;
                 foreach (Collider col in Physics.OverlapBox(transform.position + _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
@@ -45,7 +44,7 @@ namespace Player.Actions {
         }
 
 
-        public override void StopAction(InputAction.CallbackContext input) { }
+        public override void StopAction() { }
 
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Player.Actions {
+namespace ProjectMultiplayer.Player.Actions {
     public class JumpGlide : PlayerAction {
 
         [Header("Parameters")]
@@ -21,23 +20,23 @@ namespace Player.Actions {
         [SerializeField] private Vector3 _checkGroundBox;
         [SerializeField] private LayerMask _checkGroundLayer;
 
-        public override void Spawned() {
+        private void Awake() {
             _jumpForce = Vector3.up * Mathf.Sqrt(2 * -Physics.gravity.y * _jumpHeight);
             _glideForce = Vector3.up * _glideSpeed;
         }
 
-        public override void FixedUpdateNetwork() {
+        private void FixedUpdate() {
             if (_isGliding && _player.Rigidbody.velocity.y < 0) _player.Rigidbody.AddForce(_glideForce, ForceMode.Acceleration);
         }
 
-        public override void DoAction(InputAction.CallbackContext input) {
+        public override void DoAction(Ray cameraRay) {
             if (IsGrounded()) {
                 _player.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
             }
             _isGliding = true;
         }
 
-        public override void StopAction(InputAction.CallbackContext input) {
+        public override void StopAction() {
             _isGliding = false;
         }
 

@@ -1,13 +1,13 @@
-using UnityEngine.InputSystem;
+using UnityEngine;
 
-namespace Player.Actions {
+namespace ProjectMultiplayer.Player.Actions {
     public class Recall : PlayerAction {
 
-        public override void DoAction(InputAction.CallbackContext input) {
+        public override void DoAction(Ray cameraRay) {
             Recallable.Recall();
         }
 
-        public override void StopAction(InputAction.CallbackContext input) { }
+        public override void StopAction() { }
 
     }
 }

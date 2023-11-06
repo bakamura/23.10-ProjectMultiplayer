@@ -1,8 +1,7 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Player.Actions {
+namespace ProjectMultiplayer.Player.Actions {
     public class Carry : PlayerAction {
 
         [Header("Parameters")]
@@ -12,7 +11,7 @@ namespace Player.Actions {
 
         private Transform _carriedObject;
 
-        public override void DoAction(InputAction.CallbackContext input) {
+        public override void DoAction(Ray cameraRay) {
             if (!_carriedObject) {
                 Size sizeCache;
                 foreach (Collider col in Physics.OverlapBox(transform.position + _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
@@ -33,9 +32,7 @@ namespace Player.Actions {
             }
         }
 
-        public override void StopAction(InputAction.CallbackContext input) {
-            throw new System.NotImplementedException();
-        }
+        public override void StopAction() {}
 
     }
 }

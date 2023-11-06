@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Player.Actions {
+namespace ProjectMultiplayer.Player.Actions {
     public class Break : PlayerAction {
 
         [Header("Parameters")]
@@ -13,14 +12,14 @@ namespace Player.Actions {
 
         [SerializeField] private float _friendPushForce;
 
-        public override void DoAction(InputAction.CallbackContext input) {
+        public override void DoAction(Ray cameraRay) {
             foreach (Collider collider in Physics.OverlapBox(transform.position + _actionOffset, _actionBox / 2)) {
                 collider.GetComponent<Breakable>()?.TryBreak(_player.Size.Type);
                 collider.GetComponent<Player>()?.Rigidbody.AddForce((collider.transform.position - transform.position).normalized * _friendPushForce, ForceMode.VelocityChange);
             }
         }
 
-        public override void StopAction(InputAction.CallbackContext input) { }
+        public override void StopAction() { }
 
     }
 }

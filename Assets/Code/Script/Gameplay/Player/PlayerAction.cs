@@ -1,14 +1,13 @@
-using Fusion;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
-namespace Player.Actions {
-    public abstract class PlayerAction : NetworkBehaviour {
+namespace ProjectMultiplayer.Player.Actions {
+    public abstract class PlayerAction : MonoBehaviour {
 
         protected static Player _player;
 
-        public abstract void DoAction(InputAction.CallbackContext input);
+        public abstract void DoAction(Ray cameraRay);
 
-        public abstract void StopAction(InputAction.CallbackContext input);
+        public abstract void StopAction();
 
     }
 }

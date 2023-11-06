@@ -1,11 +1,10 @@
 using Fusion;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-using Player.Actions;
+using ProjectMultiplayer.Player.Actions;
 
-namespace Player {
+namespace ProjectMultiplayer.Player {
     public class Player : NetworkBehaviour, IPlayerLeft {
 
         //private bool _canAct = true;
@@ -39,14 +38,14 @@ namespace Player {
 
         private Vector2 _inputV2Cache;
         private Vector3 _inputV2ToV3 = Vector3.zero;
-        private WaitForSeconds _damagedAnimationWait;
+        //private WaitForSeconds _damagedAnimationWait;
+        [Networked] private TickTimer _respawnTimer { get; set; }
 
         // Access
 
         public InputPlayer Input { get { return _input; } }
         public Rigidbody Rigidbody { get { return _rigidbody; } }
-        public Camera Camera { get { return _camera; } }
-        public Vector3 ScreenSize { get { return _screenSize; } }
+        private Ray _rayCache;
         public Size Size { get { return _size; } }
 
         public override void Spawned() {
@@ -68,8 +67,6 @@ namespace Player {
             }
 
             _input.Enable();
-            _input.Player.MovePlayer.performed += Movement;
-            _input.Player.Action1.performed += _action1.DoAction;
 
             _rigidbody = GetComponent<Rigidbody>();
             _camera = Camera.main;
@@ -78,6 +75,29 @@ namespace Player {
             _shieldAbility = GetComponent<Shield>();
 
             //_damagedAnimationWait = DURAÇÃO DA ANIMAÇÃO DE MORTE
+        }
+
+        public override void FixedUpdateNetwork() {
+            if (GetInput(out DataPackInput inputData)) {
+                _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
+                if (inputData.Jump) _actionJump.DoAction(_rayCache);
+                if (inputData.Action1) _action1.DoAction(_rayCache);
+                if (inputData.Action2) _action2.DoAction(_rayCache);
+                if (inputData.Action3) _action3.DoAction(_rayCache);
+            }
+
+            if (_respawnTimer.Expired(Runner)) {
+                _respawnTimer = TickTimer.None; 
+
+                foreach (SpawnAnchor anchor in FindObjectsOfType<SpawnAnchor>()) {
+                    if (_type == anchor.PlayerType) {
+                        transform.position = anchor.transform.position;
+                        break;
+                    }
+                }
+
+                // Respawn Animation
+            }
         }
 
         private void Movement(InputAction.CallbackContext input) {
@@ -89,23 +109,14 @@ namespace Player {
         }
 
         public void TryDamage() {
-            if (_shieldAbility != null || !_shieldAbility.IsShielded) StartCoroutine(DamagedRoutine());
+            if (_shieldAbility != null || !_shieldAbility.IsShielded) Damaged();
             else _shieldAbility.onBlockBullet.Invoke();
         }
 
-        private IEnumerator DamagedRoutine() {
+        private void Damaged() {
             // Damaged Animation
 
-            yield return _damagedAnimationWait;
-
-            foreach (SpawnAnchor anchor in FindObjectsOfType<SpawnAnchor>()) {
-                if (_type == anchor.PlayerType) {
-                    transform.position = anchor.transform.position;
-                    break;
-                }
-            }
-
-            // Respawn Animation
+            _respawnTimer = TickTimer.CreateFromSeconds(Runner, 3f);
         }
 
         public void PlayerLeft(PlayerRef player) {

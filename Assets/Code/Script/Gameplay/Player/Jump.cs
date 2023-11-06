@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Player.Actions {
+namespace ProjectMultiplayer.Player.Actions {
     public class Jump : PlayerAction {
 
         [Header("Parameters")]
@@ -15,15 +14,15 @@ namespace Player.Actions {
         [SerializeField] private Vector3 _checkGroundBox;
         [SerializeField] private LayerMask _checkGroundLayer;
 
-        public override void Spawned() {
+        private void Awake() {
             _jumpForce = Vector3.up * Mathf.Sqrt(2 * -Physics.gravity.y * _jumpHeight);
         }
 
-        public override void DoAction(InputAction.CallbackContext input) {
+        public override void DoAction(Ray cameraRay) {
             if (IsGrounded()) _player.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
         }
 
-        public override void StopAction(InputAction.CallbackContext input) { }
+        public override void StopAction() { }
 
         private bool IsGrounded() {
             return Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox, Quaternion.identity, _checkGroundLayer) != null;
