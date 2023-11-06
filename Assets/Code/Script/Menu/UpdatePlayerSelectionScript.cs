@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System.Linq;
+using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.UI
 {
