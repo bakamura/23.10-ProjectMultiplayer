@@ -3,17 +3,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 using ProjectMultiplayer.Player.Actions;
+using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.Player {
     public class Player : NetworkBehaviour, IPlayerLeft {
 
         //private bool _canAct = true;
 
-        [Header("Singleton")]
+        [Header("Type")]
 
-        private Player _instanceHeavy;
-        private Player _instanceSpringer;
-        private Player _instanceNavi;
         [SerializeField] private NetworkManager.PlayerType _type;
 
         [Header("Movement")]
@@ -49,23 +47,6 @@ namespace ProjectMultiplayer.Player {
         public Size Size { get { return _size; } }
 
         public override void Spawned() {
-            switch (_type) {
-                case NetworkManager.PlayerType.Heavy:
-                    if (!_instanceHeavy) _instanceHeavy = this;
-                    else if (_instanceHeavy != this) Destroy(gameObject);
-                    break;
-
-                case NetworkManager.PlayerType.Springer:
-                    if (!_instanceSpringer) _instanceSpringer = this;
-                    else if (_instanceSpringer != this) Destroy(gameObject);
-                    break;
-
-                case NetworkManager.PlayerType.Navi:
-                    if (!_instanceNavi) _instanceNavi = this;
-                    else if (_instanceNavi != this) Destroy(gameObject);
-                    break;
-            }
-
             _input.Enable();
 
             _rigidbody = GetComponent<Rigidbody>();
@@ -73,8 +54,6 @@ namespace ProjectMultiplayer.Player {
             _screenSize[0] = Screen.width;
             _screenSize[1] = Screen.height;
             _shieldAbility = GetComponent<Shield>();
-
-            //_damagedAnimationWait = DURAÇÃO DA ANIMAÇÃO DE MORTE
         }
 
         public override void FixedUpdateNetwork() {
@@ -87,14 +66,9 @@ namespace ProjectMultiplayer.Player {
             }
 
             if (_respawnTimer.Expired(Runner)) {
-                _respawnTimer = TickTimer.None; 
+                _respawnTimer = TickTimer.None;
 
-                foreach (SpawnAnchor anchor in FindObjectsOfType<SpawnAnchor>()) {
-                    if (_type == anchor.PlayerType) {
-                        transform.position = anchor.transform.position;
-                        break;
-                    }
-                }
+                transform.position = FindObjectOfType<SpawnAnchor>().GetSpawnPosition(_type);
 
                 // Respawn Animation
             }

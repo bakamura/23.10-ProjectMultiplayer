@@ -5,6 +5,9 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.InputSystem;
+using ProjectMultiplayer.Connection;
+
+using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.Player
 {
@@ -47,7 +50,7 @@ namespace ProjectMultiplayer.Player
 
         private void Awake()
         {
-            NetworkManagerReference.Instance.NetworkRunner.AddCalbacks(this);
+            NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
             if (_instance != this)
             {
                 Destroy(this);
