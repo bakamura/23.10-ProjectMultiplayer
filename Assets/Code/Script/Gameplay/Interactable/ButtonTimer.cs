@@ -10,7 +10,7 @@ namespace ProjectMultiplayer.ObjectCategory
     {
         [SerializeField] private IActivable[] _activablesList;
         [SerializeField, Min(0f)] private float _timerDuration;
-        private bool _hasBeenPressed;
+        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenPressed { get; set; }
         private float _currentTime;
 
         public void Interact()
@@ -28,10 +28,10 @@ namespace ProjectMultiplayer.ObjectCategory
 
         private IEnumerator Timer()
         {
-            while(_currentTime < _timerDuration)
+            while (_currentTime < _timerDuration)
             {
                 _currentTime += Time.deltaTime;
-                if(_currentTime >= _timerDuration)
+                if (_currentTime >= _timerDuration)
                 {
                     _hasBeenPressed = false;
                 }
@@ -39,5 +39,18 @@ namespace ProjectMultiplayer.ObjectCategory
             }
         }
 
+        private static void OnInteractedChanged(Changed<ButtonTimer> changed)
+        {
+            changed.Behaviour.UpdateFeedback(changed.Behaviour._hasBeenPressed);
+        }
+        /// <summary>
+        /// This method will play any feedbacks that needs to hapen when this object changes ex: particles, materias, sounds etc
+        /// </summary>
+        /// <param name="isActive"></param>
+        private void UpdateFeedback(bool isActive)
+        {
+            //TODO SEE WHAT WILL CHANGE IN VISUAL
+            transform.localScale = isActive ? Vector3.one : Vector3.one / 2;
+        }
     }
 }
