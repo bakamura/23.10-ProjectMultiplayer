@@ -1,11 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Shield : PlayerAction {
+namespace ProjectMultiplayer.Player.Actions {
+    public class Shield : PlayerAction {
 
-    public override void DoAction() {
+        private bool _isShielded = false;
+        public bool IsShielded { get { return _isShielded; } }
+        public UnityEvent onBlockBullet = new UnityEvent();
+
+        public override void DoAction(Ray cameraRay) {
+            _isShielded = true;
+        }
+
+        public override void StopAction() {
+            _isShielded = false;
+        }
 
     }
-
 }

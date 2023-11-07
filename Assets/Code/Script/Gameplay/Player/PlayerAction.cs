@@ -1,7 +1,13 @@
-using Fusion;
+using UnityEngine;
 
-public abstract class PlayerAction : NetworkBehaviour {
+namespace ProjectMultiplayer.Player.Actions {
+    public abstract class PlayerAction : MonoBehaviour {
 
-    public abstract void DoAction();
+        protected static Player _player;
 
+        public abstract void DoAction(Ray cameraRay);
+
+        public abstract void StopAction();
+
+    }
 }
