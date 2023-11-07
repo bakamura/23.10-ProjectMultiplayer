@@ -1,7 +1,6 @@
-using Fusion;
 using UnityEngine;
 
-namespace ObjectCategory.Recall {
+namespace ProjectMultiplayer.ObjectCategory.Recall {
     public class RecallMark : MonoBehaviour {
 
         private static RecallMark _instance;

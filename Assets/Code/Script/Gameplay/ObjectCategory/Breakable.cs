@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-namespace ObjectCategory.Break {
+namespace ProjectMultiplayer.ObjectCategory.Break {
     public class Breakable : NetworkBehaviour {
 
         [Header("Parameter")]
