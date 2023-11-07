@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-namespace ObjectCategory.Size {
+namespace ProjectMultiplayer.ObjectCategory.Size {
     public class Size : NetworkBehaviour {
 
         [Header("Parameters")]

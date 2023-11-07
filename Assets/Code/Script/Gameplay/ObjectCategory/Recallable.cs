@@ -2,7 +2,7 @@ using Fusion;
 using System.Collections;
 using UnityEngine;
 
-namespace ObjectCategory.Recall {
+namespace ProjectMultiplayer.ObjectCategory.Recall {
     public class Recallable : NetworkBehaviour {
 
         [Header("Parameters")]

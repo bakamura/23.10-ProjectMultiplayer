@@ -1,8 +1,10 @@
 
-public interface IActivable {
-    
-    public void Activate();
+namespace ProjectMultiplayer.ObjectCategory {
+    public interface IActivable {
 
-    public void Deactivate();
+        public void Activate();
 
+        public void Deactivate();
+
+    }
 }
