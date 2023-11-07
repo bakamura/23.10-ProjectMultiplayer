@@ -1,4 +1,5 @@
 using UnityEngine;
+using ProjectMultiplayer.Connection;
 
 [CreateAssetMenu(fileName = "PlayersPrefabList", menuName = "Data/PlayerPrefabList")]
 public class PlayersPrefabList : ScriptableObject
