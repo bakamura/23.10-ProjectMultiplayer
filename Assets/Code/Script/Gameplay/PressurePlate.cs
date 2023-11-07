@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PressurePlate : NetworkBehaviour {
+namespace ProjectMultiplayer.ObjectCategory
+{
+    public class PressurePlate : NetworkBehaviour
+    {
 
 
 
+    }
 }

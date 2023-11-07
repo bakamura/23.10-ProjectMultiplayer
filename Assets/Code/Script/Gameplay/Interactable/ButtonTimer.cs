@@ -2,11 +2,17 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectMultiplayer.ObjectCategory;
 
-public class ButtonTimer : NetworkBehaviour, IInteractable {
+namespace ProjectMultiplayer.ObjectCategory
+{
+    public class ButtonTimer : NetworkBehaviour, IInteractable
+    {
 
-    public void Interact() {
+        public void Interact()
+        {
+
+        }
 
     }
-
 }
