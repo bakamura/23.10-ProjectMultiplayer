@@ -5,6 +5,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.InputSystem;
+using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.Player
 {
