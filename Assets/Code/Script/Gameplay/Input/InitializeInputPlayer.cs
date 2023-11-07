@@ -7,6 +7,8 @@ using System;
 using UnityEngine.InputSystem;
 using ProjectMultiplayer.Connection;
 
+using ProjectMultiplayer.Connection;
+
 namespace ProjectMultiplayer.Player
 {
     public class InitializeInputPlayer : MonoBehaviour, INetworkRunnerCallbacks
@@ -48,7 +50,7 @@ namespace ProjectMultiplayer.Player
 
         private void Awake()
         {
-            NetworkManagerReference.Instance.NetworkRunner.AddCalbacks(this);
+            NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
             if (_instance != this)
             {
                 Destroy(this);
