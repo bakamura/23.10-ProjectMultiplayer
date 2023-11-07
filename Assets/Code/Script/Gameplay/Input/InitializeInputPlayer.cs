@@ -1,12 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.InputSystem;
-using ProjectMultiplayer.Connection;
-
 using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.Player
