@@ -41,15 +41,14 @@ namespace ProjectMultiplayer.UI
 
         protected override void Awake()
         {
-            base.Awake();            
-            for(int i = 0; i < NetworkManager.MaxPlayerCount; i++)
+            base.Awake();
+            for (int i = 0; i < NetworkManager.MaxPlayerCount; i++)
             {
                 _currentlyAvailableSelectorUIs.Add(i);
             }
         }
 
         private void Start()
-
         {
             NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
             NetworkManagerReference.Instance.OnPlayersDataChangedCallback += UpdateSelectPlayerUI;
@@ -58,12 +57,12 @@ namespace ProjectMultiplayer.UI
 
         private void OnEnable()
         {
-            //InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed += ReturnToPreviousCanvas;
+            InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed += ReturnToPreviousCanvas;
         }
 
         private void OnDestroy()
         {
-            //InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
+            InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
             NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUI;
             NetworkManagerReference.Instance.OnFixedNetworkUpdate -= UpdatePlayersDataDictionary;
             NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
