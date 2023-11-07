@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using ProjectMultiplayer.ObjectCategory.Break;
+
 namespace ProjectMultiplayer.Player.Actions {
     public class Break : PlayerAction {
 

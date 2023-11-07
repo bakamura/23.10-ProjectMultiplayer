@@ -28,7 +28,6 @@ namespace ProjectMultiplayer.Player {
 
         [Header("Cache")]
 
-        private InputPlayer _input = new InputPlayer();
         private Rigidbody _rigidbody;
         private Camera _camera;
         private Vector3 _screenSize;
@@ -42,14 +41,11 @@ namespace ProjectMultiplayer.Player {
 
         // Access
 
-        public InputPlayer Input { get { return _input; } }
         public Rigidbody Rigidbody { get { return _rigidbody; } }
         private Ray _rayCache;
         public Size Size { get { return _size; } }
 
         public override void Spawned() {
-            _input.Enable();
-
             _rigidbody = GetComponent<Rigidbody>();
             _camera = Camera.main;
             _screenSize[0] = Screen.width;

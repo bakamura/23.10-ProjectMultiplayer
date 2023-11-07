@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using ProjectMultiplayer.ObjectCategory;
+
 namespace ProjectMultiplayer.Player.Actions {
     public class Interact : PlayerAction {
 

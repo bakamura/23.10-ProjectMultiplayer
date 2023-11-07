@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using ProjectMultiplayer.ObjectCategory.Size;
+
 namespace ProjectMultiplayer.Player.Actions {
     public class SizeChange : PlayerAction {
 
