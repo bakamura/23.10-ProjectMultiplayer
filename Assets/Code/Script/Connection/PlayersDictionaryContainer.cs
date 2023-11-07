@@ -5,11 +5,11 @@ namespace ProjectMultiplayer.Connection
 {
     public static class PlayersDictionaryContainer
     {
-        public static Dictionary<PlayerRef, NetworkManager.PlayerData> PlayersData;
+        public static Dictionary<int, NetworkManager.PlayerData> PlayersData;
 
         static PlayersDictionaryContainer()
         {
-            PlayersData = new Dictionary<PlayerRef, NetworkManager.PlayerData>();
+            PlayersData = new Dictionary<int, NetworkManager.PlayerData>();
         }
         /// <summary>
         /// Call this to start the dictionary

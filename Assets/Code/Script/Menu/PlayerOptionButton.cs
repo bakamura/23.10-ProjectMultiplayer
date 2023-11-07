@@ -12,6 +12,7 @@ namespace ProjectMultiplayer.UI
         [HideInInspector] public UpdatePlayerSelectionScript UpdatePlayerSelectionScript;
         private UnityEngine.UI.Button _button;
         private Image _image;
+        private RectTransform _rectTransform;
         public Image Image
         {
             get
@@ -29,6 +30,16 @@ namespace ProjectMultiplayer.UI
                 return _button;
             }
         }
+
+        public RectTransform RectTransform
+        {
+            get
+            {
+                if (_rectTransform == null) _rectTransform = GetComponent<RectTransform>();
+                return _rectTransform;
+            }
+        }
+        public NetworkManager.PlayerType PlayerType => _playerType;
 
         public void UpdateCharacterSelected()
         {

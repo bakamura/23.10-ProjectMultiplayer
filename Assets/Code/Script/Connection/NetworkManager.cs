@@ -19,7 +19,7 @@ namespace ProjectMultiplayer.Connection
         private Queue<INetworkRunnerCallbacks> _requestedCallbacks = new Queue<INetworkRunnerCallbacks>();
 
         public const byte MaxPlayerCount = 3;
-        [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<PlayerRef, PlayerData> PlayersDictionary => default;
+        [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersDictionary => default;
         public NetworkSceneManagerDefault NetworkSceneManager
         {
             get
@@ -70,7 +70,7 @@ namespace ProjectMultiplayer.Connection
         }
         public Action OnPlayersDataChangedCallback;
         public Action OnFixedNetworkUpdate;
-        private bool _transferedDataFromStaticDictionary;
+        private bool _transferedDataFromStaticDictionary;        
         public enum PlayerType
         {
             Heavy,
@@ -79,16 +79,14 @@ namespace ProjectMultiplayer.Connection
         }
         [Serializable]
         public struct PlayerData : INetworkStruct
-        {
-            //public byte PlayerID;
+        {            
             public PlayerRef PlayerRef;
             public PlayerType PlayerType;
 
-            public PlayerData(PlayerRef playerRef, PlayerType playerType/*, byte playerId*/)
+            public PlayerData(PlayerRef playerRef, PlayerType playerType)
             {
                 PlayerRef = playerRef;
                 PlayerType = playerType;
-                //PlayerID = playerId;
             }
         }
 

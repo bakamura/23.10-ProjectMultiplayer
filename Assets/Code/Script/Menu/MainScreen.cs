@@ -18,7 +18,7 @@ namespace ProjectMultiplayer.UI
     {
         [Header("General Components")]
         [SerializeField] private CanvasGroup _selectCharacterUI;
-        [SerializeField] private CharacterSelection[] _characterSelectionUIs;
+        [SerializeField] private CharacterSelection _characterSelectionUI;
         [SerializeField] private UpdatePlayerSelectionScript _updatePlayerSelectionScript;
         [SerializeField] private TMP_Text _serverNameText;
 
@@ -34,9 +34,19 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private Text _feedbackText;
 
         private bool _updatePlayerDataDictionary;
-        private bool _alreadyAssignedWithCharacterUI;
+        private bool _alreadySavedServerIDLocaly;
         List<NetworkManager.PlayerData> _playerDataCacheToAdd = new List<NetworkManager.PlayerData>();
         List<NetworkManager.PlayerData> _playerDataCacheToRemove = new List<NetworkManager.PlayerData>();
+        private List<int> _currentlyAvailableSelectorUIs = new List<int>();
+
+        protected override void Awake()
+        {
+            base.Awake();            
+            for(int i = 0; i < NetworkManager.MaxPlayerCount; i++)
+            {
+                _currentlyAvailableSelectorUIs.Add(i);
+            }
+        }
 
         private void Start()
 
@@ -152,44 +162,59 @@ namespace ProjectMultiplayer.UI
         /// </summary>
         private void UpdateSelectPlayerUI()
         {
-            //NetworkManagerReference.Instance.SavePlayerServerIDToLocalPlayer();
-            //Enables Interaction of local player to its respective SelectCharacter UI 
-            if (!_alreadyAssignedWithCharacterUI)
+            if (!_alreadySavedServerIDLocaly)
             {
-                _characterSelectionUIs[_updatePlayerSelectionScript.RecentlyJoinedPlayer.PlayerId].SetIsInteractable(true);
-                NetworkManagerReference.LocalPlayerIDInServer = _updatePlayerSelectionScript.RecentlyJoinedPlayer.PlayerId;
-                _alreadyAssignedWithCharacterUI = true;
-                //foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
-                //{
-                //    if (!_updatePlayerSelectionScript.RecentlyJoinedPlayer.Contains(player.Key))
-                //    {
-                //        Debug.Log("found the new");
-                //        _characterSelectionUIs[player.Key.PlayerId].SetIsInteractable(true);
-                //        NetworkManagerReference.LocalPlayerIDInServer = player.Key.PlayerId;
-                //        _alreadyAssignedWithCharacterUI = true;
-                //        willUpdatePreviousPlayersInDictionary = true;
-                //        break;
-                //    }
-                //}
+                NetworkManagerReference.LocalPlayerIDInServer = _updatePlayerSelectionScript.RecentlyJoinedPlayer;
+                _alreadySavedServerIDLocaly = true;
             }
 
             //updates visual for all UIs
             foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
             {
-                //Debug.Log($"the user {values.Key} is now {values.Value.PlayerType}");
-                _characterSelectionUIs[player.Key.PlayerId].UpdateSelectedPlayer(player.Value.PlayerType);
+                _characterSelectionUI.ActivatePlayerSelectorVisual(_updatePlayerSelectionScript.PlayersSelectorUIDictionary[player.Key],
+                    NetworkManagerReference.Instance.PlayersDictionary[player.Key].PlayerType,
+                    player.Key == NetworkManagerReference.LocalPlayerIDInServer);
             }
-            //Debug.Log($"new previous size is {_updatePlayerSelectionScript.PreviousPlayersInDictionary.Count}");
+            #region Old Version
+            ////NetworkManagerReference.Instance.SavePlayerServerIDToLocalPlayer();
+            ////Enables Interaction of local player to its respective SelectCharacter UI 
+            //if (!_alreadyAssignedWithCharacterUI)
+            //{
+            //    _characterSelectionUIs[_updatePlayerSelectionScript.RecentlyJoinedPlayer.PlayerId].SetIsInteractable(true);
+            //    NetworkManagerReference.LocalPlayerIDInServer = _updatePlayerSelectionScript.RecentlyJoinedPlayer.PlayerId;
+            //    _alreadyAssignedWithCharacterUI = true;
+            //    //foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
+            //    //{
+            //    //    if (!_updatePlayerSelectionScript.RecentlyJoinedPlayer.Contains(player.Key))
+            //    //    {
+            //    //        Debug.Log("found the new");
+            //    //        _characterSelectionUIs[player.Key.PlayerId].SetIsInteractable(true);
+            //    //        NetworkManagerReference.LocalPlayerIDInServer = player.Key.PlayerId;
+            //    //        _alreadyAssignedWithCharacterUI = true;
+            //    //        willUpdatePreviousPlayersInDictionary = true;
+            //    //        break;
+            //    //    }
+            //    //}
+            //}
+
+            ////updates visual for all UIs
+            //foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
+            //{
+            //    //Debug.Log($"the user {values.Key} is now {values.Value.PlayerType}");
+            //    _characterSelectionUIs[player.Key.PlayerId].UpdateSelectedPlayer(player.Value.PlayerType);
+            //}
+            ////Debug.Log($"new previous size is {_updatePlayerSelectionScript.PreviousPlayersInDictionary.Count}");
+            #endregion
         }
 
-        [ContextMenu("PrintPlayers")]
-        private void PrintPlayers()
-        {
-            foreach (var values in NetworkManagerReference.Instance.PlayersDictionary)
-            {
-                Debug.Log($"the player id is {values.Key.PlayerId}");
-            }
-        }
+        //[ContextMenu("PrintPlayers")]
+        //private void PrintPlayers()
+        //{
+        //    foreach (var values in NetworkManagerReference.Instance.PlayersDictionary)
+        //    {
+        //        Debug.Log($"the player id is {values.Key.PlayerId}");
+        //    }
+        //}
 
         private void UpdatePlayersDataDictionary()
         {
@@ -202,11 +227,11 @@ namespace ProjectMultiplayer.UI
                     //{
                     //    Debug.Log($"the user that just joined is already in the dictionary");
                     //}
-                    NetworkManagerReference.Instance.PlayersDictionary.Add(_playerDataCacheToAdd[i].PlayerRef, _playerDataCacheToAdd[i]);
+                    NetworkManagerReference.Instance.PlayersDictionary.Add(_playerDataCacheToAdd[i].PlayerRef.PlayerId, _playerDataCacheToAdd[i]);
                 }
                 for (int i = 0; i < _playerDataCacheToRemove.Count; i++)
                 {
-                    NetworkManagerReference.Instance.PlayersDictionary.Remove(_playerDataCacheToRemove[i].PlayerRef);
+                    NetworkManagerReference.Instance.PlayersDictionary.Remove(_playerDataCacheToRemove[i].PlayerRef.PlayerId);
                 }
                 _playerDataCacheToAdd.Clear();
                 _playerDataCacheToRemove.Clear();
@@ -225,19 +250,23 @@ namespace ProjectMultiplayer.UI
             Debug.Log($"the player joined has the ID off {player.PlayerId}");
             if (runner.IsServer)
             {
-                _updatePlayerSelectionScript.RecentlyJoinedPlayer = player;
+                _updatePlayerSelectionScript.RecentlyJoinedPlayer = player.PlayerId;
                 //Debug.Log($"the player that joined is {player.PlayerId}");
                 _updatePlayerDataDictionary = true;
                 _playerDataCacheToAdd.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy/*, player.PlayerId*/));
+                _updatePlayerSelectionScript.PlayersSelectorUIDictionary.Add(player.PlayerId, _currentlyAvailableSelectorUIs[0]);
+                _currentlyAvailableSelectorUIs.RemoveAt(0);
             }
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
-            if (runner.IsServer && NetworkManagerReference.Instance.PlayersDictionary.ContainsKey(player))
+            if (runner.IsServer && NetworkManagerReference.Instance.PlayersDictionary.ContainsKey(player.PlayerId))
             {
                 _updatePlayerDataDictionary = true;
                 _playerDataCacheToRemove.Add(new NetworkManager.PlayerData(player, NetworkManager.PlayerType.Heavy/*, player.PlayerId*/));
+                _currentlyAvailableSelectorUIs.Add(_updatePlayerSelectionScript.PlayersSelectorUIDictionary[player.PlayerId]);
+                _updatePlayerSelectionScript.PlayersSelectorUIDictionary.Remove(player.PlayerId);
             }
         }
 
