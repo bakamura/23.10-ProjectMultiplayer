@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
+using ProjectMultiplayer.ObjectCategory.Size;
 
 namespace ProjectMultiplayer.Player {
     public class Player : NetworkBehaviour, IPlayerLeft {
