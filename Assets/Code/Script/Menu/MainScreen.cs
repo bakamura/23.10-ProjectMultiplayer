@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using System.Threading.Tasks;
 using ProjectMultiplayer.Connection;
+using ProjectMultiplayer.Player;
 
 namespace ProjectMultiplayer.UI
 {
