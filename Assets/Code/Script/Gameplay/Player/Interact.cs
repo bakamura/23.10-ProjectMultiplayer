@@ -1,11 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Interact : PlayerAction {
+namespace ProjectMultiplayer.Player.Actions {
+    public class Interact : PlayerAction {
 
-    public override void DoAction() {
+        [Header("Parameters")]
+
+        [SerializeField] private float _actionRange;
+
+        public override void DoAction(Ray cameraRay) {
+            if (Physics.Raycast(cameraRay, out RaycastHit hit) && 
+                Vector3.Distance(transform.position, hit.point) < _actionRange) hit.transform.GetComponent<IInteractable>()?.Interact();
+
+        }
+
+        public override void StopAction() { }
 
     }
-
 }
