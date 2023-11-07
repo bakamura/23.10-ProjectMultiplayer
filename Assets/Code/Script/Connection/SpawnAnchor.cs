@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace ProjectMultiplayer.Connection
 {
-    public class SpawnAnchor : MonoBehaviour, INetworkRunnerCallbacks
+    public class SpawnAnchor : MonoBehaviour
     {
         [SerializeField] private PlayersPrefabList _playersPrefabList;
         [SerializeField] private SpawnPointData[] _spawnPoints;
@@ -19,6 +19,7 @@ namespace ProjectMultiplayer.Connection
             public Vector3 SpawnPoint;
         }
 
+        private bool _alreadySpawnedAllPlayers;
 #if UNITY_EDITOR
         [Header("Debug")]
         [SerializeField] private float _debugGizmoSize;
@@ -29,7 +30,7 @@ namespace ProjectMultiplayer.Connection
         private void Awake()
         {
             _initialPosition = transform.position;
-            NetworkManagerReference.Instance.AddCallbackToNetworkRunner(this);
+            NetworkManagerReference.Instance.OnFixedNetworkUpdate += SpawnPlayers;
         }
 
         public Vector3 GetSpawnPosition(NetworkManager.PlayerType playerType)
@@ -43,97 +44,20 @@ namespace ProjectMultiplayer.Connection
             return Vector3.zero;
         }
 
-        private void OnDestroy()
+        private void SpawnPlayers()
         {
-            NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
-        }
-        #region Photon Callbacks
-        public void OnConnectedToServer(NetworkRunner runner)
-        {
-
-        }
-
-        public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
-        {
-
-        }
-
-        public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
-        {
-
-        }
-
-        public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-        {
-
-        }
-
-        public void OnDisconnectedFromServer(NetworkRunner runner)
-        {
-
-        }
-
-        public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
-        {
-
-        }
-
-        public void OnInput(NetworkRunner runner, NetworkInput input)
-        {
-
-        }
-
-        public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-        {
-
-        }
-
-        public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
-        {
-
-        }
-
-        public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-        {
-
-        }
-
-        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
-        {
-
-        }
-
-        public void OnSceneLoadDone(NetworkRunner runner)
-        {
-            if (runner.IsServer)
+            if (!_alreadySpawnedAllPlayers)
             {
-                foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
+                if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
                 {
-                    runner.Spawn(_playersPrefabList.GetPlayerPrefab(player.Value.PlayerType), GetSpawnPosition(player.Value.PlayerType), Quaternion.identity, player.Key);
+                    foreach (var player in NetworkManagerReference.Instance.PlayersDictionary)
+                    {
+                        NetworkManagerReference.Instance.NetworkRunner.Spawn(_playersPrefabList.GetPlayerPrefab(player.Value.PlayerType), GetSpawnPosition(player.Value.PlayerType), Quaternion.identity, player.Key);
+                    }
                 }
+                _alreadySpawnedAllPlayers = true;
             }
-        }
-
-        public void OnSceneLoadStart(NetworkRunner runner)
-        {
-
-        }
-
-        public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-        {
-
-        }
-
-        public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-        {
-
-        }
-
-        public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
-        {
-
-        }
-        #endregion
+        }        
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
