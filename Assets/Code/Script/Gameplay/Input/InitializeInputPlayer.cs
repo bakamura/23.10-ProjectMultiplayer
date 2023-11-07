@@ -30,8 +30,8 @@ namespace ProjectMultiplayer.Player
                     }
                 }
                 // se ainda n tiver uma referência da instancia, cria uma do tipo desejado
-                if (_instance == null)
-                    _instance = new GameObject($"Instance of Type: {typeof(InitializeInputPlayer)}").AddComponent<InitializeInputPlayer>();
+                //if (_instance == null)
+                //    _instance = new GameObject($"Instance of Type: {typeof(InitializeInputPlayer)}").AddComponent<InitializeInputPlayer>();
                 return _instance;
             }
         }
