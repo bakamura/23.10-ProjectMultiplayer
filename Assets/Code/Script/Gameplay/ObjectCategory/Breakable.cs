@@ -1,12 +1,27 @@
 using Fusion;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Breakable : NetworkBehaviour {
+namespace ObjectCategory.Break {
+    public class Breakable : NetworkBehaviour {
 
-    public void TryBreak(Size.SizeType breakerSize) {
+        [Header("Parameter")]
+
+        [SerializeField] private GameObject[] _objectToSpawn;
+
+        [Header("Cache")]
+
+        private Size.Size _size;
+
+        public override void Spawned() {
+            for (int i = 0; i < _objectToSpawn.Length; i++) _objectToSpawn[i] = Instantiate(_objectToSpawn[i], transform.position, transform.rotation);
+        }
+
+        public void TryBreak(Size.Size.SizeType breakerSize) {
+            if (breakerSize >= _size.Type) {
+                foreach (GameObject obj in _objectToSpawn) obj.SetActive(true);
+            }
+            gameObject.SetActive(false);
+        }
 
     }
-
 }
