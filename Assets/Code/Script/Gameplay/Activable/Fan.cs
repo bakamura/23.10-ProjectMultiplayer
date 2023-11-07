@@ -2,15 +2,22 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectMultiplayer.ObjectCategory;
 
-public class Fan : NetworkBehaviour, IActivable {
+namespace ProjectMultiplayer.ObjectCategory
+{
+    public class Fan : NetworkBehaviour, IActivable
+    {
 
-    public void Activate() {
-    
+        public void Activate()
+        {
+
+        }
+
+        public void Deactivate()
+        {
+
+        }
+
     }
-
-    public void Deactivate() {
-    
-    }
-
 }
