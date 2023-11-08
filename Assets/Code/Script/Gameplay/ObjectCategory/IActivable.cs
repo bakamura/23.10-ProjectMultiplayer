@@ -1,4 +1,4 @@
-
+using Fusion;
 namespace ProjectMultiplayer.ObjectCategory {
     public interface IActivable {
 

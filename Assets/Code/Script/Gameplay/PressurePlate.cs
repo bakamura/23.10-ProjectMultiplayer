@@ -7,9 +7,19 @@ namespace ProjectMultiplayer.ObjectCategory
 {
     public class PressurePlate : NetworkBehaviour
     {
+        [SerializeField] private List<GameObject> _activablesListReference = new List<GameObject>();
+        private IActivable[] _activableInterfaceArray;
         [SerializeField] private Size.Size.SizeType _sizeDesired;
-        [SerializeField] private IActivable[] _activablesList;
-        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenPressed { get; set; }        
+        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenPressed { get; set; }
+
+        private void Awake()
+        {
+            _activableInterfaceArray = new IActivable[_activablesListReference.Count];
+            for (int i = 0; i < _activablesListReference.Count; i++)
+            {
+                _activableInterfaceArray[i] = _activablesListReference[i].GetComponent<IActivable>();
+            }
+        }
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -18,7 +28,7 @@ namespace ProjectMultiplayer.ObjectCategory
                 Size.Size temp = collision.gameObject.GetComponent<Size.Size>();
                 if (temp && temp.Type == _sizeDesired)
                 {
-                    for (int i = 0; i < _activablesList.Length; i++) _activablesList[i].Activate();
+                    for (int i = 0; i < _activableInterfaceArray.Length; i++) _activableInterfaceArray[i].Activate();
                     _hasBeenPressed = true;                    
                 }
             }
@@ -31,7 +41,7 @@ namespace ProjectMultiplayer.ObjectCategory
                 Size.Size temp = collision.gameObject.GetComponent<Size.Size>();
                 if (temp && temp.Type == _sizeDesired)
                 {
-                    for (int i = 0; i < _activablesList.Length; i++) _activablesList[i].Deactivate();
+                    for (int i = 0; i < _activableInterfaceArray.Length; i++) _activableInterfaceArray[i].Deactivate();
                     _hasBeenPressed = false;
                 }
             }
@@ -50,6 +60,18 @@ namespace ProjectMultiplayer.ObjectCategory
         {
             //TODO SEE WHAT WILL CHANGE IN VISUAL
             transform.localScale = isActive ? Vector3.one : Vector3.one / 2;
+        }
+
+        private void OnValidate()
+        {
+            if (_activablesListReference != null)
+            {
+                for (int i = 0; i < _activablesListReference.Count; i++)
+                {
+                    if (_activablesListReference[i] && _activablesListReference[i].GetComponent<IActivable>() == null)
+                        _activablesListReference.Remove(_activablesListReference[i]);
+                }
+            }
         }
     }
 }

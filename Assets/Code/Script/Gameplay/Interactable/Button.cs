@@ -8,15 +8,25 @@ namespace ProjectMultiplayer.ObjectCategory
 {    
     public class Button : NetworkBehaviour, IInteractable, IActivable
     {
-        [SerializeField] private IActivable[] _activablesList;
+        [SerializeField] private List<GameObject> _activablesListReference = new List<GameObject>();
+        private IActivable[] _activableInterfaceArray;
         [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenPressed { get; set; }
+        private void Awake()
+        {
+            _activableInterfaceArray = new IActivable[_activablesListReference.Count];
+            for (int i = 0; i < _activablesListReference.Count; i++)
+            {
+                _activableInterfaceArray[i] = _activablesListReference[i].GetComponent<IActivable>();
+            }
+        }
+
         public void Interact()
         {
             if (!_hasBeenPressed)
             {
-                for(int i = 0; i < _activablesList.Length; i++)
+                for(int i = 0; i < _activableInterfaceArray.Length; i++)
                 {
-                    _activablesList[i].Activate();
+                    _activableInterfaceArray[i].Activate();
                 }
                 _hasBeenPressed = true;
             }
@@ -26,9 +36,9 @@ namespace ProjectMultiplayer.ObjectCategory
         {
             if (_hasBeenPressed)
             {
-                for (int i = 0; i < _activablesList.Length; i++)
+                for (int i = 0; i < _activableInterfaceArray.Length; i++)
                 {
-                    _activablesList[i].Deactivate();
+                    _activableInterfaceArray[i].Deactivate();
                 }
                 _hasBeenPressed = false;
             }
@@ -52,6 +62,18 @@ namespace ProjectMultiplayer.ObjectCategory
         {
             //TODO SEE WHAT WILL CHANGE IN VISUAL
             transform.localScale = isActive ? Vector3.one : Vector3.one / 2;
+        }
+
+        private void OnValidate()
+        {
+            if(_activablesListReference != null)
+            {
+                for(int i = 0; i < _activablesListReference.Count; i++)
+                {
+                    if (_activablesListReference[i] && _activablesListReference[i].GetComponent<IActivable>() == null) 
+                        _activablesListReference.Remove(_activablesListReference[i]);
+                }
+            }
         }
 
     }
