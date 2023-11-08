@@ -11,12 +11,19 @@ namespace ProjectMultiplayer.ObjectCategory
     {
         [SerializeField] private SpeedValueData[] _speedValues;
         [SerializeField] private LayerMask _objectsAffectedLayer;
+
+#if UNITY_EDITOR
+        [Header("Debug")]
+        [SerializeField] private bool _debugActive;
+        [SerializeField] private Color _debugColor;
+#endif
+
         [Networked(OnChanged = nameof(OnActivateChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenActivated { get; set; }
 
         private Dictionary<int, MovableObjectData> _objectsInsideArea = new Dictionary<int, MovableObjectData>();
         private Coroutine _moveObjectsCoroutine = null;
         private WaitForSeconds _delay = new WaitForSeconds(_tickDelay);
-        private const float _tickDelay = .2f;
+        private const float _tickDelay = .02f;
 
         [Serializable]
         private struct SpeedValueData
@@ -37,6 +44,11 @@ namespace ProjectMultiplayer.ObjectCategory
                 Rigidbody = rb;
             }
         }
+
+        //public override void Spawned()
+        //{
+        //    _hasBeenActivated = true;
+        //}
 
         private void OnTriggerEnter(Collider other)
         {
@@ -67,7 +79,6 @@ namespace ProjectMultiplayer.ObjectCategory
                 for (int i = 0; i < objectsInThisFrame.Length; i++)
                 {
                     RaycastHit[] hits = Physics.RaycastAll(objectsInThisFrame[i].Rigidbody.transform.position, -transform.forward, Vector3.Distance(objectsInThisFrame[i].Rigidbody.transform.position, transform.position), _objectsAffectedLayer);
-
                     if (hits == null || !CheckForBlockingCollisions(hits, objectsInThisFrame[i].SizeType))
                         objectsInThisFrame[i].Rigidbody.Rigidbody.AddForce(transform.forward * GetSpeedData(objectsInThisFrame[i].SizeType).Speed, ForceMode.Force);
                 }
@@ -134,5 +145,19 @@ namespace ProjectMultiplayer.ObjectCategory
             //TODO SEE WHAT WILL CHANGE IN VISUAL
             transform.localScale = isActive ? Vector3.one : Vector3.one / 2;
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            if (_debugActive)
+            {
+                Gizmos.color = _debugColor;
+                Gizmos.matrix = transform.localToWorldMatrix;
+                BoxCollider boxCollider = GetComponent<BoxCollider>();
+                Vector3 size = new Vector3(boxCollider.size.x * transform.localScale.x, boxCollider.size.y * transform.localScale.y, boxCollider.size.z * transform.localScale.z);
+                Gizmos.DrawCube(boxCollider.center, size);
+            }
+        }
+#endif
     }
 }
