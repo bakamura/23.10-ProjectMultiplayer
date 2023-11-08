@@ -39,6 +39,7 @@ namespace ProjectMultiplayer.ObjectCategory
                     spawnedBullet.GetComponent<Bullet>().Shoot(_shootPoint + _initialPosition, transform.forward);
                 }
                 );
+                _tickTimer = TickTimer.CreateFromSeconds(Runner, _shootDelay);
             }
         }
 #if UNITY_EDITOR

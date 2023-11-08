@@ -141,11 +141,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _shootDelay: 0
+  _shootDelay: 2
   _bulletPrefab: {fileID: 1540999314127687944, guid: 0aaf66320c1c9124e9458f62bcbdbc65, type: 3}
-  _shootPoint: {x: 0, y: 0, z: 0}
-  _debugGizmoColor: {r: 0, g: 0, b: 0, a: 0}
-  _debugGizmoSize: 0
+  _shootPoint: {x: 0, y: 0, z: 2}
+  _debugGizmoColor: {r: 0, g: 0, b: 0, a: 1}
+  _debugGizmoSize: 0.2
 --- !u!114 &4205255962778925399
 MonoBehaviour:
   m_ObjectHideFlags: 0

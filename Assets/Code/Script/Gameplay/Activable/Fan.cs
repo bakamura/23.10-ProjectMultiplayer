@@ -29,9 +29,9 @@ namespace ProjectMultiplayer.ObjectCategory
         private struct MovableObjectData
         {
             public Size.Size.SizeType SizeType;
-            public Rigidbody Rigidbody;
+            public NetworkRigidbody Rigidbody;
 
-            public MovableObjectData(Size.Size.SizeType sizeType, Rigidbody rb)
+            public MovableObjectData(Size.Size.SizeType sizeType, NetworkRigidbody rb)
             {
                 SizeType = sizeType;
                 Rigidbody = rb;
@@ -43,7 +43,7 @@ namespace ProjectMultiplayer.ObjectCategory
             Size.Size temp = other.GetComponent<Size.Size>();
             if (Runner.IsServer && _hasBeenActivated && temp && ContainsSpeedDataForSizeType(temp.Type) && !_objectsInsideArea.ContainsKey(temp.gameObject.GetHashCode()))
             {
-                _objectsInsideArea.Add(temp.gameObject.GetHashCode(), new MovableObjectData(temp.Type, temp.GetComponent<Rigidbody>()));
+                _objectsInsideArea.Add(temp.gameObject.GetHashCode(), new MovableObjectData(temp.Type, temp.GetComponent<NetworkRigidbody>()));
                 if (_moveObjectsCoroutine == null) _moveObjectsCoroutine = StartCoroutine(MoveObjects());
             }
         }
@@ -69,7 +69,7 @@ namespace ProjectMultiplayer.ObjectCategory
                     RaycastHit[] hits = Physics.RaycastAll(objectsInThisFrame[i].Rigidbody.transform.position, -transform.forward, Vector3.Distance(objectsInThisFrame[i].Rigidbody.transform.position, transform.position), _objectsAffectedLayer);
 
                     if (hits == null || !CheckForBlockingCollisions(hits, objectsInThisFrame[i].SizeType))
-                        objectsInThisFrame[i].Rigidbody.AddForce(transform.forward * GetSpeedData(objectsInThisFrame[i].SizeType).Speed, ForceMode.Force);
+                        objectsInThisFrame[i].Rigidbody.Rigidbody.AddForce(transform.forward * GetSpeedData(objectsInThisFrame[i].SizeType).Speed, ForceMode.Force);
                 }
                 yield return _delay;
             }
