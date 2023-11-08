@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using ProjectMultiplayer.ObjectCategory;
 
 namespace ProjectMultiplayer.Connection
 {
@@ -19,7 +20,7 @@ namespace ProjectMultiplayer.Connection
         private Queue<INetworkRunnerCallbacks> _requestedCallbacks = new Queue<INetworkRunnerCallbacks>();
 
         public const byte MaxPlayerCount = 3;
-        [Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersDictionary => default;
+        [HideInInspector, Networked(OnChanged = nameof(OnPlayersDataChanged), OnChangedTargets = OnChangedTargets.All), Capacity(MaxPlayerCount)] public NetworkDictionary<int, PlayerData> PlayersDictionary => default;
         public NetworkSceneManagerDefault NetworkSceneManager
         {
             get
@@ -168,6 +169,7 @@ namespace ProjectMultiplayer.Connection
 
         protected async Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
         {
+            ObjectPool pooling = new ObjectPool();
             runner.ProvideInput = true;
             var task = await runner.StartGame(new StartGameArgs
             {
@@ -177,6 +179,7 @@ namespace ProjectMultiplayer.Connection
                 SessionName = SessionName,
                 Initialized = initialized,
                 CustomLobbyName = SessionName,
+                ObjectPool = pooling,
                 SceneManager = NetworkSceneManager
             });
             if (!task.Ok)
