@@ -47,6 +47,6 @@ namespace ProjectMultiplayer.ObjectCategory
             Gizmos.color = _debugGizmoColor;
             Gizmos.DrawSphere(transform.position + _shootPoint, _debugGizmoSize);
         }
-    }
 #endif
+    }
 }
