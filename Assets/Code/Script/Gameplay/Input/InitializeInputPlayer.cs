@@ -48,7 +48,7 @@ namespace ProjectMultiplayer.Player
         private void Awake()
         {
             NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
-            if (_instance != this)
+            if (_instance != null && _instance != this)
             {
                 Destroy(this);
                 return;
