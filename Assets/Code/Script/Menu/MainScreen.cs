@@ -282,7 +282,7 @@ namespace ProjectMultiplayer.UI
 
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
-            NetworkManagerReference.Instance.PlayersDictionary.Clear();
+            //NetworkManagerReference.Instance.PlayersDictionary.Clear();
             ReturnToDefaultUI();
         }
 
