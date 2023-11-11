@@ -40,9 +40,12 @@ namespace ProjectMultiplayer.UI
         List<NetworkManager.PlayerData> _playerDataCacheToRemove = new List<NetworkManager.PlayerData>();
         private List<int> _currentlyAvailableSelectorUIs = new List<int>();
 
+        private InputAction _return;
+
         protected override void Awake()
         {
             base.Awake();
+            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Jump"];
             for (int i = 0; i < NetworkManager.MaxPlayerCount; i++)
             {
                 _currentlyAvailableSelectorUIs.Add(i);
@@ -56,22 +59,21 @@ namespace ProjectMultiplayer.UI
             NetworkManagerReference.Instance.OnFixedNetworkUpdate += UpdatePlayersDataDictionary;
         }
 
-        private void OnEnable()
-        {
-            InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed += ReturnToPreviousCanvas;
-        }
-
         private void OnDestroy()
         {
-            InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= ReturnToPreviousCanvas;
             NetworkManagerReference.Instance.OnPlayersDataChangedCallback -= UpdateSelectPlayerUI;
             NetworkManagerReference.Instance.OnFixedNetworkUpdate -= UpdatePlayersDataDictionary;
             NetworkManagerReference.Instance.RemoveCallbackToNetworkRunner(this);
         }
 
-        private void ReturnToPreviousCanvas(InputAction.CallbackContext ctx)
+        private void Update()
         {
-            if (ctx.ReadValue<float>() == 1 && GetPreviousCanvasGroup(out CanvasGroup temp))
+            if (_return.WasPressedThisFrame()) ReturnToPreviousCanvas();
+        }
+
+        private void ReturnToPreviousCanvas()
+        {
+            if (GetPreviousCanvasGroup(out CanvasGroup temp))
             {
                 ChangeCurrentCanvas(temp);
             }

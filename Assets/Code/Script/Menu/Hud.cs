@@ -12,26 +12,53 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private CanvasGroup _settingsUI;
         [SerializeField] private CanvasGroup _hudUI;
 
-        private bool _isPaused;
+        //private bool _isPaused;
 
-        private void Toggle(InputAction.CallbackContext ctx)
+        private InputAction _return;
+
+        protected override void Awake()
         {
-            if(ctx.ReadValue<float>() == 1 && _canvasTransitionCoroutine == null)
+            base.Awake();
+            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Jump"];
+            //Cancel
+            LoadControlBindings();
+        }
+
+        private void Update()
+        {
+            if (_return.WasPressedThisFrame())
             {
-                if (_isPaused) ChangeCurrentCanvas(_hudUI);                
-                else ChangeCurrentCanvas(_settingsUI);                
-                _isPaused = !_isPaused;
+                GetPreviousCanvasGroup(out CanvasGroup temp);
+                if (temp == _hudUI) UpdateKeyDisplay();
+                if(!temp)
+                {
+                    //_isPaused = true;
+                    ChangeCurrentCanvas(_settingsUI);
+                }
+                else
+                {
+                    //_isPaused = false;
+                    ChangeCurrentCanvas(temp);
+                }
             }
+        }      
+        
+        private void UpdateKeyDisplay()
+        {
+
         }
 
-        private void OnEnable()
-        {
-            InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed += Toggle;
+        public void SaveControlBindings()
+        {            
+            var rebinds = InitializeInputPlayer.Instance.PlayerActions.actions.SaveBindingOverridesAsJson();
+            PlayerPrefs.SetString("rebinds", rebinds);
         }
 
-        private void OnDisable()
+        private void LoadControlBindings()
         {
-            InitializeInputPlayer.Instance.PlayerActions.UI.Cancel.performed -= Toggle;
+            var rebinds = PlayerPrefs.GetString("rebinds");
+            if (!string.IsNullOrEmpty(rebinds))
+                InitializeInputPlayer.Instance.PlayerActions.actions.LoadBindingOverridesFromJson(rebinds);
         }
     }
 }
