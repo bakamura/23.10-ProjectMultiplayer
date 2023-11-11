@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using ProjectMultiplayer.Player;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using TMPro;
 
 namespace ProjectMultiplayer.UI
 {
     public class Hud : Menu
     {
+        [Header("Canvas References")]
         [SerializeField] private CanvasGroup _settingsUI;
         [SerializeField] private CanvasGroup _hudUI;
 
+        [Header("Inputs Display Components")]
+        [SerializeField] private TMP_Text[] _pauseTexts;
+        [SerializeField] private TMP_Text _action1Text;
+        [SerializeField] private TMP_Text _action2Text;
+        [SerializeField] private TMP_Text _action3Text;
         //private bool _isPaused;
 
         private InputAction _return;
@@ -19,14 +25,18 @@ namespace ProjectMultiplayer.UI
         protected override void Awake()
         {
             base.Awake();
-            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
             LoadControlBindings();
+            UpdateKeyDisplay();
+            //_return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
+            _return = InitializeInputPlayer.Instance.PlayerActions.actions.actionMaps[1].actions[2];
+            Debug.Log(_return);
         }
 
         private void Update()
         {
             if (_return.WasPressedThisFrame())
             {
+                Debug.Log("input");
                 GetPreviousCanvasGroup(out CanvasGroup temp);
                 if (temp == _hudUI) UpdateKeyDisplay();
                 if(!temp)
@@ -44,7 +54,13 @@ namespace ProjectMultiplayer.UI
         
         private void UpdateKeyDisplay()
         {
-
+            for(int i = 0; i < _pauseTexts.Length; i++)
+            {
+                _pauseTexts[i].text = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"].GetBindingDisplayString();
+            }
+            _action1Text.text = InitializeInputPlayer.Instance.PlayerActions.actions["Action1"].GetBindingDisplayString();
+            _action2Text.text = InitializeInputPlayer.Instance.PlayerActions.actions["Action2"].GetBindingDisplayString();
+            _action3Text.text = InitializeInputPlayer.Instance.PlayerActions.actions["Action3"].GetBindingDisplayString();
         }
 
         public void SaveControlBindings()
