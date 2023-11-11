@@ -45,7 +45,7 @@ namespace ProjectMultiplayer.UI
         protected override void Awake()
         {
             base.Awake();
-            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Jump"];
+            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
             for (int i = 0; i < NetworkManager.MaxPlayerCount; i++)
             {
                 _currentlyAvailableSelectorUIs.Add(i);

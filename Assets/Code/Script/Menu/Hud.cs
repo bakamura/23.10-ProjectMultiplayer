@@ -19,8 +19,7 @@ namespace ProjectMultiplayer.UI
         protected override void Awake()
         {
             base.Awake();
-            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Jump"];
-            //Cancel
+            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
             LoadControlBindings();
         }
 
