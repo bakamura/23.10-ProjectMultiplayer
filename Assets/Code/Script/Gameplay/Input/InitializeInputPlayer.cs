@@ -67,15 +67,6 @@ namespace ProjectMultiplayer.Player
             _action3 = PlayerActions.actions["Action3"];
         }
 
-        private void Update()
-        {
-            _dataPackInputCached.Movement = _playerMove.ReadValue<Vector2>();
-            _dataPackInputCached.Jump = _jump.WasPressedThisFrame();
-            _dataPackInputCached.Action1 = _action1.WasPressedThisFrame();
-            _dataPackInputCached.Action2 = _action2.WasPressedThisFrame();
-            _dataPackInputCached.Action3 = _action3.WasPressedThisFrame();
-        }
-
         #region Photon Callbacks
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
         {
@@ -89,6 +80,11 @@ namespace ProjectMultiplayer.Player
 
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
+            _dataPackInputCached.Movement = _playerMove.ReadValue<Vector2>();
+            _dataPackInputCached.Jump = _jump.IsPressed();
+            _dataPackInputCached.Action1 = _action1.IsPressed();
+            _dataPackInputCached.Action2 = _action2.IsPressed();
+            _dataPackInputCached.Action3 = _action3.IsPressed();
             input.Set(_dataPackInputCached);
         }
 
