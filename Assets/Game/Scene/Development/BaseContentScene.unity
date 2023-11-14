@@ -646,6 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sensitivityX: 0.25
   _sensitivityY: -0.25
+  _followTargetOffset: {x: 0, y: 0.75, z: 0}
 --- !u!114 &1261056117
 MonoBehaviour:
   m_ObjectHideFlags: 0
