@@ -27,9 +27,16 @@ namespace ProjectMultiplayer.UI
             base.Awake();
             LoadControlBindings();
             UpdateKeyDisplay();
-            //_return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
-            _return = InitializeInputPlayer.Instance.PlayerActions.actions.actionMaps[1].actions[2];
-            Debug.Log(_return);
+            _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
+        }
+        private void OnEnable()
+        {
+            _return.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _return.Disable();
         }
 
         private void Update()
