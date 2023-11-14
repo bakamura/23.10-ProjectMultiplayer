@@ -28,25 +28,25 @@ namespace ProjectMultiplayer.Player {
 
         [Header("Cache")]
 
-        private Rigidbody _rigidbody;
+        private NetworkRigidbody _nRigidbody;
         private Camera _camera;
         private Vector3 _screenSize;
         private Size _size;
         private Shield _shieldAbility;
 
-        private Vector2 _inputV2Cache;
         private Vector3 _inputV2ToV3 = Vector3.zero;
         //private WaitForSeconds _damagedAnimationWait;
         [Networked] private TickTimer _respawnTimer { get; set; }
 
         // Access
 
-        public Rigidbody Rigidbody { get { return _rigidbody; } }
+        public NetworkManager.PlayerType Type { get { return _type; } }
+        public NetworkRigidbody NRigidbody { get { return _nRigidbody; } }
         private Ray _rayCache;
         public Size Size { get { return _size; } }
 
         public override void Spawned() {
-            _rigidbody = GetComponent<Rigidbody>();
+            _nRigidbody = GetComponent<NetworkRigidbody>();
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
             _screenSize[1] = Screen.height;
@@ -56,6 +56,7 @@ namespace ProjectMultiplayer.Player {
         public override void FixedUpdateNetwork() {
             if (GetInput(out DataPackInput inputData)) {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
+                Movement(inputData.Movement);
                 if (inputData.Jump) _actionJump.DoAction(_rayCache);
                 if (inputData.Action1) _action1.DoAction(_rayCache);
                 if (inputData.Action2) _action2.DoAction(_rayCache);
@@ -71,12 +72,11 @@ namespace ProjectMultiplayer.Player {
             }
         }
 
-        private void Movement(InputAction.CallbackContext input) {
-            _inputV2Cache = input.ReadValue<Vector2>();
-            _inputV2ToV3[0] = _inputV2Cache.x;
-            _inputV2ToV3[2] = _inputV2Cache.y;
+        private void Movement(Vector2 direction) {
+            _inputV2ToV3[0] = direction.x;
+            _inputV2ToV3[2] = direction.y;
 
-            _rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);
+            _nRigidbody.Rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);
         }
 
         public void TryDamage() {

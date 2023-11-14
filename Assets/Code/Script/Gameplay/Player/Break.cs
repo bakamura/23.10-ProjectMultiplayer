@@ -17,11 +17,17 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             foreach (Collider collider in Physics.OverlapBox(transform.position + _actionOffset, _actionBox / 2)) {
                 collider.GetComponent<Breakable>()?.TryBreak(_player.Size.Type);
-                collider.GetComponent<Player>()?.Rigidbody.AddForce((collider.transform.position - transform.position).normalized * _friendPushForce, ForceMode.VelocityChange);
+                collider.GetComponent<Player>()?.NRigidbody.Rigidbody.AddForce((collider.transform.position - transform.position).normalized * _friendPushForce, ForceMode.VelocityChange);
             }
         }
 
         public override void StopAction() { }
 
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(transform.position + _actionOffset, _actionBox / 2);
+        }
+#endif
     }
 }

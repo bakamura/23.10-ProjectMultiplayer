@@ -19,7 +19,7 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         public override void DoAction(Ray cameraRay) {
-            if (IsGrounded()) _player.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
+            if (IsGrounded()) _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
         }
 
         public override void StopAction() { }

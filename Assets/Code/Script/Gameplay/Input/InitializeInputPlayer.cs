@@ -4,6 +4,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.InputSystem;
+
 using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.Player
@@ -18,7 +19,7 @@ namespace ProjectMultiplayer.Player
                 // se ainda n tiver uma referência da instancia, procura ela no GameObject
                 if (_instance == null)
                 {
-                    InitializeInputPlayer[] results = GameObject.FindObjectsOfType<InitializeInputPlayer>();
+                    InitializeInputPlayer[] results = FindObjectsOfType<InitializeInputPlayer>();
                     if (results.Length > 0)
                     {
                         if (results.Length > 1) Debug.Log($"Multiple Instances of {typeof(InitializeInputPlayer).Name} found, destroing extras");

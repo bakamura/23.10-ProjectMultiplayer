@@ -48,5 +48,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
         public override void StopAction() { }
 
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(transform.position + _liftOffset, _liftBox);
+        }
+#endif
+
     }
 }
