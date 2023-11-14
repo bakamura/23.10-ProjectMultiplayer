@@ -71,6 +71,16 @@ namespace ProjectMultiplayer.UI
             if (_return.WasPressedThisFrame()) ReturnToPreviousCanvas();
         }
 
+        private void OnEnable()
+        {
+            _return.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _return.Disable();
+        }
+
         private void ReturnToPreviousCanvas()
         {
             if (GetPreviousCanvasGroup(out CanvasGroup temp))
