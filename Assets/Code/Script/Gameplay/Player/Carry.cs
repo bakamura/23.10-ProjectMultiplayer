@@ -21,12 +21,12 @@ namespace ProjectMultiplayer.Player.Actions {
                         sizeCache = col.GetComponent<Size>();
                         if (sizeCache) {
                             _carriedObject = sizeCache.transform;
+                            _carriedObject.transform.parent = transform;
+                            _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
                             break;
                         }
                     }
                 }
-                _carriedObject.transform.parent = transform;
-                _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
             }
             else {
                 _carriedObject.transform.parent = null;
@@ -34,7 +34,7 @@ namespace ProjectMultiplayer.Player.Actions {
             }
         }
 
-        public override void StopAction() {}
+        public override void StopAction() { }
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected() {
