@@ -11,7 +11,7 @@ namespace ProjectMultiplayer.UI
 
         [SerializeField] private float _openDuration;
         [SerializeField, Tooltip("if contais something and the player tries to return on the UI, this Canvas will never close if is the only one open")] private CanvasGroup _alwaysStayOnThisUI;
-        private Coroutine _canvasTransitionCoroutine = null;
+        protected Coroutine _canvasTransitionCoroutine = null;
         //private WaitForSeconds _delay = new WaitForSeconds(_canvasTick);
         //private const float _canvasTick = .02f;
         protected Stack<CanvasGroup> _currentCanvasOpened = new Stack<CanvasGroup>();
