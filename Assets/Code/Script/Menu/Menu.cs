@@ -15,6 +15,7 @@ namespace ProjectMultiplayer.UI
         //private WaitForSeconds _delay = new WaitForSeconds(_canvasTick);
         //private const float _canvasTick = .02f;
         protected Stack<CanvasGroup> _currentCanvasOpened = new Stack<CanvasGroup>();
+        protected Action<CanvasGroup> _onTransitionEnd;
 
         protected virtual void Awake()
         {
@@ -108,6 +109,7 @@ namespace ProjectMultiplayer.UI
             newCanvas.blocksRaycasts = true;
             newCanvas.interactable = true;
 
+            _onTransitionEnd?.Invoke(newCanvas);
             _canvasTransitionCoroutine = null;
         }
 

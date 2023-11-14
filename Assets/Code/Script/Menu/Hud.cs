@@ -25,9 +25,11 @@ namespace ProjectMultiplayer.UI
         protected override void Awake()
         {
             base.Awake();
+            _onTransitionEnd += UpdateMouseDisplay;
+            Cursor.lockState = CursorLockMode.Locked;
             LoadControlBindings();
-            UpdateKeyDisplay();
             _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
+            UpdateKeyDisplay();
         }
         private void OnEnable()
         {
@@ -43,7 +45,6 @@ namespace ProjectMultiplayer.UI
         {
             if (_return.WasPressedThisFrame())
             {
-                Debug.Log("input");
                 GetPreviousCanvasGroup(out CanvasGroup temp);
                 if (temp == _hudUI) UpdateKeyDisplay();
                 if(!temp)
@@ -58,6 +59,18 @@ namespace ProjectMultiplayer.UI
                 }
             }
         }      
+
+        private void UpdateMouseDisplay(CanvasGroup currentCanvas)
+        {
+            if (currentCanvas == _hudUI)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
         
         private void UpdateKeyDisplay()
         {
