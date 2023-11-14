@@ -11,6 +11,9 @@ namespace ProjectMultiplayer.UI
     public class UpdatePlayerSelectionScript : NetworkBehaviour
     {
         private MainScreen _mainScreen;
+#if UNITY_EDITOR
+        [SerializeField] private bool _removeAllPlayersNecessity;
+#endif
         [SerializeField] private CharacterSelection _characterSelection;
         [HideInInspector, Networked] public int RecentlyJoinedPlayer { get; set; }
         [/*HideInInspector,*/ Networked(OnChanged = nameof(OnPlayersSelectorUIDictionaryChanged), OnChangedTargets = OnChangedTargets.All), Capacity(NetworkManager.MaxPlayerCount)] public NetworkDictionary<int, int> PlayersSelectorUIDictionary => default;
@@ -49,6 +52,13 @@ namespace ProjectMultiplayer.UI
                 {
                     tempList.Add(playerData.Value.PlayerType);
                 }
+#if UNITY_EDITOR
+                if (_removeAllPlayersNecessity)
+                {
+                    _mainScreen.UpdateStartGameInteractableState(tempList.Distinct().Count() == tempList.Count);
+                    return;
+                }
+#endif
                 _mainScreen.UpdateStartGameInteractableState(tempList.Distinct().Count() == tempList.Count && NetworkManagerReference.Instance.PlayersDictionary.Count == NetworkManager.MaxPlayerCount);
             }
         }
