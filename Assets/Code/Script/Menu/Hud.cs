@@ -4,6 +4,7 @@ using UnityEngine;
 using ProjectMultiplayer.Player;
 using UnityEngine.InputSystem;
 using TMPro;
+using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.UI
 {
@@ -12,15 +13,30 @@ namespace ProjectMultiplayer.UI
         [Header("Canvas References")]
         [SerializeField] private CanvasGroup _settingsUI;
         [SerializeField] private CanvasGroup _hudUI;
+        [SerializeField] private IconData[] _iconsData;
 
         [Header("Inputs Display Components")]
         [SerializeField] private TMP_Text[] _pauseTexts;
         [SerializeField] private TMP_Text _action1Text;
         [SerializeField] private TMP_Text _action2Text;
         [SerializeField] private TMP_Text _action3Text;
+
+        [Header("Test")]
+        [SerializeField] private TMP_Text _action1Name;
+        [SerializeField] private TMP_Text _action2Name;
+        [SerializeField] private TMP_Text _action3Name;
         //private bool _isPaused;
 
         private InputAction _return;
+
+        [System.Serializable]
+        private struct IconData
+        {
+            public NetworkManager.PlayerType PlayerType;
+            public string TextAction1;
+            public string TextAction2;
+            public string TextAction3;
+        }
 
         protected override void Awake()
         {
@@ -31,6 +47,12 @@ namespace ProjectMultiplayer.UI
             _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
             UpdateKeyDisplay();
         }
+
+        private void Start()
+        {
+            StartCoroutine(UpdateActionsIcons());
+        }
+
         private void OnEnable()
         {
             _return.Enable();
@@ -47,7 +69,7 @@ namespace ProjectMultiplayer.UI
             {
                 GetPreviousCanvasGroup(out CanvasGroup temp);
                 if (temp == _hudUI) UpdateKeyDisplay();
-                if(!temp)
+                if (!temp)
                 {
                     //_isPaused = true;
                     ChangeCurrentCanvas(_settingsUI);
@@ -70,11 +92,40 @@ namespace ProjectMultiplayer.UI
             {
                 Cursor.lockState = CursorLockMode.None;
             }
+        }               
+
+        private IEnumerator UpdateActionsIcons()
+        {
+            while (!CanUpdateIcons()) yield return null;
         }
-        
+
+        private bool CanUpdateIcons()
+        {
+            Player.Player[] players = FindObjectsOfType<Player.Player>();
+            if (players != null && players.Length > 0)
+            {
+                NetworkManager.PlayerType temp = NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType;
+                for (int i = 0; i < _iconsData.Length; i++)
+                {
+                    if (_iconsData[i].PlayerType == temp)
+                    {
+                        _action1Name.text = _iconsData[i].TextAction1;
+                        _action2Name.text = _iconsData[i].TextAction2;
+                        _action3Name.text = _iconsData[i].TextAction3;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void UpdateKeyDisplay()
         {
-            for(int i = 0; i < _pauseTexts.Length; i++)
+            for (int i = 0; i < _pauseTexts.Length; i++)
             {
                 _pauseTexts[i].text = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"].GetBindingDisplayString();
             }
@@ -84,7 +135,7 @@ namespace ProjectMultiplayer.UI
         }
 
         public void SaveControlBindings()
-        {            
+        {
             var rebinds = InitializeInputPlayer.Instance.PlayerActions.actions.SaveBindingOverridesAsJson();
             PlayerPrefs.SetString("rebinds", rebinds);
         }

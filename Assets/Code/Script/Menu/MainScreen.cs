@@ -33,6 +33,7 @@ namespace ProjectMultiplayer.UI
 
         [Header("Debug")]
         [SerializeField] private Text _feedbackText;
+        [SerializeField] private string _levelToLoad = "MatchTestScene";
 
         private bool _updatePlayerDataDictionary;
         private bool _alreadySavedServerIDLocaly;
@@ -136,7 +137,7 @@ namespace ProjectMultiplayer.UI
         public void StartMatch()
         {
             //TO DO get the chose level from server to open
-            NetworkManagerReference.Instance.NetworkRunner.SetActiveScene("MatchTestScene");
+            NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(_levelToLoad);
         }
 
         /// <summary>
