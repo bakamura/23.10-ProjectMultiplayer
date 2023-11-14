@@ -1,5 +1,5 @@
 {
-    "name": "Player",
+    "name": "InputPlayer",
     "maps": [
         {
             "name": "Player",
@@ -45,6 +45,15 @@
                     "name": "Action3",
                     "type": "Button",
                     "id": "bdeb8d40-4911-4d6b-b746-0efe37c49b5f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "644e1405-8fb9-4138-9dc1-29b69dc6a1c1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -192,6 +201,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Action3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "519c5675-efb0-425a-ab17-9e1edc344855",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -388,10 +408,10 @@
                 {
                     "name": "",
                     "id": "82627dcc-3b13-4ba9-841d-e4b746d6553e",
-                    "path": "*/{Cancel}",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "groups": "Keyboard&Mouse",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
