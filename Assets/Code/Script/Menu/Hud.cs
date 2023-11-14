@@ -80,7 +80,6 @@ namespace ProjectMultiplayer.UI
                     ChangeCurrentCanvas(temp);
                 }
             }
-<<<<<<< Updated upstream
         }      
 
         private void UpdateMouseDisplay(CanvasGroup currentCanvas)
@@ -93,10 +92,7 @@ namespace ProjectMultiplayer.UI
             {
                 Cursor.lockState = CursorLockMode.None;
             }
-        }
-        
-=======
-        }
+        }               
 
         private IEnumerator UpdateActionsIcons()
         {
@@ -127,19 +123,6 @@ namespace ProjectMultiplayer.UI
             }
         }
 
-        private void UpdateMouseDisplay(CanvasGroup currentCanvas)
-        {
-            if (currentCanvas == _hudUI)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-        }
-
->>>>>>> Stashed changes
         private void UpdateKeyDisplay()
         {
             for (int i = 0; i < _pauseTexts.Length; i++)
