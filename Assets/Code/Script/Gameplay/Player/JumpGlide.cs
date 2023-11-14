@@ -26,12 +26,12 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         private void FixedUpdate() {
-            if (_isGliding && _player.Rigidbody.velocity.y < 0) _player.Rigidbody.AddForce(_glideForce, ForceMode.Acceleration);
+            if (_isGliding && _player.NRigidbody.Rigidbody.velocity.y < 0) _player.NRigidbody.Rigidbody.AddForce(_glideForce, ForceMode.Acceleration);
         }
 
         public override void DoAction(Ray cameraRay) {
             if (IsGrounded()) {
-                _player.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
+                _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
             }
             _isGliding = true;
         }
