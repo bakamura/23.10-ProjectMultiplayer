@@ -47,11 +47,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Heavy_Activate
+      name: Activate
       takeName: Armature|Activate
       internalID: 2917318281195987965
       firstFrame: 0
-      lastFrame: 9
+      lastFrame: 18
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -76,7 +76,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Death
+      name: Death
       takeName: Armature|Death
       internalID: -982115091633673366
       firstFrame: 0
@@ -87,7 +87,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -105,7 +105,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Lift_Down
+      name: Lift_Down
       takeName: Armature|Lift_Down
       internalID: 5363963981846740256
       firstFrame: 0
@@ -134,7 +134,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Lift_Up
+      name: Lift_Up
       takeName: Armature|Lift_Up
       internalID: 8423843431349565185
       firstFrame: 0
@@ -163,7 +163,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_|Shield_Down
+      name: Shield_Down
       takeName: Armature|Shield_Down
       internalID: -3413954747517921814
       firstFrame: 0
@@ -192,7 +192,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Shield_Up
+      name: Shield_Up
       takeName: Armature|Shield_Up
       internalID: 7176276558078528791
       firstFrame: 0
@@ -221,7 +221,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Walk
+      name: Walk
       takeName: Armature|Walk
       internalID: 8349542763059015795
       firstFrame: 0
@@ -250,36 +250,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Walk_LiftDown
-      takeName: Armature|Walk_LiftDown
-      internalID: -4520011569248330613
-      firstFrame: 0
-      lastFrame: 8
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 1
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Heavy_Walk_LiftUp
+      name: Walk_Lift
       takeName: Armature|Walk_LiftUp
       internalID: -5563933064424767576
       firstFrame: 0
@@ -308,7 +279,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Heavy_Walk_Shield
+      name: Walk_Shield
       takeName: Armature|Walk_Shield
       internalID: -2290896460547583508
       firstFrame: 0
