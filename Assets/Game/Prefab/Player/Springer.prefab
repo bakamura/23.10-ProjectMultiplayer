@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 1650789184706367615}
   - component: {fileID: 4397504978718732112}
   - component: {fileID: 8823390516947465460}
-  - component: {fileID: 823505674057580487}
+  - component: {fileID: 5925315652806545037}
   - component: {fileID: 3878690806424562483}
+  - component: {fileID: 1500955026411046971}
   m_Layer: 0
   m_Name: Springer
   m_TagString: Untagged
@@ -81,6 +82,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1826411923759499281}
+  - {fileID: 5925315652806545037}
   - {fileID: 3878690806424562483}
   SimulationBehaviours: []
 --- !u!114 &5535785193188092347
@@ -95,12 +97,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a223227c966d24095b397f0b831f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpHeight: 0
-  _checkGroundOffset: {x: 0, y: 0, z: 0}
-  _checkGroundBox: {x: 0, y: 0, z: 0}
+  _jumpHeight: 5
+  _checkGroundOffset: {x: 0, y: 0, z: -0.5}
+  _checkGroundBox: {x: 1, y: 1, z: 1}
   _checkGroundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
 --- !u!114 &1650789184706367615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f031e98cb03b694fb2ac549d3a14433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionRange: 0
+  _actionRange: 2
 --- !u!114 &8823390516947465460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,25 +140,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995d39771c40b334ab70dd83dbe65b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionOffset: {x: 0, y: 0, z: 0}
-  _actionBox: {x: 0, y: 0, z: 0}
-  _friendPushForce: 0
---- !u!54 &823505674057580487
-Rigidbody:
+  _actionOffset: {x: 0, y: 0, z: 1}
+  _actionBox: {x: 1, y: 2, z: 1}
+  _friendPushForce: 3
+--- !u!114 &5925315652806545037
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7624451880831849821}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4826338109c51c64faae16ca536645ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _sizeType: 1
+  _triPhase: 0
+  _triPhaseTransitionDuration: 1
+  _sizeScales:
+  - 0.5
+  - 1
+  - 2
 --- !u!114 &3878690806424562483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +191,22 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!54 &1500955026411046971
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7624451880831849821}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &8322185057319787258
 GameObject:
   m_ObjectHideFlags: 0
