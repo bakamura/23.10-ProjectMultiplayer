@@ -16,7 +16,7 @@ namespace ProjectMultiplayer.UI
 #endif
         [SerializeField] private CharacterSelection _characterSelection;
         [HideInInspector, Networked] public int RecentlyJoinedPlayer { get; set; }
-        [/*HideInInspector,*/ Networked(OnChanged = nameof(OnPlayersSelectorUIDictionaryChanged), OnChangedTargets = OnChangedTargets.All), Capacity(NetworkManager.MaxPlayerCount)] public NetworkDictionary<int, int> PlayersSelectorUIDictionary => default;
+        [HideInInspector, Networked(OnChanged = nameof(OnPlayersSelectorUIDictionaryChanged), OnChangedTargets = OnChangedTargets.All), Capacity(NetworkManager.MaxPlayerCount)] public NetworkDictionary<int, int> PlayersSelectorUIDictionary => default;
 
         private void Awake()
         {
