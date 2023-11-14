@@ -30,13 +30,13 @@ namespace ProjectMultiplayer.Player.Actions {
                         sizeCache = col.GetComponent<Size>();
                         if (sizeCache) {
                             _liftedObject = sizeCache.transform;
+                            _liftedObject.transform.parent = transform;
+                            _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
+                            _liftedObject.transform.localRotation = Quaternion.identity; // Test Out
                             break;
                         }
                     }
                 }
-                _liftedObject.transform.parent = transform;
-                _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
-                _liftedObject.transform.localRotation = Quaternion.identity; // Test Out
             }
             else {
                 if (_liftedObject.GetComponent<Player>()) _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);

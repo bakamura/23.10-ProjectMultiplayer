@@ -9,6 +9,7 @@ public class CameraControl : MonoBehaviour {
 
     [SerializeField] private float _sensitivityX;
     [SerializeField] private float _sensitivityY;
+    [SerializeField] private Vector3 _followTargetOffset;
 
     [Header("Cache")]
 
@@ -21,6 +22,8 @@ public class CameraControl : MonoBehaviour {
     }
 
     private void Update() {
+        
+
         _deltaInputCache = InitializeInputPlayer.Instance.PlayerActions.actions["MoveCamera"].ReadValue<Vector2>();
         _deltaInputCacheUnit = _deltaInputCache.x * _sensitivityX;
         _deltaInputCache[0] = _deltaInputCache.y * _sensitivityY;
@@ -41,6 +44,7 @@ public class CameraControl : MonoBehaviour {
             foreach (Player player in players)
                 if (player.Type == NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType) {
                     _followTarget.parent = player.transform;
+                    _followTarget.localPosition = _followTargetOffset;
                     return false; // Found
                 }
         }
