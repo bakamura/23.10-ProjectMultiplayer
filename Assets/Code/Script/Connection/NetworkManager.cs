@@ -169,7 +169,7 @@ namespace ProjectMultiplayer.Connection
 
         protected async Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress netAddress, SceneRef sceneRef, string SessionName, Action<NetworkRunner> initialized)
         {
-            ObjectPool pooling = new ObjectPool();
+            //ObjectPool pooling = new ObjectPool();
             runner.ProvideInput = true;
             var task = await runner.StartGame(new StartGameArgs
             {
@@ -179,7 +179,7 @@ namespace ProjectMultiplayer.Connection
                 SessionName = SessionName,
                 Initialized = initialized,
                 CustomLobbyName = SessionName,
-                ObjectPool = pooling,
+                //ObjectPool = pooling,
                 SceneManager = NetworkSceneManager
             });
             if (!task.Ok)
