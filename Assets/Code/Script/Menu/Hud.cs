@@ -16,7 +16,7 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private IconData[] _iconsData;
 
         [Header("Inputs Display Components")]
-        [SerializeField] private TMP_Text[] _pauseTexts;
+        //[SerializeField] private TMP_Text[] _pauseTexts;
         [SerializeField] private TMP_Text _action1Text;
         [SerializeField] private TMP_Text _action2Text;
         [SerializeField] private TMP_Text _action3Text;
@@ -125,10 +125,10 @@ namespace ProjectMultiplayer.UI
 
         private void UpdateKeyDisplay()
         {
-            for (int i = 0; i < _pauseTexts.Length; i++)
-            {
-                _pauseTexts[i].text = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"].GetBindingDisplayString();
-            }
+            //for (int i = 0; i < _pauseTexts.Length; i++)
+            //{
+            //    _pauseTexts[i].text = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"].GetBindingDisplayString();
+            //}
             _action1Text.text = InitializeInputPlayer.Instance.PlayerActions.actions["Action1"].GetBindingDisplayString();
             _action2Text.text = InitializeInputPlayer.Instance.PlayerActions.actions["Action2"].GetBindingDisplayString();
             _action3Text.text = InitializeInputPlayer.Instance.PlayerActions.actions["Action3"].GetBindingDisplayString();
