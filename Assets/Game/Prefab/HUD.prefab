@@ -2453,9 +2453,6 @@ MonoBehaviour:
     TextAction1: Carry
     TextAction2: Size
     TextAction3: Mark
-  _pauseTexts:
-  - {fileID: 2908433657881269368}
-  - {fileID: 4827926120235005379}
   _action1Text: {fileID: 2058192390569911012}
   _action2Text: {fileID: 789259555418177021}
   _action3Text: {fileID: 1948448084653239119}
@@ -4655,7 +4652,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5497760253510096729
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4789,7 +4786,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5497760253538181377
 RectTransform:
   m_ObjectHideFlags: 0
