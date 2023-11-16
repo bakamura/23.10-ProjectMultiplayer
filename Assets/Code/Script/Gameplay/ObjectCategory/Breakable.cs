@@ -13,6 +13,8 @@ namespace ProjectMultiplayer.ObjectCategory.Break {
         private Size.Size _size;
 
         public override void Spawned() {
+            _size = GetComponent<Size.Size>();
+
             for (int i = 0; i < _objectToSpawn.Length; i++) _objectToSpawn[i] = Instantiate(_objectToSpawn[i], transform.position, transform.rotation);
         }
 
