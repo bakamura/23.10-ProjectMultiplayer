@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 using ProjectMultiplayer.ObjectCategory.Size;
+using ProjectMultiplayer.ObjectCategory.Recall;
 
 namespace ProjectMultiplayer.Player.Actions {
     public class Carry : PlayerAction {
@@ -13,6 +14,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private Transform _carriedObject;
 
+#if UNITY_EDITOR
+        [Header("Debug")]
+
+        [SerializeField] private bool _debugLogs;
+#endif
+
         public override void DoAction(Ray cameraRay) {
             if (!_carriedObject) {
                 Size sizeCache;
@@ -23,14 +30,23 @@ namespace ProjectMultiplayer.Player.Actions {
                             _carriedObject = sizeCache.transform;
                             _carriedObject.transform.parent = transform;
                             _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
+#if UNITY_EDITOR
+                            if (_debugLogs) Debug.Log($"{_carriedObject.name} is now being carried by {gameObject.name}");
+#endif
                             break;
                         }
                     }
                 }
+#if UNITY_EDITOR
+                if (_debugLogs && !_carriedObject) Debug.Log($"{gameObject.name} failed to carry anything");
+#endif
             }
             else {
                 _carriedObject.transform.parent = null;
                 _carriedObject = null;
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{_carriedObject.name} STOPED being carried by {gameObject.name}");
+#endif
             }
         }
 

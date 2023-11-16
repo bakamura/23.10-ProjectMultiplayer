@@ -1,6 +1,5 @@
 using Fusion;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
@@ -43,18 +42,18 @@ namespace ProjectMultiplayer.Player {
         //private WaitForSeconds _damagedAnimationWait;
         [Networked] private TickTimer _respawnTimer { get; set; }
 
+#if UNITY_EDITOR
+        [Header("Debug")]
+
+        [SerializeField] private bool _debugLogs;
+#endif
+
         // Access
 
         public NetworkManager.PlayerType Type { get { return _type; } }
         public NetworkRigidbody NRigidbody { get { return _nRigidbody; } }
         private Ray _rayCache;
         public Size Size { get { return _size; } }
-
-        //[ContextMenu("Test")]
-        //private void Test()
-        //{
-        //    Debug.Log(_action1.GetType() == typeof(Jump));
-        //}
 
         public override void Spawned() {
             _nRigidbody = GetComponent<NetworkRigidbody>();
@@ -64,7 +63,7 @@ namespace ProjectMultiplayer.Player {
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
             _screenSize[1] = Screen.height;
-            Debug.Log($"Spawned {name}");
+            Debug.Log($"Spawned {gameObject.name}");
         }
 
         public override void FixedUpdateNetwork() {
@@ -85,7 +84,9 @@ namespace ProjectMultiplayer.Player {
                 _respawnTimer = TickTimer.None;
 
                 transform.position = FindObjectOfType<SpawnAnchor>().GetSpawnPosition(_type);
-
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{gameObject.name} has respawned at {transform.position}");
+#endif
                 // Respawn Animation
             }
         }
@@ -98,8 +99,18 @@ namespace ProjectMultiplayer.Player {
         }
 
         public void TryDamage() {
-            if (_shieldAbility != null || !_shieldAbility.IsShielded) Damaged();
-            else _shieldAbility.onBlockBullet.Invoke();
+            if (_shieldAbility != null || !_shieldAbility.IsShielded) {
+                Damaged();
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{gameObject.name} took damage");
+#endif
+            }
+            else {
+                _shieldAbility.onBlockBullet.Invoke();
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{gameObject.name} blocked damage with shield");
+#endif
+            }
         }
 
         private void Damaged() {

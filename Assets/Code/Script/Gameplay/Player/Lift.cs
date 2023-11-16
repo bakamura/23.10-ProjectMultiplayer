@@ -18,6 +18,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private Transform _liftedObject;
 
+#if UNITY_EDITOR
+        [Header("Debug")]
+
+        [SerializeField] private bool _debugLogs;
+#endif
+
         private void Awake() {
             _friendThrowupForce = Vector3.up * _friendThrowupVelocity;
         }
@@ -33,15 +39,29 @@ namespace ProjectMultiplayer.Player.Actions {
                             _liftedObject.transform.parent = transform;
                             _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
                             _liftedObject.transform.localRotation = Quaternion.identity; // Test Out
+#if UNITY_EDITOR
+                            if (_debugLogs) Debug.Log($"{_liftedObject.name} is now being lifted by {gameObject.name}");
+#endif
                             break;
                         }
                     }
                 }
+#if UNITY_EDITOR
+                if (_debugLogs && !_liftedObject) Debug.Log($"{gameObject.name} failed to lift anything");
+#endif
             }
             else {
-                if (_liftedObject.GetComponent<Player>()) _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);
                 _liftedObject.transform.parent = null;
+                if (_liftedObject.GetComponent<Player>()) {
+                    _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);
+#if UNITY_EDITOR
+                    if (_debugLogs) Debug.Log($"{_liftedObject.name} was thrown up by {gameObject.name}");
+#endif
+                }
                 _liftedObject = null;
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{_liftedObject.name} STOPED being lifted by {gameObject.name}");
+#endif
             }
         }
 
