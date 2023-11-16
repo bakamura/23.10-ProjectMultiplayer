@@ -61,4 +61,12 @@ public class CameraControl : MonoBehaviour {
         return true; // Keep trying
     }
 
+#if UNITY_EDITOR
+    public void ResetCameraTracking(Transform playerTransform)
+    {
+        _followTarget.parent = playerTransform;
+        _followTarget.localPosition = _followTargetOffset;
+    }
+#endif
+
 }
