@@ -41,8 +41,15 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         private bool IsGrounded() {
-            return Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox, Quaternion.identity, _checkGroundLayer) != null;
+            return Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = IsGrounded() ? Color.green : Color.red;
+            Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
+        }
+#endif
 
     }
 }

@@ -6,10 +6,8 @@ using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
 
-namespace ProjectMultiplayer.Player
-{
-    public class Player : NetworkBehaviour, IPlayerLeft
-    {
+namespace ProjectMultiplayer.Player {
+    public class Player : NetworkBehaviour, IPlayerLeft {
 
         //private bool _canAct = true;
 
@@ -58,20 +56,19 @@ namespace ProjectMultiplayer.Player
         //    Debug.Log(_action1.GetType() == typeof(Jump));
         //}
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             _nRigidbody = GetComponent<NetworkRigidbody>();
+            _size = GetComponent<Size>();
+            _shieldAbility = GetComponent<Shield>();
+
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
             _screenSize[1] = Screen.height;
-            _shieldAbility = GetComponent<Shield>();
             Debug.Log($"Spawned {name}");
         }
 
-        public override void FixedUpdateNetwork()
-        {
-            if (GetInput(out DataPackInput inputData))
-            {
+        public override void FixedUpdateNetwork() {
+            if (GetInput(out DataPackInput inputData)) {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
                 if (inputData.Jump != _alreadyJumped && inputData.Jump) _actionJump.DoAction(_rayCache);
@@ -84,8 +81,7 @@ namespace ProjectMultiplayer.Player
                 _alreadyAction3 = inputData.Action3;
             }
 
-            if (_respawnTimer.Expired(Runner))
-            {
+            if (_respawnTimer.Expired(Runner)) {
                 _respawnTimer = TickTimer.None;
 
                 transform.position = FindObjectOfType<SpawnAnchor>().GetSpawnPosition(_type);
@@ -94,29 +90,25 @@ namespace ProjectMultiplayer.Player
             }
         }
 
-        private void Movement(Vector2 direction)
-        {
+        private void Movement(Vector2 direction) {
             _inputV2ToV3[0] = direction.x;
             _inputV2ToV3[2] = direction.y;
 
             _nRigidbody.Rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);
         }
 
-        public void TryDamage()
-        {
+        public void TryDamage() {
             if (_shieldAbility != null || !_shieldAbility.IsShielded) Damaged();
             else _shieldAbility.onBlockBullet.Invoke();
         }
 
-        private void Damaged()
-        {
+        private void Damaged() {
             // Damaged Animation
 
             _respawnTimer = TickTimer.CreateFromSeconds(Runner, 3f);
         }
 
-        public void PlayerLeft(PlayerRef player)
-        {
+        public void PlayerLeft(PlayerRef player) {
 
         }
 
