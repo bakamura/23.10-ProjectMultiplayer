@@ -17,13 +17,17 @@ public class CameraControl : MonoBehaviour {
     private Vector2 _deltaInputCache;
     private float _deltaInputCacheUnit;
 
+#if UNITY_EDITOR
+    [Header("Debug")]
+
+    [SerializeField] private bool _debugLogs;
+#endif
+
     private void Start() {
         StartCoroutine(KeepTryingGetPlayer());
     }
 
     private void Update() {
-        
-
         _deltaInputCache = InitializeInputPlayer.Instance.PlayerActions.actions["MoveCamera"].ReadValue<Vector2>();
         _deltaInputCacheUnit = _deltaInputCache.x * _sensitivityX;
         _deltaInputCache[0] = _deltaInputCache.y * _sensitivityY;
@@ -39,12 +43,18 @@ public class CameraControl : MonoBehaviour {
     }
 
     private bool TryGetPlayer() {
+#if UNITY_EDITOR
+        if (_debugLogs) Debug.Log("Camera trying to find active Player");
+#endif
         Player[] players = FindObjectsOfType<Player>();
         if (players != null) {
             foreach (Player player in players)
                 if (player.Type == NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType) {
                     _followTarget.parent = player.transform;
                     _followTarget.localPosition = _followTargetOffset;
+#if UNITY_EDITOR
+                    if (_debugLogs) Debug.Log("Camera found active Player");
+#endif
                     return false; // Found
                 }
         }
