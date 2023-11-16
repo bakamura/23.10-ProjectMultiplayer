@@ -14,18 +14,25 @@ namespace ProjectMultiplayer.ObjectCategory
         private Vector3 _initialPosition;
         private bool _isMoving;
         private sbyte _directionSign;
+
         public void Activate()
         {
-            _directionSign = 1;
-            _initialPosition = _movablePart.position;
-            _isMoving = true;
+            if (!_isMoving)
+            {
+                _directionSign = 1;
+                _initialPosition = _movablePart.position;
+                _isMoving = true;
+            }
         }
 
         public void Deactivate()
         {
-            _directionSign = -1;
-            _initialPosition = _movablePart.position;
-            _isMoving = true;
+            if (!_isMoving)
+            {
+                _directionSign = -1;
+                _initialPosition = _movablePart.position;
+                _isMoving = true;
+            }
         }
 
         public override void FixedUpdateNetwork()
@@ -33,7 +40,7 @@ namespace ProjectMultiplayer.ObjectCategory
             if (_isMoving)
             {
                 _movablePart.position += _speed * _directionSign * Runner.DeltaTime * transform.forward;
-                if(Vector3.Distance(_movablePart.position, _initialPosition) >= _travelDistance)
+                if (Vector3.Distance(_movablePart.position, _initialPosition) >= _travelDistance && _directionSign > 0)
                 {
                     _isMoving = false;
                 }
