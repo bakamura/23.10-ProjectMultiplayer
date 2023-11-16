@@ -25,6 +25,9 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private TMP_Text _action1Name;
         [SerializeField] private TMP_Text _action2Name;
         [SerializeField] private TMP_Text _action3Name;
+#if UNITY_EDITOR
+        [SerializeField] private bool _canPause = true;
+#endif
         //private bool _isPaused;
 
         private InputAction _return;
@@ -46,6 +49,9 @@ namespace ProjectMultiplayer.UI
             LoadControlBindings();
             _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
             UpdateKeyDisplay();
+#if UNITY_EDITOR
+            if(!_canPause) Cursor.lockState = CursorLockMode.None;
+#endif
         }
 
         private void Start()
@@ -65,6 +71,9 @@ namespace ProjectMultiplayer.UI
 
         private void Update()
         {
+#if UNITY_EDITOR
+            if (!_canPause) return;
+#endif
             if (_return.WasPressedThisFrame())
             {
                 GetPreviousCanvasGroup(out CanvasGroup temp);
@@ -80,7 +89,7 @@ namespace ProjectMultiplayer.UI
                     ChangeCurrentCanvas(temp);
                 }
             }
-        }      
+        }
 
         private void UpdateMouseDisplay(CanvasGroup currentCanvas)
         {
@@ -92,7 +101,7 @@ namespace ProjectMultiplayer.UI
             {
                 Cursor.lockState = CursorLockMode.None;
             }
-        }               
+        }
 
         private IEnumerator UpdateActionsIcons()
         {
@@ -122,7 +131,20 @@ namespace ProjectMultiplayer.UI
                 return false;
             }
         }
-
+#if UNITY_EDITOR
+        public void UpdateIcons(NetworkManager.PlayerType type)
+        {
+            for (int i = 0; i < _iconsData.Length; i++)
+            {
+                if (_iconsData[i].PlayerType == type)
+                {
+                    _action1Name.text = _iconsData[i].TextAction1;
+                    _action2Name.text = _iconsData[i].TextAction2;
+                    _action3Name.text = _iconsData[i].TextAction3;
+                }
+            }
+        }
+#endif
         private void UpdateKeyDisplay()
         {
             //for (int i = 0; i < _pauseTexts.Length; i++)
