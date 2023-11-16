@@ -13,11 +13,12 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private float _speed;
         private Vector3 _initialPosition;
         private bool _isMoving;
+        private bool _isActive;
         private sbyte _directionSign;
 
         public void Activate()
         {
-            if (!_isMoving)
+            if (!_isMoving && !_isActive)
             {
                 _directionSign = 1;
                 _initialPosition = _movablePart.position;
@@ -27,7 +28,7 @@ namespace ProjectMultiplayer.ObjectCategory
 
         public void Deactivate()
         {
-            if (!_isMoving)
+            if (!_isMoving && _isActive)
             {
                 _directionSign = -1;
                 _initialPosition = _movablePart.position;
@@ -42,6 +43,7 @@ namespace ProjectMultiplayer.ObjectCategory
                 _movablePart.position += _speed * _directionSign * Runner.DeltaTime * transform.forward;
                 if (Vector3.Distance(_movablePart.position, _initialPosition) >= _travelDistance && _directionSign > 0)
                 {
+                    _isActive = _directionSign > 0;
                     _isMoving = false;
                 }
             }
