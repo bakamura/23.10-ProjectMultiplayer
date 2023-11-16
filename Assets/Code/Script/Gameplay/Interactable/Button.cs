@@ -10,7 +10,7 @@ namespace ProjectMultiplayer.ObjectCategory
     {
         [SerializeField] private List<GameObject> _activablesListReference = new List<GameObject>();
         private IActivable[] _activableInterfaceArray;
-        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenPressed { get; set; }
+        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.All)] private NetworkBool _hasBeenPressed { get; set; }
         private void Awake()
         {
             _activableInterfaceArray = new IActivable[_activablesListReference.Count];

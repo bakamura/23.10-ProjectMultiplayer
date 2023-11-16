@@ -18,7 +18,7 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private Color _debugColor;
 #endif
 
-        [Networked(OnChanged = nameof(OnActivateChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenActivated { get; set; }
+        [Networked(OnChanged = nameof(OnActivateChanged), OnChangedTargets = OnChangedTargets.All)] private NetworkBool _hasBeenActivated { get; set; }
 
         private Dictionary<int, MovableObjectData> _objectsInsideArea = new Dictionary<int, MovableObjectData>();
         private Coroutine _moveObjectsCoroutine = null;

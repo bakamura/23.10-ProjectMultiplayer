@@ -11,7 +11,7 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private List<GameObject> _activablesListReference = new List<GameObject>();
         private IActivable[] _activableInterfaceArray;
         [SerializeField, Min(0f)] private float _timerDuration;
-        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.InputAuthority)] private NetworkBool _hasBeenPressed { get; set; }
+        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.All)] private NetworkBool _hasBeenPressed { get; set; }
         private float _currentTime;
 
         private void Awake()
