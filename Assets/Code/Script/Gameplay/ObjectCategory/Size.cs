@@ -29,6 +29,13 @@ namespace ProjectMultiplayer.ObjectCategory.Size {
         private Vector3 _sizeFinalC;
         [Networked] private TickTimer _sizeChangeTimer { get; set; }
 
+
+#if UNITY_EDITOR
+        [Header("Debug")]
+
+        [SerializeField] private bool _debugLogs;
+#endif
+
         // Access
         public SizeType Type { get { return _sizeType; } }
         public bool TriPhase { get { return _triPhase; } }
@@ -37,10 +44,16 @@ namespace ProjectMultiplayer.ObjectCategory.Size {
             for (int i = 0; i < _sizeScales.Length; i++) _sizeScalesVector[i] = Vector3.one * _sizeScales[i];
 
             transform.localScale = _sizeScalesVector[(int)_sizeType];
+#if UNITY_EDITOR
+            if (_debugLogs) Debug.Log($"{gameObject.name}'s Size initialized with {_sizeScales.Length} sizes and started with size {_sizeType}");
+#endif
         }
 
         public override void FixedUpdateNetwork() {
             if (_sizeChangeTimer.IsRunning) {
+#if UNITY_EDITOR
+                if(_debugLogs) Debug.Log($"{gameObject.name} currently changing size to {_sizeType}");
+#endif
                 _progressC += Time.fixedDeltaTime / _triPhaseTransitionDuration;
                 transform.localScale = Vector3.Lerp(_sizeInitialC, _sizeFinalC, _progressC);
 
@@ -62,6 +75,9 @@ namespace ProjectMultiplayer.ObjectCategory.Size {
                 else {
                     if (_sizeType != SizeType.S) _sizeType--;
                 }
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{gameObject.name} trying to change size to {_sizeType}");
+#endif
 
                 _progressC = 0;
                 _sizeInitialC = transform.localScale;
