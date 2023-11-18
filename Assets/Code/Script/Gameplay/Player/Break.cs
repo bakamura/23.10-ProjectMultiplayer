@@ -1,0 +1,42 @@
+using UnityEngine;
+
+using ProjectMultiplayer.ObjectCategory.Break;
+
+namespace ProjectMultiplayer.Player.Actions {
+    public class Break : PlayerAction {
+
+        [Header("Parameters")]
+
+        [SerializeField] private Vector3 _actionOffset;
+        [SerializeField] private Vector3 _actionBox;
+
+        [Space(16)]
+
+        [SerializeField] private float _friendPushForce;
+
+#if UNITY_EDITOR
+        [Header("Debug")]
+
+        [SerializeField] private bool _debugLogs;
+#endif
+
+        public override void DoAction(Ray cameraRay) {
+            foreach (Collider collider in Physics.OverlapBox(transform.position + _actionOffset, _actionBox / 2)) {
+                collider.GetComponent<Breakable>()?.TryBreak(_player.Size.Type);
+                collider.GetComponent<Player>()?.NRigidbody.Rigidbody.AddForce((collider.transform.position - transform.position).normalized * _friendPushForce, ForceMode.VelocityChange);
+#if UNITY_EDITOR
+                if (_debugLogs) Debug.Log($"{collider.name} was Asked to break");
+#endif
+            }
+        }
+
+        public override void StopAction() { }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(transform.position + _actionOffset, _actionBox / 2);
+        }
+#endif
+    }
+}
