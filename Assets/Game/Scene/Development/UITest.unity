@@ -1914,6 +1914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _removeAllPlayersNecessity: 0
   _characterSelection: {fileID: 5935885530292076476}
   _RecentlyJoinedPlayer: 0
   _PlayersSelectorUIDictionary:
@@ -4282,6 +4283,7 @@ MonoBehaviour:
   _clientInputField: {fileID: 1499047108}
   _clientUI: {fileID: 1435078980}
   _feedbackText: {fileID: 1429267786}
+  _levelToLoad: MatchTestScene
 --- !u!114 &1023507669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6476,7 +6478,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 12
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -10081,7 +10083,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 12
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
