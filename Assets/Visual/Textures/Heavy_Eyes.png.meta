@@ -1,12 +1,66 @@
 fileFormatVersion: 2
 guid: ce75f272df4dd834ca0d3b9d88ea011a
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 8790110523137250546
+    second: Heavy_Eyes_0
+  - first:
+      213: 3420957516429023890
+    second: Heavy_Eyes_1
+  - first:
+      213: -5120233338888824761
+    second: Heavy_Eyes_2
+  - first:
+      213: -4774006754729174187
+    second: Heavy_Eyes_3
+  - first:
+      213: -7114551994782217519
+    second: Heavy_Eyes_4
+  - first:
+      213: -7366315630663567738
+    second: Heavy_Eyes_5
+  - first:
+      213: 2198657746054992319
+    second: Heavy_Eyes_6
+  - first:
+      213: 7843441447458352632
+    second: Heavy_Eyes_7
+  - first:
+      213: 7771962674900605807
+    second: Heavy_Eyes_8
+  - first:
+      213: -7005989260614579887
+    second: Heavy_Eyes_9
+  - first:
+      213: -6189709082765762345
+    second: Heavy_Eyes_10
+  - first:
+      213: -4793514124680159192
+    second: Heavy_Eyes_11
+  - first:
+      213: -1493288835962621099
+    second: Heavy_Eyes_12
+  - first:
+      213: 6969266384224426974
+    second: Heavy_Eyes_13
+  - first:
+      213: -4083060518930907418
+    second: Heavy_Eyes_14
+  - first:
+      213: 4725822806408323480
+    second: Heavy_Eyes_15
+  - first:
+      213: 58647590549419754
+    second: Heavy_Eyes_16
+  - first:
+      213: 8365354022918009662
+    second: Heavy_Eyes_17
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -35,24 +89,24 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 3200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -100,13 +154,151 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Heavy_Eyes_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2040
+        width: 1660
+        height: 1020
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f4d404e2febcf970800000000000000
+      internalID: 8790110523137250546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Eyes_1
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 2040
+        width: 1660
+        height: 1020
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29a54767cbea97f20800000000000000
+      internalID: 3420957516429023890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Eyes_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1020
+        width: 1660
+        height: 1020
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7485b6c08e641f8b0800000000000000
+      internalID: -5120233338888824761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Eyes_3
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 1020
+        width: 1660
+        height: 1020
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55b5d0d76225fbdb0800000000000000
+      internalID: -4774006754729174187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Eyes_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1660
+        height: 1020
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1da85feb7a8044d90800000000000000
+      internalID: -7114551994782217519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Eyes_5
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 0
+        width: 1660
+        height: 1020
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 686f3ea56f695c990800000000000000
+      internalID: -7366315630663567738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ebc2a65fc4603544dadbde1daf59d1ac
     internalID: 0
     vertices: []
     indices: 
