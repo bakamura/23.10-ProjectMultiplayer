@@ -4,6 +4,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.InputSystem;
+
 using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.Player
@@ -18,7 +19,7 @@ namespace ProjectMultiplayer.Player
                 // se ainda n tiver uma referência da instancia, procura ela no GameObject
                 if (_instance == null)
                 {
-                    InitializeInputPlayer[] results = GameObject.FindObjectsOfType<InitializeInputPlayer>();
+                    InitializeInputPlayer[] results = FindObjectsOfType<InitializeInputPlayer>();
                     if (results.Length > 0)
                     {
                         if (results.Length > 1) Debug.Log($"Multiple Instances of {typeof(InitializeInputPlayer).Name} found, destroing extras");
@@ -35,50 +36,36 @@ namespace ProjectMultiplayer.Player
                 return _instance;
             }
         }
-        private InputPlayer _inputActions;
-        public InputPlayer PlayerActions
+        private PlayerInput _inputActions;
+        public PlayerInput PlayerActions
         {
             get
             {
-                if (_inputActions == null) return _inputActions = new InputPlayer();
+                if (_inputActions == null) return _inputActions = GetComponent<PlayerInput>();
                 return _inputActions;
             }
         }
+        private DataPackInput _dataPackInputCached = new DataPackInput();
+        private InputAction _playerMove;
+        private InputAction _jump;
+        private InputAction _action1;
+        private InputAction _action2;
+        private InputAction _action3;
 
         private void Awake()
         {
-            NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
-            if (_instance != this)
+            if (_instance != null && _instance != this)
             {
                 Destroy(this);
                 return;
             }
-            PlayerActions.Player.MovePlayer.performed += OnMoveCharacter;
-            PlayerActions.Player.Action1.performed += OnAction1;
-            PlayerActions.Player.Action2.performed += OnAction2;
-            PlayerActions.Player.Action3.performed += OnAction3;
-            PlayerActions.Enable();
+            NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
+            _playerMove = PlayerActions.actions["MovePlayer"];
+            _jump = PlayerActions.actions["Jump"];
+            _action1 = PlayerActions.actions["Action1"];
+            _action2 = PlayerActions.actions["Action2"];
+            _action3 = PlayerActions.actions["Action3"];
         }
-        private DataPackInput _dataPackInputCached = new DataPackInput();
-
-        #region Input System Callbacks
-        private void OnMoveCharacter(InputAction.CallbackContext context)
-        {
-            _dataPackInputCached.Movement = context.ReadValue<Vector2>();
-        }
-        private void OnAction1(InputAction.CallbackContext context)
-        {
-            _dataPackInputCached.Action1 = context.ReadValue<float>() >= 1f;
-        }
-        private void OnAction2(InputAction.CallbackContext context)
-        {
-            _dataPackInputCached.Action2 = context.ReadValue<float>() >= 1f;
-        }
-        private void OnAction3(InputAction.CallbackContext context)
-        {
-            _dataPackInputCached.Action3 = context.ReadValue<float>() >= 1f;
-        }
-        #endregion
 
         #region Photon Callbacks
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
@@ -93,6 +80,11 @@ namespace ProjectMultiplayer.Player
 
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
+            _dataPackInputCached.Movement = _playerMove.ReadValue<Vector2>();
+            _dataPackInputCached.Jump = _jump.IsPressed();
+            _dataPackInputCached.Action1 = _action1.IsPressed();
+            _dataPackInputCached.Action2 = _action2.IsPressed();
+            _dataPackInputCached.Action3 = _action3.IsPressed();
             input.Set(_dataPackInputCached);
         }
 

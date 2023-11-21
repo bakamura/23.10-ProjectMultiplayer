@@ -195,11 +195,6 @@ namespace ProjectMultiplayer.Connection
             return task;
         }
 
-        //public void JoinMacth(SessionInfo info)
-        //{
-        //    //para os clientes n é necessário ter o id da cena correta pois eles sempre irão para a cena em q o servdor estiver
-        //    InitializeNetworkRunner(NetworkRunnerRef, GameMode.Client, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, info.Name, null);
-        //}
 
         public async Task<StartGameResult> JoinMacth(string sessionName, Action<NetworkRunner> OnMatchCreated = null)
         {
@@ -217,33 +212,5 @@ namespace ProjectMultiplayer.Connection
         {
             OnPlayersDataChangedCallback?.Invoke();
         }
-        //public void SavePlayerServerIDToLocalPlayer()
-        //{
-        //    //when a player joins the match he is always the first element in the dictionary
-        //    if(!NetworkManagerReference.AlreadySavedId)
-        //    {
-        //        foreach(var player in PlayersDictionary)
-        //        {
-        //            NetworkManagerReference.LocalPlayerIDInServer = player.Key;
-        //            NetworkManagerReference.AlreadySavedId = true;
-        //            break;
-        //        }
-        //    }
-        //}
-        //public bool JoinLobby(string sessionName)
-        //{
-        //    return JoinLobbyTask(sessionName) != null;
-        //}
-
-        //private async Task JoinLobbyTask(string sessionName)
-        //{
-        //    StartGameResult operation = await NetworkRunnerRef.JoinSessionLobby(SessionLobby.Custom, sessionName);
-
-        //    if (!operation.Ok)
-        //    {
-        //        Debug.LogError($"Not possible to Join loby {sessionName}");
-        //        operation = null;
-        //    }
-        //}
     }
 }

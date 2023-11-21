@@ -3,7 +3,11 @@ using UnityEngine;
 namespace ProjectMultiplayer.Player.Actions {
     public abstract class PlayerAction : MonoBehaviour {
 
-        protected static Player _player;
+        protected Player _player;
+
+        private void Start() {
+            _player = GetComponent<Player>();
+        }
 
         public abstract void DoAction(Ray cameraRay);
 

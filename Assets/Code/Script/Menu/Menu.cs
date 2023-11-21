@@ -11,10 +11,11 @@ namespace ProjectMultiplayer.UI
 
         [SerializeField] private float _openDuration;
         [SerializeField, Tooltip("if contais something and the player tries to return on the UI, this Canvas will never close if is the only one open")] private CanvasGroup _alwaysStayOnThisUI;
-        private Coroutine _canvasTransitionCoroutine = null;
+        protected Coroutine _canvasTransitionCoroutine = null;
         //private WaitForSeconds _delay = new WaitForSeconds(_canvasTick);
         //private const float _canvasTick = .02f;
         protected Stack<CanvasGroup> _currentCanvasOpened = new Stack<CanvasGroup>();
+        protected Action<CanvasGroup> _onTransitionEnd;
 
         protected virtual void Awake()
         {
@@ -40,15 +41,21 @@ namespace ProjectMultiplayer.UI
         {
             if (_alwaysStayOnThisUI)
             {
-                ChangeCurrentCanvas(_alwaysStayOnThisUI);
-                _currentCanvasOpened.Clear();
-                _currentCanvasOpened.Push(_alwaysStayOnThisUI);
+                _onTransitionEnd += HandleCanvasStackReset;
+                ChangeCurrentCanvas(_alwaysStayOnThisUI);                
             }
             else
             {
                 _currentCanvasOpened.Clear();
                 ChangeCurrentCanvas(canvasToReturn);
             }
+        }
+
+        private void HandleCanvasStackReset(CanvasGroup currentCanvas)
+        {
+            _currentCanvasOpened.Clear();
+            _currentCanvasOpened.Push(_alwaysStayOnThisUI);
+            _onTransitionEnd -= HandleCanvasStackReset;
         }
 
         protected CanvasGroup GetPreviousCanvasGroup(out CanvasGroup result)
@@ -108,6 +115,7 @@ namespace ProjectMultiplayer.UI
             newCanvas.blocksRaycasts = true;
             newCanvas.interactable = true;
 
+            _onTransitionEnd?.Invoke(newCanvas);
             _canvasTransitionCoroutine = null;
         }
 

@@ -9,15 +9,27 @@ namespace ProjectMultiplayer.ObjectCategory.Recall {
 
         [SerializeField] private float _recallDuration;
 
+#if UNITY_EDITOR
+        [Header("Debug")]
+
+        [SerializeField] private bool _debugLogs;
+#endif
+
         public void Mark() {
             RecallMark.Instance.markCurrent = this;
             RecallMark.Instance.markPosition = transform.position;
             RecallMark.Instance.markRotation = transform.rotation;
             RecallMark.Instance.markSize = GetComponent<Size.Size>().Type;
+#if UNITY_EDITOR
+            if (_debugLogs) Debug.Log($"{gameObject.name} has been Marked");
+#endif
         }
 
         public static void Recall() {
             RecallMark.Instance.markCurrent.StartCoroutine(RecallMark.Instance.markCurrent.RecallRoutine());
+#if UNITY_EDITOR
+            Debug.Log($"{RecallMark.Instance.markCurrent.gameObject.name} has been Recalled");
+#endif
         }
 
         public IEnumerator RecallRoutine() {
@@ -46,5 +58,11 @@ namespace ProjectMultiplayer.ObjectCategory.Recall {
             RecallMark.Instance.markCurrent = null;
         }
 
+#if UNITY_EDITOR
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, 2f);
+        }
+#endif
     }
 }
