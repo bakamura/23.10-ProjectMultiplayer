@@ -41,15 +41,21 @@ namespace ProjectMultiplayer.UI
         {
             if (_alwaysStayOnThisUI)
             {
-                ChangeCurrentCanvas(_alwaysStayOnThisUI);
-                _currentCanvasOpened.Clear();
-                _currentCanvasOpened.Push(_alwaysStayOnThisUI);
+                _onTransitionEnd += HandleCanvasStackReset;
+                ChangeCurrentCanvas(_alwaysStayOnThisUI);                
             }
             else
             {
                 _currentCanvasOpened.Clear();
                 ChangeCurrentCanvas(canvasToReturn);
             }
+        }
+
+        private void HandleCanvasStackReset(CanvasGroup currentCanvas)
+        {
+            _currentCanvasOpened.Clear();
+            _currentCanvasOpened.Push(_alwaysStayOnThisUI);
+            _onTransitionEnd -= HandleCanvasStackReset;
         }
 
         protected CanvasGroup GetPreviousCanvasGroup(out CanvasGroup result)
