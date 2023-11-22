@@ -5,10 +5,12 @@ using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
 
-namespace ProjectMultiplayer.Player {
-    public class Player : NetworkBehaviour, IPlayerLeft {
+namespace ProjectMultiplayer.Player
+{
+    public class Player : NetworkBehaviour, IPlayerLeft
+    {
 
-        //private bool _canAct = true;
+        private bool _canAct = true;
 
         [Header("Type")]
 
@@ -17,13 +19,17 @@ namespace ProjectMultiplayer.Player {
         [Header("Movement")]
 
         [SerializeField] private float _movementSpeed;
+        [SerializeField] private Vector3 _checkGroundOffset;
+        [SerializeField] private Vector3 _checkGroundBox;
+        [SerializeField] private LayerMask _checkGroundLayer;
+        [SerializeField] private AudioSource _movmentAudioSource;        
 
         [Header("Action")]
 
-        [SerializeField] private PlayerAction _actionJump;
-        [SerializeField] private PlayerAction _action1;
-        [SerializeField] private PlayerAction _action2;
-        [SerializeField] private PlayerAction _action3;
+        [SerializeField] private PlayerActionData _actionJump;
+        [SerializeField] private PlayerActionData _action1;
+        [SerializeField] private PlayerActionData _action2;
+        [SerializeField] private PlayerActionData _action3;
 
         [Header("Cache")]
 
@@ -39,6 +45,8 @@ namespace ProjectMultiplayer.Player {
         private bool _alreadyAction3;
 
         private Vector3 _inputV2ToV3 = Vector3.zero;
+        private bool _isGrounded;
+        private bool _recentlyJumped;
         //private WaitForSeconds _damagedAnimationWait;
         [Networked] private TickTimer _respawnTimer { get; set; }
 
@@ -54,11 +62,30 @@ namespace ProjectMultiplayer.Player {
         public NetworkRigidbody NRigidbody { get { return _nRigidbody; } }
         private Ray _rayCache;
         public Size Size { get { return _size; } }
+        public bool IsGrounded => _isGrounded;
+        private PlayerActionData[] _playerActions;
 
-        public override void Spawned() {
+        [System.Serializable]
+        private struct PlayerActionData
+        {
+            public PlayerAction Action;
+            [SerializeField] private AnimationClip _animation;
+            [HideInInspector] public float CurrentCooldownTime;
+            public bool UseCheckGroundInstead;
+            public AnimationClip AnimClip => _animation;
+
+            public void ResetCooldown()
+            {
+                CurrentCooldownTime = _animation.length;
+            }
+        }
+
+        public override void Spawned()
+        {
             _nRigidbody = GetComponent<NetworkRigidbody>();
             _size = GetComponent<Size>();
             _shieldAbility = GetComponent<Shield>();
+            _playerActions = new PlayerActionData[] { /*_actionJump,*/ _action1, _action2, _action3 };
 
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
@@ -66,21 +93,42 @@ namespace ProjectMultiplayer.Player {
             Debug.Log($"Spawned {gameObject.name}");
         }
 
-        public override void FixedUpdateNetwork() {
-            if (GetInput(out DataPackInput inputData)) {
+        public override void FixedUpdateNetwork()
+        {
+            _isGrounded = Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
+
+            if (GetInput(out DataPackInput inputData))
+            {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
-                if (inputData.Jump != _alreadyJumped && inputData.Jump) _actionJump.DoAction(_rayCache);
-                if (inputData.Action1 != _alreadyAction1 && inputData.Action1) _action1.DoAction(_rayCache);
-                if (inputData.Action2 != _alreadyAction2 && inputData.Action2) _action2.DoAction(_rayCache);
-                if (inputData.Action3 != _alreadyAction3 && inputData.Action3) _action3.DoAction(_rayCache);
+                if (inputData.Jump != _alreadyJumped && inputData.Jump)
+                {
+                    _actionJump.Action.DoAction(_rayCache);
+                    LockPlayerAction(_actionJump);
+                }
+                if (inputData.Action1 != _alreadyAction1 && inputData.Action1)
+                {
+                    _action1.Action.DoAction(_rayCache);
+                    LockPlayerAction(_action1);
+                }
+                if (inputData.Action2 != _alreadyAction2 && inputData.Action2)
+                {
+                    _action2.Action.DoAction(_rayCache);
+                    LockPlayerAction(_action2);
+                }
+                if (inputData.Action3 != _alreadyAction3 && inputData.Action3)
+                {
+                    _action3.Action.DoAction(_rayCache);
+                    LockPlayerAction(_action3);
+                }
                 _alreadyJumped = inputData.Jump;
                 _alreadyAction1 = inputData.Action1;
                 _alreadyAction2 = inputData.Action2;
                 _alreadyAction3 = inputData.Action3;
             }
 
-            if (_respawnTimer.Expired(Runner)) {
+            if (_respawnTimer.Expired(Runner))
+            {
                 _respawnTimer = TickTimer.None;
 
                 transform.position = FindObjectOfType<SpawnAnchor>().GetSpawnPosition(_type);
@@ -89,23 +137,56 @@ namespace ProjectMultiplayer.Player {
 #endif
                 // Respawn Animation
             }
+
+            // check to unlock player actions
+            for (int i = 0; i < _playerActions.Length; i++)
+            {
+                if ((_playerActions[i].UseCheckGroundInstead || _playerActions[i].AnimClip) && _playerActions[i].CurrentCooldownTime > 0)
+                {
+                    if (_playerActions[i].UseCheckGroundInstead)
+                    {
+                        if (!_recentlyJumped) _recentlyJumped = !_isGrounded;                        
+                        if (_recentlyJumped && _isGrounded)
+                        {
+                            _playerActions[i].CurrentCooldownTime = 0;
+                            _recentlyJumped = false;
+                            UpdateCanAct(true);
+                        }
+                    }
+                    else
+                    {
+                        _playerActions[i].CurrentCooldownTime -= Runner.DeltaTime;
+                        if (_playerActions[i].CurrentCooldownTime <= 0) UpdateCanAct(true);
+                    }
+                }
+            }
+
         }
 
-        private void Movement(Vector2 direction) {
+        private void Movement(Vector2 direction)
+        {
             _inputV2ToV3[0] = direction.x;
             _inputV2ToV3[2] = direction.y;
+            if (_movmentAudioSource.clip)
+            {
+                if (direction.sqrMagnitude > 0) _movmentAudioSource.Play();
+                else _movmentAudioSource.Pause();
+            }
 
             _nRigidbody.Rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);
         }
 
-        public void TryDamage() {
-            if (_shieldAbility != null || !_shieldAbility.IsShielded) {
+        public void TryDamage()
+        {
+            if (_shieldAbility != null || !_shieldAbility.IsShielded)
+            {
                 Damaged();
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} took damage");
 #endif
             }
-            else {
+            else
+            {
                 _shieldAbility.onBlockBullet.Invoke();
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} blocked damage with shield");
@@ -113,15 +194,35 @@ namespace ProjectMultiplayer.Player {
             }
         }
 
-        private void Damaged() {
+        private void Damaged()
+        {
             // Damaged Animation
 
             _respawnTimer = TickTimer.CreateFromSeconds(Runner, 3f);
         }
 
-        public void PlayerLeft(PlayerRef player) {
+        public void PlayerLeft(PlayerRef player)
+        {
 
         }
 
+        public void UpdateCanAct(bool canAct)
+        {
+            _canAct = canAct;
+        }
+
+        private void LockPlayerAction(PlayerActionData currentActionGoing)
+        {
+            UpdateCanAct(false);
+            currentActionGoing.ResetCooldown();
+        }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = _isGrounded ? Color.green : Color.red;
+            Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
+        }
+#endif
     }
 }

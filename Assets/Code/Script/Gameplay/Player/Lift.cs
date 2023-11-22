@@ -10,6 +10,9 @@ namespace ProjectMultiplayer.Player.Actions {
 
         [SerializeField] private Vector3 _liftOffset;
         [SerializeField] private Vector3 _liftBox;
+        [SerializeField] private AudioClip _liftObjectSuccess;
+        [SerializeField] private AudioClip _liftObjectFailed;
+        [SerializeField] private AudioClip _liftPlayer;
 
         [Space(16)]
 
@@ -39,25 +42,30 @@ namespace ProjectMultiplayer.Player.Actions {
                             _liftedObject.transform.parent = transform;
                             _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
                             _liftedObject.transform.localRotation = Quaternion.identity; // Test Out
+                            PlayAudio(_liftObjectSuccess);
 #if UNITY_EDITOR
                             if (_debugLogs) Debug.Log($"{_liftedObject.name} is now being lifted by {gameObject.name}");
 #endif
-                            break;
+                            return;
                         }
                     }
                 }
+                PlayAudio(_liftObjectFailed);
 #if UNITY_EDITOR
                 if (_debugLogs && !_liftedObject) Debug.Log($"{gameObject.name} failed to lift anything");
 #endif
             }
             else {
                 _liftedObject.transform.parent = null;
-                if (_liftedObject.GetComponent<Player>()) {
+                if (_liftedObject.GetComponent<Player>())
+                {
                     _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);
+                    PlayAudio(_liftPlayer);
 #if UNITY_EDITOR
                     if (_debugLogs) Debug.Log($"{_liftedObject.name} was thrown up by {gameObject.name}");
 #endif
                 }
+                else PlayAudio(_liftObjectFailed);
                 _liftedObject = null;
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{_liftedObject.name} STOPED being lifted by {gameObject.name}");

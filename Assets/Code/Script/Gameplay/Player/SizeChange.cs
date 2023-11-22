@@ -10,6 +10,8 @@ namespace ProjectMultiplayer.Player.Actions {
         [SerializeField] private bool _isGrowing;
         [SerializeField] private float _actionRange;
         [SerializeField] private LayerMask _sizedObjectLayer;
+        [SerializeField] private AudioClip _actionSuccess;
+        [SerializeField] private AudioClip _actionFailed;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -23,8 +25,14 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log($"Size change Cast, hitting { hit.transform.name }, that { (hitSize ? (hitSize.TriPhase ? "Is TriPhase" : "Is NOT TriPhase") : "Does NOT have Size") } ");
 #endif
-                if (hitSize && hitSize.TriPhase) hitSize.ChangeSize(_isGrowing);
+                if (hitSize && hitSize.TriPhase)
+                {
+                    PlayAudio(_actionSuccess);
+                    hitSize.ChangeSize(_isGrowing);
+                    return;
+                }
             }
+            PlayAudio(_actionFailed);
         }
 
         public override void StopAction() { }
