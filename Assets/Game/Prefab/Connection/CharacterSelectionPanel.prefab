@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 7886908829860282002}
   - component: {fileID: 4789901869827596107}
   - component: {fileID: 5413824801026287282}
+  - component: {fileID: 6579793347133829791}
   m_Layer: 5
   m_Name: CharacterSelectionPanel
   m_TagString: Untagged
@@ -326,6 +327,19 @@ MonoBehaviour:
   - CanvasGroup: {fileID: 2050488623507914537}
     RectTransform: {fileID: 4238195575244691276}
     Text: {fileID: 3839421695041566332}
+--- !u!114 &6579793347133829791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851370191859608906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775cbc47ad7f86f4c8b20b0366901c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiClickSfx: {fileID: 0}
 --- !u!1 &2318955214237065295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,7 +1147,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4902891504744684195}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6579793347133829791}
+        m_TargetAssemblyTypeName: SfxHandler, Assembly-CSharp
+        m_MethodName: UiClickSfx
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4582540331635919719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,7 +1429,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8901731445106472277}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6579793347133829791}
+        m_TargetAssemblyTypeName: SfxHandler, Assembly-CSharp
+        m_MethodName: UiClickSfx
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8431033797290355749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1625,7 +1663,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4190008325802213170}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6579793347133829791}
+        m_TargetAssemblyTypeName: SfxHandler, Assembly-CSharp
+        m_MethodName: UiClickSfx
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8790497782939152227
 MonoBehaviour:
   m_ObjectHideFlags: 0
