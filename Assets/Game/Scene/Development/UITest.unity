@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1914,6 +1914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _removeAllPlayersNecessity: 1
   _characterSelection: {fileID: 5935885530292076476}
   _RecentlyJoinedPlayer: 0
   _PlayersSelectorUIDictionary:
@@ -4282,6 +4283,7 @@ MonoBehaviour:
   _clientInputField: {fileID: 1499047108}
   _clientUI: {fileID: 1435078980}
   _feedbackText: {fileID: 1429267786}
+  _levelToLoad: LevelDesignTest
 --- !u!114 &1023507669
 MonoBehaviour:
   m_ObjectHideFlags: 0
