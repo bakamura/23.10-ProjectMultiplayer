@@ -7,12 +7,9 @@ namespace ProjectMultiplayer.Player.Actions {
 
         [SerializeField] private float _jumpHeight;
         private Vector3 _jumpForce;
+        [SerializeField] private AudioClip _soundEffect;
 
         [Space(16)]
-
-        [SerializeField] private Vector3 _checkGroundOffset;
-        [SerializeField] private Vector3 _checkGroundBox;
-        [SerializeField] private LayerMask _checkGroundLayer;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -25,8 +22,9 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         public override void DoAction(Ray cameraRay) {
-            if (IsGrounded()) {
+            if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
+                PlayAudio(_soundEffect);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has jumped");
 #endif
@@ -37,17 +35,6 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         public override void StopAction() { }
-
-        private bool IsGrounded() {
-            return Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected() {
-            Gizmos.color = IsGrounded() ? Color.green : Color.red;
-            Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
-        }
-#endif
 
     }
 }

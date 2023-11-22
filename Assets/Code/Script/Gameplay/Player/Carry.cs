@@ -11,6 +11,8 @@ namespace ProjectMultiplayer.Player.Actions {
 
         [SerializeField] private Vector3 _liftOffset;
         [SerializeField] private Vector3 _liftBox;
+        [SerializeField] private AudioClip _actionSuccess;
+        [SerializeField] private AudioClip _actionFailed;
 
         private Transform _carriedObject;
 
@@ -30,13 +32,15 @@ namespace ProjectMultiplayer.Player.Actions {
                             _carriedObject = sizeCache.transform;
                             _carriedObject.transform.parent = transform;
                             _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
+                            PlayAudio(_actionSuccess);
 #if UNITY_EDITOR
                             if (_debugLogs) Debug.Log($"{_carriedObject.name} is now being carried by {gameObject.name}");
 #endif
-                            break;
+                            return;
                         }
                     }
                 }
+                PlayAudio(_actionFailed);
 #if UNITY_EDITOR
                 if (_debugLogs && !_carriedObject) Debug.Log($"{gameObject.name} failed to carry anything");
 #endif
@@ -44,6 +48,7 @@ namespace ProjectMultiplayer.Player.Actions {
             else {
                 _carriedObject.transform.parent = null;
                 _carriedObject = null;
+                PlayAudio(_actionSuccess);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{_carriedObject.name} STOPED being carried by {gameObject.name}");
 #endif

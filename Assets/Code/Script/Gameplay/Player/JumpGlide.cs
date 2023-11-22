@@ -6,6 +6,8 @@ namespace ProjectMultiplayer.Player.Actions {
         [Header("Parameters")]
 
         [SerializeField] private float _jumpHeight;
+        [SerializeField] private AudioClip _jumpSound;
+        [SerializeField] private AudioClip _glideSound;
         private Vector3 _jumpForce;
 
         [Space(16)]
@@ -15,10 +17,6 @@ namespace ProjectMultiplayer.Player.Actions {
         private bool _isGliding = false;
 
         [Space(16)]
-
-        [SerializeField] private Vector3 _checkGroundOffset;
-        [SerializeField] private Vector3 _checkGroundBox;
-        [SerializeField] private LayerMask _checkGroundLayer;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -34,6 +32,7 @@ namespace ProjectMultiplayer.Player.Actions {
         private void FixedUpdate() {
             if (_isGliding && _player.NRigidbody.Rigidbody.velocity.y < 0) {
                 _player.NRigidbody.Rigidbody.AddForce(_glideForce, ForceMode.Acceleration);
+                PlayAudio(_glideSound, false);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} is gliding");
 #endif
@@ -41,8 +40,9 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         public override void DoAction(Ray cameraRay) {
-            if (IsGrounded()) {
+            if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
+                PlayAudio(_jumpSound);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has jumped");
 #endif
@@ -59,17 +59,6 @@ namespace ProjectMultiplayer.Player.Actions {
             if (_debugLogs) Debug.Log($"{gameObject.name} STOPED gliding anymore");
 #endif
         }
-
-        private bool IsGrounded() {
-            return Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected() {
-            Gizmos.color = IsGrounded() ? Color.green : Color.red;
-            Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
-        }
-#endif
 
     }
 }
