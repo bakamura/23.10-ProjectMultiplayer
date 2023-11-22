@@ -39,16 +39,18 @@ namespace ProjectMultiplayer.ObjectCategory.Break {
 #endif
         }
 
-        public void TryBreak(Size.Size.SizeType breakerSize) {
+        public bool TryBreak(Size.Size.SizeType breakerSize) {
             if (breakerSize >= _size.Type) {
                 foreach (GameObject obj in _objectToSpawn) obj.SetActive(true);
                 gameObject.SetActive(false);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has been broken");
 #endif
+                return true;
             }
 #if UNITY_EDITOR
             else if (_debugLogs) Debug.Log($"Couldn't break {gameObject.name} due to lacking Size form the breaker");
+            return false;
 #endif
         }
 
