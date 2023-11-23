@@ -173,7 +173,7 @@ namespace ProjectMultiplayer.Player
             _inputV2ToV3[2] = direction.y;
             if (_movmentAudioSource.clip)
             {
-                if (direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
+                if (_movmentAudioSource.clip && direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
                 {
                     if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
                     _movmentAudioSource.Play();
