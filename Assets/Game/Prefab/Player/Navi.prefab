@@ -60,7 +60,6 @@ MonoBehaviour:
   _checkGroundLayer:
     serializedVersion: 2
     m_Bits: 1
-  _movmentAudioSource: {fileID: 8188387396917865919}
   _actionJump:
     Action: {fileID: 5733168522873637007}
     _animation: {fileID: 0}
@@ -81,6 +80,9 @@ MonoBehaviour:
     _animation: {fileID: 0}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+  _movmentAudioSource: {fileID: 8188387396917865919}
+  _randomizePicth: 0
+  _randomizeRange: {x: 0, y: 0}
   _debugLogs: 0
 --- !u!114 &-4812793043350097850
 MonoBehaviour:
@@ -392,7 +394,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
