@@ -12,6 +12,7 @@ namespace ProjectMultiplayer.UI
     public class CutsceneUI : NetworkBehaviour
     {
         [SerializeField] private Image _skipUIIcon;
+        [SerializeField] private GameObject _skipText;
         [SerializeField] private string _levelToOpen;
         [SerializeField] private SkipIconData[] _skipIcons;
         [Networked(OnChanged = nameof(OnSkipRequestUpdate), OnChangedTargets = OnChangedTargets.StateAuthority)] private byte _currentSkipRequests { get; set; }
@@ -43,6 +44,7 @@ namespace ProjectMultiplayer.UI
         {
             if (_skipInput.WasPressedThisFrame() && !_skipUIIcon.enabled)
             {
+                _skipText.SetActive(false);
                 _skipUIIcon.sprite = GetIconForLocalPlayer(NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType);
                 _skipUIIcon.enabled = true;
                 _currentSkipRequests++;
