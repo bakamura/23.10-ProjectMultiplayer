@@ -9,6 +9,7 @@ namespace ProjectMultiplayer.ObjectCategory
     public class Piston : NetworkBehaviour, IActivable
     {
         [SerializeField] private Transform _movablePart;
+        [SerializeField] private Transform _middlePart;
         [SerializeField, Min(0)] private float _travelDistance;
         [SerializeField] private float _speed;
         private Vector3 _initialPosition;
@@ -41,7 +42,8 @@ namespace ProjectMultiplayer.ObjectCategory
             if (_isMoving)
             {
                 _movablePart.position += _speed * _directionSign * Runner.DeltaTime * transform.forward;
-                if (Vector3.Distance(_movablePart.position, _initialPosition) >= _travelDistance && _directionSign > 0)
+                _middlePart.localScale += _speed * _directionSign * Runner.DeltaTime * transform.forward;
+                if (Vector3.Distance(_movablePart.position, _initialPosition) >= _travelDistance)
                 {
                     _isActive = _directionSign > 0;
                     _isMoving = false;
