@@ -22,7 +22,6 @@ namespace ProjectMultiplayer.Player
         [SerializeField] private Vector3 _checkGroundOffset;
         [SerializeField] private Vector3 _checkGroundBox;
         [SerializeField] private LayerMask _checkGroundLayer;
-        [SerializeField] private AudioSource _movmentAudioSource;        
 
         [Header("Action")]
 
@@ -30,6 +29,11 @@ namespace ProjectMultiplayer.Player
         [SerializeField] private PlayerActionData _action1;
         [SerializeField] private PlayerActionData _action2;
         [SerializeField] private PlayerActionData _action3;
+
+        [Header("Audio")] 
+        [SerializeField] private AudioSource _movmentAudioSource;
+        [SerializeField] private bool _randomizePicth;
+        [SerializeField] private Vector2 _randomizeRange;
 
         [Header("Cache")]
 
@@ -169,8 +173,11 @@ namespace ProjectMultiplayer.Player
             _inputV2ToV3[2] = direction.y;
             if (_movmentAudioSource.clip)
             {
-                if (direction.sqrMagnitude > 0) _movmentAudioSource.Play();
-                else _movmentAudioSource.Pause();
+                if (_movmentAudioSource.clip && direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
+                {
+                    if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
+                    _movmentAudioSource.Play();
+                }
             }
 
             _nRigidbody.Rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);

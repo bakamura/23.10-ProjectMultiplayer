@@ -31,6 +31,7 @@ namespace ProjectMultiplayer.UI
         //private bool _isPaused;
 
         private InputAction _return;
+        private SfxHandler _sfxHandler;
 
         [System.Serializable]
         private struct IconData
@@ -44,6 +45,7 @@ namespace ProjectMultiplayer.UI
         protected override void Awake()
         {
             base.Awake();
+            _sfxHandler = GetComponent<SfxHandler>();
             _onTransitionEnd += UpdateMouseDisplay;
             Cursor.lockState = CursorLockMode.Locked;
             LoadControlBindings();
@@ -88,6 +90,7 @@ namespace ProjectMultiplayer.UI
                     //_isPaused = false;
                     ChangeCurrentCanvas(temp);
                 }
+                _sfxHandler.UiClickSfx();
             }
         }
 
