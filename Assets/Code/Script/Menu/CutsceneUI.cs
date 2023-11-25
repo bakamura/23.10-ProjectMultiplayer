@@ -47,8 +47,13 @@ namespace ProjectMultiplayer.UI
                 _skipText.SetActive(false);
                 _skipUIIcon.sprite = GetIconForLocalPlayer(NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType);
                 _skipUIIcon.enabled = true;
-                _currentSkipRequests++;
+                TransitionLevel();
             }
+        }
+
+        public void TransitionLevel()
+        {
+            _currentSkipRequests++;
         }
 
         private Sprite GetIconForLocalPlayer(NetworkManager.PlayerType playerType)
@@ -64,7 +69,21 @@ namespace ProjectMultiplayer.UI
 
         private static void OnSkipRequestUpdate(Changed<CutsceneUI> changed)
         {
-            if(changed.Behaviour._currentSkipRequests == 3) NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(changed.Behaviour._levelToOpen);
+            if (changed.Behaviour._currentSkipRequests == 3)
+            {
+                changed.Behaviour.Rpc_FadeUI();                
+            }
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_FadeUI()
+        {
+            FadeUi.Instance.UpdateFade(FadeUi.FadeTypes.FADEIN, OnFadeEnd);
+        }
+
+        private void OnFadeEnd()
+        {
+            if (Runner.IsServer) NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(_levelToOpen);
         }
     }
 }
