@@ -17,6 +17,7 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private SkipIconData[] _skipIcons;
         [Networked(OnChanged = nameof(OnSkipRequestUpdate), OnChangedTargets = OnChangedTargets.StateAuthority)] private byte _currentSkipRequests { get; set; }
         private InputAction _skipInput;
+        private bool _isLoading;
 
         [System.Serializable]
         private struct SkipIconData
@@ -69,8 +70,9 @@ namespace ProjectMultiplayer.UI
 
         private static void OnSkipRequestUpdate(Changed<CutsceneUI> changed)
         {
-            if (changed.Behaviour._currentSkipRequests == 3)
+            if (changed.Behaviour._currentSkipRequests == 3 && !changed.Behaviour._isLoading)
             {
+                changed.Behaviour._isLoading = true;
                 changed.Behaviour.Rpc_FadeUI();                
             }
         }
