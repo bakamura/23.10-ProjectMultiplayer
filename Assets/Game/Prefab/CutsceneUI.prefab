@@ -330,11 +330,11 @@ MonoBehaviour:
   _levelToOpen: 
   _skipIcons:
   - PlayerType: 0
-    Icon: {fileID: -7114551994782217519, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    Icon: {fileID: 21300000, guid: c1d8870552ffeb645b8726afce26b874, type: 3}
   - PlayerType: 1
-    Icon: {fileID: 3567485440293780597, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    Icon: {fileID: 21300000, guid: 06ee6a591c6b982459ea161ad54b3c22, type: 3}
   - PlayerType: 2
-    Icon: {fileID: 534671116800545189, guid: 8edcf55b888207747827ade9cdebc133, type: 3}
+    Icon: {fileID: 21300000, guid: 64c481b67db398c47a9cda813d308f02, type: 3}
 --- !u!114 &7888374932238729690
 MonoBehaviour:
   m_ObjectHideFlags: 0
