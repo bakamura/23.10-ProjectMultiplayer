@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 7863598435952899248}
   - component: {fileID: 5874633582925711104}
   - component: {fileID: 3671050606686731337}
+  - component: {fileID: 558911835966987595}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -188,4 +189,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bffc277816f1c242a5a29902dd902cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _defaultFadeDuration: 1
+  _startWithFadeOut: 1
+--- !u!114 &558911835966987595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665763371365307900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 0
+  NetworkGuid:
+    RawGuidValue: 00000000000000000000000000000000
+  NestedObjects: []
+  NetworkedBehaviours: []
+  SimulationBehaviours: []

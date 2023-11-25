@@ -78,12 +78,17 @@ namespace ProjectMultiplayer.UI
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void Rpc_FadeUI()
         {
-            FadeUi.Instance.UpdateFade(FadeUi.FadeTypes.FADEIN, OnFadeEnd);
+            FadeUIReference.Instance.OnFadeEnd += OnFadeEnd;
+            FadeUIReference.Instance.Rpc_ChangeFade(FadeUI.FadeTypes.FADEIN);
         }
 
         private void OnFadeEnd()
         {
-            if (Runner.IsServer) NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(_levelToOpen);
+            if (Runner.IsServer)
+            {
+                FadeUIReference.Instance.OnFadeEnd -= OnFadeEnd;
+                NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(_levelToOpen);
+            }
         }
     }
 }
