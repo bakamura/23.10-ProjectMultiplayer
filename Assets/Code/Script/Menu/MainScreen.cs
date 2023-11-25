@@ -137,7 +137,17 @@ namespace ProjectMultiplayer.UI
         public void StartMatch()
         {
             //TO DO get the chose level from server to open
-            NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(_levelToLoad);
+            FadeUIReference.Instance.OnFadeEnd += OnFadeEnd;
+            FadeUIReference.Instance.Rpc_ChangeFade(FadeUI.FadeTypes.FADEIN);            
+        }
+
+        private void OnFadeEnd()
+        {
+            if (NetworkManagerReference.Instance.NetworkRunner.IsServer)
+            {
+                FadeUIReference.Instance.OnFadeEnd -= OnFadeEnd;
+                NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(_levelToLoad);
+            }
         }
 
         /// <summary>
