@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Fusion;
+using ProjectMultiplayer.Connection;
 
 public class PipeFill : LevelObjective
 {
@@ -12,7 +14,11 @@ public class PipeFill : LevelObjective
 
     public override bool CheckObjective()
     {
-        if (_currentCount >= _orderMax) _onObjectiveMeet?.Invoke();
+        if (_currentCount >= _orderMax)
+        {
+            _onObjectiveMeet?.Invoke();
+            NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(levelToLoadWhenObjectiveComplete);
+        }
         return _currentCount >= _orderMax;
     }
 

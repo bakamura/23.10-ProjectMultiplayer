@@ -5,6 +5,7 @@ using UnityEngine;
 
 public abstract class LevelObjective : NetworkBehaviour {
 
+    [SerializeField] protected string levelToLoadWhenObjectiveComplete;
     public abstract bool CheckObjective();
 
 }
