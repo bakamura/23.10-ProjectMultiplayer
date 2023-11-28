@@ -579,7 +579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7888374932238729690, guid: 94f369f952153884e863851926812341, type: 3}
       propertyPath: Flags
-      value: 2561
+      value: 133633
       objectReference: {fileID: 0}
     - target: {fileID: 7888374932238729690, guid: 94f369f952153884e863851926812341, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
@@ -592,6 +592,10 @@ PrefabInstance:
     - target: {fileID: 8861338335378263591, guid: 94f369f952153884e863851926812341, type: 3}
       propertyPath: m_Name
       value: CutsceneUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861338335378263591, guid: 94f369f952153884e863851926812341, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94f369f952153884e863851926812341, type: 3}
@@ -1291,7 +1295,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 558911835966987595, guid: e215fceb741b1ab428b5989f5b41f3fe, type: 3}
       propertyPath: Flags
-      value: 2561
+      value: 133633
       objectReference: {fileID: 0}
     - target: {fileID: 558911835966987595, guid: e215fceb741b1ab428b5989f5b41f3fe, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
@@ -1304,6 +1308,10 @@ PrefabInstance:
     - target: {fileID: 682486048231487438, guid: e215fceb741b1ab428b5989f5b41f3fe, type: 3}
       propertyPath: m_Name
       value: FadeUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 682486048231487438, guid: e215fceb741b1ab428b5989f5b41f3fe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6544823843588392064, guid: e215fceb741b1ab428b5989f5b41f3fe, type: 3}
       propertyPath: m_Pivot.x
