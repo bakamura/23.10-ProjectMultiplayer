@@ -35,7 +35,7 @@ namespace ProjectMultiplayer.UI
 
         public override void FixedUpdateNetwork()
         {
-            if(_startWithFadeOut && !_initialFadOutDone)
+            if (_startWithFadeOut && !_initialFadOutDone)
             {
                 _initialFadOutDone = true;
                 Rpc_ChangeFade(FadeTypes.FADEOUT);
@@ -55,7 +55,7 @@ namespace ProjectMultiplayer.UI
         {
             float delta = 0;
             float durationFactor = fadeDuration > 0 ? fadeDuration : _defaultFadeDuration;
-            Color currentColor = fadeType == FadeTypes.FADEIN ? Color.clear : Color.black;        
+            Color currentColor = fadeType == FadeTypes.FADEIN ? Color.clear : Color.black;
             while (delta < 1)
             {
                 _fadeImage.color = Color.Lerp(currentColor, fadeType == FadeTypes.FADEIN ? Color.black : Color.clear, delta);
@@ -78,6 +78,6 @@ namespace ProjectMultiplayer.UI
         public void Rpc_ChangeFade(FadeTypes fadeType, /*Action OnFadeEnd = null,*/ float fadeDuration = 0)
         {
             UpdateFade(fadeType, fadeDuration);
-        }        
+        }
     }
 }
