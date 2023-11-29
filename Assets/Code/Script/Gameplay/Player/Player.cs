@@ -102,7 +102,7 @@ namespace ProjectMultiplayer.Player
         {
             _isGrounded = Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
 
-            if (GetInput(out DataPackInput inputData))
+            if (GetInput(out DataPackInput inputData) && _canAct)
             {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
@@ -163,6 +163,10 @@ namespace ProjectMultiplayer.Player
                         _playerActions[i].CurrentCooldownTime -= Runner.DeltaTime;
                         if (_playerActions[i].CurrentCooldownTime <= 0) UpdateCanAct(true);
                     }
+                }
+                else
+                {
+                    UpdateCanAct(true);
                 }
             }
 
