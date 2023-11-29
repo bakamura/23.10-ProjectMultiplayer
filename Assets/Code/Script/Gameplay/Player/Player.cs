@@ -76,8 +76,7 @@ namespace ProjectMultiplayer.Player {
             public bool UseCheckGroundInstead;
             public AnimationClip AnimClip => _animation;
 
-            public void ResetCooldown()
-            {
+            public void ResetCooldown() {
                 if (_animation) CurrentCooldownTime = _animation.length;
                 else CurrentCooldownTime = 0;
             }
@@ -98,8 +97,7 @@ namespace ProjectMultiplayer.Player {
         public override void FixedUpdateNetwork() {
             _isGrounded = Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
 
-            if (GetInput(out DataPackInput inputData) && _canAct)
-            {
+            if (GetInput(out DataPackInput inputData) && _canAct) {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
                 if (inputData.Jump != _alreadyJumped && inputData.Jump) {
@@ -150,8 +148,7 @@ namespace ProjectMultiplayer.Player {
                         if (_playerActions[i].CurrentCooldownTime <= 0) UpdateCanAct(true);
                     }
                 }
-                else
-                {
+                else {
                     UpdateCanAct(true);
                 }
             }
