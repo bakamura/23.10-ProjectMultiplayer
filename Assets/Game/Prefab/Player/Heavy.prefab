@@ -705,7 +705,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 00000000fb66104fe1f72aa52afa8626a8b5caa326d1144ecd129cb3679a3a33e3b9ecdcb30499d816407e67740e60f09fcde80de093af7c0b502781532ea8d0f66a4f6f7b37914ede7376f1
+  StateHashes: 00000000fb66104fe1f72aa52afa8626a8b5caa326d1144ecd129cb3679a3a33e3b9ecdcb30499d816407e67740e60f09fcde80de093af7c0b5027810877168ae3b49e777b37914ede7376f1
   TriggerHashes: 000000002fd4f57d6f80c832
 --- !u!114 &4528221714184371136
 MonoBehaviour:
@@ -720,27 +720,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _faceAnimations:
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Walk/idle
+    faceSprite:
+    - {fileID: 8790110523137250546, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Shield_Up
+    faceSprite:
+    - {fileID: -4774006754729174187, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Walk_Shield
+    faceSprite:
+    - {fileID: -4774006754729174187, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Shield_Down
+    faceSprite:
+    - {fileID: 8790110523137250546, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Lift_Up
+    faceSprite:
+    - {fileID: 8790110523137250546, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    - {fileID: -7114551994782217519, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
+    - 0.5
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Walk_Lift
+    faceSprite:
+    - {fileID: -7114551994782217519, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
+    loop: 0
+  - animationName: Lift_Down
+    faceSprite:
+    - {fileID: -4774006754729174187, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
+    loop: 0
+  - animationName: Activate
+    faceSprite:
+    - {fileID: -5120233338888824761, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
+    loop: 0
+  - animationName: Death
+    faceSprite:
+    - {fileID: -7114551994782217519, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    - {fileID: -7366315630663567738, guid: ce75f272df4dd834ca0d3b9d88ea011a, type: 3}
+    faceTime:
+    - 0
+    - 0.5
     loop: 0
