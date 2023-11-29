@@ -16,9 +16,9 @@ namespace ProjectMultiplayer.Player.Actions {
         private Vector3 _glideForce;
         private bool _isGliding = false;
 
+#if UNITY_EDITOR
         [Space(16)]
 
-#if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
