@@ -62,6 +62,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   _turnDuration: 0.05
+  _actionCooldownFactor: 1
   _actionJump:
     Action: {fileID: 5733168522873637007}
     _animation: {fileID: 8931999904791260600, guid: 839e8b920f4e440438ce9a175f7f25ee, type: 3}
@@ -109,6 +110,10 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -8610974669089112299}
+  - {fileID: 5733168522873637007}
+  - {fileID: 322104195487087942}
+  - {fileID: 5819210551799558472}
+  - {fileID: 3529934112086954632}
   - {fileID: 4338670505153219735}
   - {fileID: 8013813967320261173}
   - {fileID: 3996776240122360717}
@@ -126,6 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e992a7173c56e2842b117e30a04368c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _jumpHeight: 4
   _jumpSound: {fileID: 0}
@@ -144,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875d4f61e42b14149b4977425ea60d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _isGrowing: 0
   _actionRange: 5
@@ -166,12 +173,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8dad6f77d1dc564896acebfe0d29ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _liftOffset: {x: 0, y: 0.25, z: 0.25}
   _liftBox: {x: 1, y: 1.5, z: 1}
   _actionSuccess: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
   _actionFailed: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
-  _animationTrigger: isGrabbi
+  _animationBool: 
   _debugLogs: 0
 --- !u!114 &3529934112086954632
 MonoBehaviour:
@@ -185,6 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95955aeb9cf29084e92668fc0b4e2835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _actionRange: 5
   _actionLayer:
