@@ -100,21 +100,34 @@ namespace ProjectMultiplayer.Player {
             if (GetInput(out DataPackInput inputData) && _canAct) {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
-                if (inputData.Jump != _alreadyJumped && inputData.Jump) {
-                    _actionJump.Action.DoAction(_rayCache);
-                    LockPlayerAction(_actionJump);
+                if (inputData.Jump != _alreadyJumped) {
+                    if (inputData.Jump) {
+                        _actionJump.Action.DoAction(_rayCache);
+                        LockPlayerAction(_actionJump);
+                    }
+                    else _actionJump.Action.StopAction();
+
                 }
-                if (inputData.Action1 != _alreadyAction1 && inputData.Action1) {
-                    _action1.Action.DoAction(_rayCache);
-                    LockPlayerAction(_action1);
+                if (inputData.Action1 != _alreadyAction1) {
+                    if (inputData.Action1) {
+                        _action1.Action.DoAction(_rayCache);
+                        LockPlayerAction(_action1);
+                    }
+                    else _action1.Action.StopAction();
                 }
-                if (inputData.Action2 != _alreadyAction2 && inputData.Action2) {
-                    _action2.Action.DoAction(_rayCache);
-                    LockPlayerAction(_action2);
+                if (inputData.Action2 != _alreadyAction2) {
+                    if (inputData.Action2) {
+                        _action2.Action.DoAction(_rayCache);
+                        LockPlayerAction(_action2);
+                    }
+                    else _action2.Action.StopAction();
                 }
-                if (inputData.Action3 != _alreadyAction3 && inputData.Action3) {
-                    _action3.Action.DoAction(_rayCache);
-                    LockPlayerAction(_action3);
+                if (inputData.Action3 != _alreadyAction3) {
+                    if (inputData.Action3) {
+                        _action3.Action.DoAction(_rayCache);
+                        LockPlayerAction(_action3);
+                    }
+                    else _action3.Action.StopAction();
                 }
                 _alreadyJumped = inputData.Jump;
                 _alreadyAction1 = inputData.Action1;
@@ -165,7 +178,7 @@ namespace ProjectMultiplayer.Player {
                 }
             }
 
-            if(_inputV2ToV3.sqrMagnitude > 0) _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y, 0)
+            if (_inputV2ToV3.sqrMagnitude > 0) _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y, 0)
                                                           * Vector3.forward).normalized, ForceMode.Acceleration);
         }
 
