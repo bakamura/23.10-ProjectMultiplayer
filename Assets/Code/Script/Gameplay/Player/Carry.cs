@@ -24,7 +24,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             if (!_carriedObject) {
                 Size sizeCache;
-                foreach (Collider col in Physics.OverlapBox(transform.position + _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
+                foreach (Collider col in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _liftOffset, _liftBox, transform.rotation).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
                     if (col.transform != transform) {
                         sizeCache = col.GetComponent<Size>();
                         if (sizeCache) {
@@ -58,8 +58,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected() {
+            Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.color = Color.cyan;
+            Gizmos.matrix = transform.localToWorldMatrix;
+
             Gizmos.DrawWireCube(transform.position + _liftOffset, _liftBox);
+            Gizmos.matrix = prevMatrix;
         }
 #endif
     }

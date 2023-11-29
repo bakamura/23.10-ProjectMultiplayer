@@ -24,7 +24,7 @@ namespace ProjectMultiplayer.Player.Actions {
 #endif
 
         public override void DoAction(Ray cameraRay) {
-            foreach (Collider collider in Physics.OverlapBox(transform.position + _actionOffset, _actionBox / 2)) {
+            foreach (Collider collider in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _actionOffset, _actionBox / 2)) {
                 Breakable breakScript = collider.GetComponent<Breakable>();
                 if (breakScript && breakScript.TryBreak(_player.Size.Type)) PlayAudio(_breakSuccess);
                 Player playerScript = collider.GetComponent<Player>();
@@ -48,8 +48,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected() {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(transform.position + _actionOffset, _actionBox / 2);
+            Matrix4x4 prevMatrix = Gizmos.matrix;
+            Gizmos.color = Color.yellow;
+            Gizmos.matrix = transform.localToWorldMatrix;
+
+            Gizmos.DrawWireCube(transform.localPosition + _actionOffset, _actionBox);
+            Gizmos.matrix = prevMatrix;
         }
 #endif
     }
