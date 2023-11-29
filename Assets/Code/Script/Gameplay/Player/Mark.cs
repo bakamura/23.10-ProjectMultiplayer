@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using ProjectMultiplayer.ObjectCategory.Recall;
+using Fusion;
 
 namespace ProjectMultiplayer.Player.Actions {
     public class Mark : PlayerAction {
@@ -31,7 +32,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 Recallable temp = hit.transform.GetComponent<Recallable>();
                 if (temp) {
                     temp.Mark();
-                    PlayAudio(_actionSuccess);
+                    Rpc_UpdateVisuals(true);
                 }
 
 #if UNITY_EDITOR
@@ -42,7 +43,18 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             else if (_debugLogs) Debug.Log($"{gameObject.name} is trying to mark but didn't hit anything");
 #endif
-            PlayAudio(_actionFailed);
+            Rpc_UpdateVisuals(false);
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(bool actionSuccess)
+        {
+            UpdateVisuals(actionSuccess);
+        }
+
+        private void UpdateVisuals(bool actionSuccess)
+        {
+            PlayAudio(actionSuccess ? _actionSuccess : _actionFailed);
         }
 
         public override void StopAction() { }
