@@ -11,12 +11,18 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private List<GameObject> _activablesListReference = new List<GameObject>();
         private IActivable[] _activableInterfaceArray;
         [SerializeField, Min(0f)] private float _timerDuration;
-        [Networked(OnChanged = nameof(OnInteractedChanged), OnChangedTargets = OnChangedTargets.All)] private NetworkBool _hasBeenPressed { get; set; }
+        [SerializeField] private Transform _movablePart;
+        [SerializeField] private float _buttonDistance;
+        private bool _hasBeenPressed;
         private float _currentTime;
+        private AudioSource _audioSource;
+        private Vector3 _baseMovablepartPosition;
 
         private void Awake()
         {
             _activableInterfaceArray = new IActivable[_activablesListReference.Count];
+            _audioSource = GetComponent<AudioSource>();
+            _baseMovablepartPosition = _movablePart.localPosition;
             for (int i = 0; i < _activablesListReference.Count; i++)
             {
                 _activableInterfaceArray[i] = _activablesListReference[i].GetComponent<IActivable>();
@@ -31,7 +37,7 @@ namespace ProjectMultiplayer.ObjectCategory
                 {
                     _activableInterfaceArray[i].Activate();
                 }
-                _hasBeenPressed = true;
+                Rpc_OnInteractedChanged(true);
                 StartCoroutine(Timer());
             }
         }
@@ -43,24 +49,24 @@ namespace ProjectMultiplayer.ObjectCategory
                 _currentTime += Time.deltaTime;
                 if (_currentTime >= _timerDuration)
                 {
-                    _hasBeenPressed = false;
+                    Rpc_OnInteractedChanged(false);
                 }
                 yield return null;
             }
         }
-
-        private static void OnInteractedChanged(Changed<ButtonTimer> changed)
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_OnInteractedChanged(bool hasBeenActivated)
         {
-            changed.Behaviour.UpdateFeedback(changed.Behaviour._hasBeenPressed);
+            _hasBeenPressed = hasBeenActivated;
+            UpdateVisuals();
         }
         /// <summary>
         /// This method will play any feedbacks that needs to hapen when this object changes ex: particles, materias, sounds etc
         /// </summary>
-        /// <param name="isActive"></param>
-        private void UpdateFeedback(bool isActive)
+        private void UpdateVisuals()
         {
-            //TODO SEE WHAT WILL CHANGE IN VISUAL
-            transform.localScale = isActive ? Vector3.one : Vector3.one / 2;
+            _movablePart.localPosition = _hasBeenPressed ? _movablePart.localPosition + transform.up * _buttonDistance : _baseMovablepartPosition;
+            if (_audioSource.clip) _audioSource.Play();
         }
 
         private void OnValidate()

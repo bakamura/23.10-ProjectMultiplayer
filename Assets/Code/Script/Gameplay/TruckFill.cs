@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using ProjectMultiplayer.Connection;
+using Fusion;
 
 public class TruckFill : LevelObjective
 {
@@ -11,7 +13,11 @@ public class TruckFill : LevelObjective
     private int _currentCount;
     public override bool CheckObjective()
     {
-        if (_currentCount >= _boxCapacity) _onObjectiveMeet?.Invoke();
+        if (_currentCount >= _boxCapacity)
+        {
+            _onObjectiveMeet?.Invoke();
+            NetworkManagerReference.Instance.NetworkRunner.SetActiveScene(levelToLoadWhenObjectiveComplete);
+        }
         return _currentCount >= _boxCapacity;
     }
 

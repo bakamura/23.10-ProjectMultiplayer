@@ -21,6 +21,9 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private Transform _liftedObject;
 
+        private PlayerAnimationHandler _handler;
+        [SerializeField] private string _animationBool;
+
 #if UNITY_EDITOR
         [Header("Debug")]
 
@@ -28,16 +31,19 @@ namespace ProjectMultiplayer.Player.Actions {
 #endif
 
         private void Awake() {
+            _handler = GetComponentInChildren<PlayerAnimationHandler>();
             _friendThrowupForce = Vector3.up * _friendThrowupVelocity;
         }
 
         public override void DoAction(Ray cameraRay) {
+            _handler.SetBool(_animationBool, true);
             if (!_liftedObject) {
                 Size sizeCache;
-                foreach (Collider col in Physics.OverlapBox(transform.position + _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
+                foreach (Collider col in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
                     if (col.transform != transform) {
                         sizeCache = col.GetComponent<Size>();
                         if (sizeCache) {
+                            _handler.SetBool(_animationBool, true);
                             _liftedObject = sizeCache.transform;
                             _liftedObject.transform.parent = transform;
                             _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
@@ -52,10 +58,11 @@ namespace ProjectMultiplayer.Player.Actions {
                 }
                 PlayAudio(_liftObjectFailed);
 #if UNITY_EDITOR
-                if (_debugLogs && !_liftedObject) Debug.Log($"{gameObject.name} failed to lift anything");
+                if (_debugLogs) Debug.Log($"{gameObject.name} failed to lift anything");
 #endif
             }
             else {
+                _handler.SetBool(_animationBool, false);
                 _liftedObject.transform.parent = null;
                 if (_liftedObject.GetComponent<Player>())
                 {
@@ -76,10 +83,15 @@ namespace ProjectMultiplayer.Player.Actions {
 
         public override void StopAction() { }
 
+
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected() {
+            Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(transform.position + _liftOffset, _liftBox);
+            Gizmos.matrix = transform.localToWorldMatrix;
+
+            Gizmos.DrawWireCube(_liftOffset, _liftBox);
+            Gizmos.matrix = prevMatrix;
         }
 #endif
 

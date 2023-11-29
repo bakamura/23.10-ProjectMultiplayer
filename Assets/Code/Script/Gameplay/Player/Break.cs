@@ -17,14 +17,22 @@ namespace ProjectMultiplayer.Player.Actions {
 
         [SerializeField] private float _friendPushForce;
 
+        private PlayerAnimationHandler _handler;
+        [SerializeField] private string _animationTrigger;
+
 #if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
 #endif
 
+        private void Awake() {
+            _handler = GetComponentInChildren<PlayerAnimationHandler>();
+        }
+
         public override void DoAction(Ray cameraRay) {
-            foreach (Collider collider in Physics.OverlapBox(transform.position + _actionOffset, _actionBox / 2)) {
+            _handler.SetTrigger(_animationTrigger);
+            foreach (Collider collider in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _actionOffset, _actionBox / 2)) {
                 Breakable breakScript = collider.GetComponent<Breakable>();
                 if (breakScript && breakScript.TryBreak(_player.Size.Type)) PlayAudio(_breakSuccess);
                 Player playerScript = collider.GetComponent<Player>();
@@ -38,6 +46,9 @@ namespace ProjectMultiplayer.Player.Actions {
 #endif
                 return;
             }
+#if UNITY_EDITOR
+            if (_debugLogs) Debug.Log("Break did not hit any relevant colliders");
+#endif
             PlayAudio(_breakFailed);
         }
 
@@ -45,8 +56,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected() {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(transform.position + _actionOffset, _actionBox / 2);
+            Matrix4x4 prevMatrix = Gizmos.matrix;
+            Gizmos.color = Color.yellow;
+            Gizmos.matrix = transform.localToWorldMatrix;
+
+            Gizmos.DrawWireCube(_actionOffset, _actionBox);
+            Gizmos.matrix = prevMatrix;
         }
 #endif
     }

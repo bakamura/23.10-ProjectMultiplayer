@@ -15,7 +15,7 @@ public class SfxHandler : MonoBehaviour {
     protected void Awake() {
         _as = GetComponent<AudioSource>();
 
-        _uiClickDuration = _uiClickSfx.length;
+        if(_uiClickSfx) _uiClickDuration = _uiClickSfx.length;
     }
 
     private void Update() {

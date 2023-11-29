@@ -30,7 +30,7 @@ namespace ProjectMultiplayer.Connection
                             Destroy(results[i]);
                         }
                         _instance = results[0];
-                        _instance.Spawned();
+                        //_instance.Spawned();
                     }
                 }
                 // se ainda n tiver uma referência da instancia, cria uma do tipo desejado

@@ -50,8 +50,8 @@ namespace ProjectMultiplayer.ObjectCategory.Break {
             }
 #if UNITY_EDITOR
             else if (_debugLogs) Debug.Log($"Couldn't break {gameObject.name} due to lacking Size form the breaker");
-            return false;
 #endif
+            return false;
         }
 
     }

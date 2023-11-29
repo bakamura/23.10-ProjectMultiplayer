@@ -11,6 +11,9 @@ namespace ProjectMultiplayer.ObjectCategory
     {
         [SerializeField] private SpeedValueData[] _speedValues;
         [SerializeField] private LayerMask _objectsAffectedLayer;
+        [SerializeField, Min(0f)] private float _fanRotationSpeed;
+        [SerializeField] private Transform _objectToRotate;
+        [SerializeField] private bool _turnCounterClokwise;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -18,12 +21,13 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private Color _debugColor;
 #endif
 
-        [Networked(OnChanged = nameof(OnActivateChanged), OnChangedTargets = OnChangedTargets.All)] private NetworkBool _hasBeenActivated { get; set; }
+        private bool _hasBeenActivated { get; set; }
 
         private Dictionary<int, MovableObjectData> _objectsInsideArea = new Dictionary<int, MovableObjectData>();
         private Coroutine _moveObjectsCoroutine = null;
-        private WaitForSeconds _delay = new WaitForSeconds(_tickDelay);
-        private const float _tickDelay = .02f;
+        private Coroutine _fanRotationCoroutine = null;
+        private AudioSource _audioSource;
+        private WaitForSeconds _delay;
 
         [Serializable]
         private struct SpeedValueData
@@ -45,10 +49,15 @@ namespace ProjectMultiplayer.ObjectCategory
             }
         }
 
-        //public override void Spawned()
-        //{
-        //    _hasBeenActivated = true;
-        //}
+        public override void Spawned()
+        {
+            _delay = new WaitForSeconds(Runner.DeltaTime);
+        }
+
+        private void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();            
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -123,27 +132,50 @@ namespace ProjectMultiplayer.ObjectCategory
 
         public void Activate()
         {
-            _hasBeenActivated = true;
+            Rpc_OnInteractedChanged(true);
         }
 
         public void Deactivate()
         {
-            _hasBeenActivated = false;
+            Rpc_OnInteractedChanged(false);
         }
 
-        private static void OnActivateChanged(Changed<Fan> changed)
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_OnInteractedChanged(bool hasBeenActivated)
         {
-            changed.Behaviour.UpdateVisuals(changed.Behaviour._hasBeenActivated);
+            _hasBeenActivated = hasBeenActivated;
+            UpdateVisuals();
         }
 
         /// <summary>
         /// This method will play any feedbacks that needs to hapen when this object changes ex: particles, materias, sounds etc
         /// </summary>
-        /// <param name="isActive"></param>
-        private void UpdateVisuals(bool isActive)
+        private void UpdateVisuals()
         {
-            //TODO SEE WHAT WILL CHANGE IN VISUAL
-            transform.localScale = isActive ? Vector3.one : Vector3.one / 2;
+            if (_hasBeenActivated)
+            {
+                if (_audioSource.clip) _audioSource.Play();
+                if(_fanRotationCoroutine == null)_fanRotationCoroutine = StartCoroutine(FanRotation());
+            }
+            else
+            {
+                if (_fanRotationCoroutine != null)
+                {
+                    if (_audioSource.clip) _audioSource.Stop();
+                    StopCoroutine(_fanRotationCoroutine);
+                    _fanRotationCoroutine = null;
+                }
+            }
+        }
+
+        private IEnumerator FanRotation()
+        {
+            WaitForFixedUpdate delay = new WaitForFixedUpdate();
+            while (true)
+            {
+                _objectToRotate.Rotate(Vector3.right, _turnCounterClokwise ? -_fanRotationSpeed * Time.fixedDeltaTime : _fanRotationSpeed * Time.fixedDeltaTime);
+                yield return delay;
+            }
         }
 
 #if UNITY_EDITOR

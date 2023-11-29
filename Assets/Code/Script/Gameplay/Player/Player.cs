@@ -4,6 +4,7 @@ using UnityEngine;
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
+using UnityEngine.InputSystem;
 
 namespace ProjectMultiplayer.Player
 {
@@ -22,15 +23,17 @@ namespace ProjectMultiplayer.Player
         [SerializeField] private Vector3 _checkGroundOffset;
         [SerializeField] private Vector3 _checkGroundBox;
         [SerializeField] private LayerMask _checkGroundLayer;
+        private float _currentTurnVelocity;
+        [SerializeField] private float _turnDuration;
 
         [Header("Action")]
-
+        [SerializeField] private float _actionCooldownFactor = 1;
         [SerializeField] private PlayerActionData _actionJump;
         [SerializeField] private PlayerActionData _action1;
         [SerializeField] private PlayerActionData _action2;
         [SerializeField] private PlayerActionData _action3;
 
-        [Header("Audio")] 
+        [Header("Audio")]
         [SerializeField] private AudioSource _movmentAudioSource;
         [SerializeField] private bool _randomizePicth;
         [SerializeField] private Vector2 _randomizeRange;
@@ -80,7 +83,8 @@ namespace ProjectMultiplayer.Player
 
             public void ResetCooldown()
             {
-                CurrentCooldownTime = _animation.length;
+                if (_animation) CurrentCooldownTime = _animation.length;
+                else CurrentCooldownTime = 1;
             }
         }
 
@@ -89,7 +93,7 @@ namespace ProjectMultiplayer.Player
             _nRigidbody = GetComponent<NetworkRigidbody>();
             _size = GetComponent<Size>();
             _shieldAbility = GetComponent<Shield>();
-            _playerActions = new PlayerActionData[] { /*_actionJump,*/ _action1, _action2, _action3 };
+            _playerActions = new PlayerActionData[] { _actionJump, _action1, _action2, _action3 };
 
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
@@ -99,31 +103,48 @@ namespace ProjectMultiplayer.Player
 
         public override void FixedUpdateNetwork()
         {
-            _isGrounded = Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
+            _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
 
-            if (GetInput(out DataPackInput inputData))
+            if (GetInput(out DataPackInput inputData) && _canAct)
             {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
-                if (inputData.Jump != _alreadyJumped && inputData.Jump)
+                if (inputData.Jump != _alreadyJumped)
                 {
-                    _actionJump.Action.DoAction(_rayCache);
-                    LockPlayerAction(_actionJump);
+                    if (inputData.Jump)
+                    {
+                        _actionJump.Action.DoAction(_rayCache);
+                        LockPlayerAction(0);
+                    }
+                    else _actionJump.Action.StopAction();
+
                 }
-                if (inputData.Action1 != _alreadyAction1 && inputData.Action1)
+                if (inputData.Action1 != _alreadyAction1)
                 {
-                    _action1.Action.DoAction(_rayCache);
-                    LockPlayerAction(_action1);
+                    if (inputData.Action1)
+                    {
+                        _action1.Action.DoAction(_rayCache);
+                        LockPlayerAction(1);
+                    }
+                    else _action1.Action.StopAction();
                 }
-                if (inputData.Action2 != _alreadyAction2 && inputData.Action2)
+                if (inputData.Action2 != _alreadyAction2)
                 {
-                    _action2.Action.DoAction(_rayCache);
-                    LockPlayerAction(_action2);
+                    if (inputData.Action2)
+                    {
+                        _action2.Action.DoAction(_rayCache);
+                        LockPlayerAction(2);
+                    }
+                    else _action2.Action.StopAction();
                 }
-                if (inputData.Action3 != _alreadyAction3 && inputData.Action3)
+                if (inputData.Action3 != _alreadyAction3)
                 {
-                    _action3.Action.DoAction(_rayCache);
-                    LockPlayerAction(_action3);
+                    if (inputData.Action3)
+                    {
+                        _action3.Action.DoAction(_rayCache);
+                        LockPlayerAction(3);
+                    }
+                    else _action3.Action.StopAction();
                 }
                 _alreadyJumped = inputData.Jump;
                 _alreadyAction1 = inputData.Action1;
@@ -149,7 +170,7 @@ namespace ProjectMultiplayer.Player
                 {
                     if (_playerActions[i].UseCheckGroundInstead)
                     {
-                        if (!_recentlyJumped) _recentlyJumped = !_isGrounded;                        
+                        if (!_recentlyJumped) _recentlyJumped = !_isGrounded;
                         if (_recentlyJumped && _isGrounded)
                         {
                             _playerActions[i].CurrentCooldownTime = 0;
@@ -159,12 +180,11 @@ namespace ProjectMultiplayer.Player
                     }
                     else
                     {
-                        _playerActions[i].CurrentCooldownTime -= Runner.DeltaTime;
+                        _playerActions[i].CurrentCooldownTime -= _playerActions[i].AnimClip.length * Runner.DeltaTime * _actionCooldownFactor;
                         if (_playerActions[i].CurrentCooldownTime <= 0) UpdateCanAct(true);
                     }
                 }
             }
-
         }
 
         private void Movement(Vector2 direction)
@@ -173,14 +193,20 @@ namespace ProjectMultiplayer.Player
             _inputV2ToV3[2] = direction.y;
             if (_movmentAudioSource.clip)
             {
-                if (_movmentAudioSource.clip && direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
+                if (_movmentAudioSource.clip && _inputV2ToV3.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
                 {
                     if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
                     _movmentAudioSource.Play();
                 }
             }
 
-            _nRigidbody.Rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);
+            if (_inputV2ToV3.sqrMagnitude > 0)
+            {
+                float targetAngle = Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y;
+                _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, targetAngle, 0) * Vector3.forward).normalized, ForceMode.Acceleration);
+                transform.rotation = Quaternion.Euler(0, Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentTurnVelocity, _turnDuration), 0);
+
+            }
         }
 
         public void TryDamage()
@@ -218,17 +244,21 @@ namespace ProjectMultiplayer.Player
             _canAct = canAct;
         }
 
-        private void LockPlayerAction(PlayerActionData currentActionGoing)
+        private void LockPlayerAction(int currentActionGoingIndex)
         {
             UpdateCanAct(false);
-            currentActionGoing.ResetCooldown();
+            _playerActions[currentActionGoingIndex].ResetCooldown();
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
+            Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.color = _isGrounded ? Color.green : Color.red;
-            Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
+            Gizmos.matrix = transform.localToWorldMatrix;
+
+            Gizmos.DrawWireCube(_checkGroundOffset, _checkGroundBox);
+            Gizmos.matrix = prevMatrix;
         }
 #endif
     }
