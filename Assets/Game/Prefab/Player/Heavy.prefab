@@ -398,6 +398,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   _turnDuration: 0.05
+  _actionCooldownFactor: 1
   _actionJump:
     Action: {fileID: 7863089885790155227}
     _animation: {fileID: 0}
@@ -445,6 +446,10 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8805940847868612583}
+  - {fileID: 7863089885790155227}
+  - {fileID: 4541591849879484853}
+  - {fileID: 571833973339913280}
+  - {fileID: 1411086493647162598}
   - {fileID: 1289702765922453596}
   - {fileID: 8731267189884099451}
   - {fileID: 3932481180723045919}
@@ -462,6 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a223227c966d24095b397f0b831f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 7629891120456832127}
   _jumpHeight: 0.1
   _soundEffect: {fileID: 0}
@@ -478,6 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875d4f61e42b14149b4977425ea60d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 7629891120456832127}
   _isGrowing: 1
   _actionRange: 5
@@ -500,6 +507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8041054eccc8f644babf9c4b61b1eed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 7629891120456832127}
   _liftOffset: {x: 0, y: 0.5, z: 1}
   _liftBox: {x: 1.5, y: 1.5, z: 1.5}
@@ -521,6 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02a14650788963d43bf42d1b52969ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 7629891120456832127}
   onBlockBullet:
     m_PersistentCalls:
