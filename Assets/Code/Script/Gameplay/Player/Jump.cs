@@ -9,9 +9,9 @@ namespace ProjectMultiplayer.Player.Actions {
         private Vector3 _jumpForce;
         [SerializeField] private AudioClip _soundEffect;
 
+#if UNITY_EDITOR
         [Space(16)]
 
-#if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
