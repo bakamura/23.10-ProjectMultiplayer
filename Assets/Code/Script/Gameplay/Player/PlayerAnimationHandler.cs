@@ -55,7 +55,11 @@ public class PlayerAnimationHandler : NetworkBehaviour {
     }
 
     public void SetTrigger(string trigger) {
-        _animator.SetTrigger(trigger);
+        if(trigger.Length > 0) _animator.Animator.SetTrigger(trigger);
+    }
+
+    public void SetBool(string boolName, bool isTrue) {
+        _animator.Animator.SetBool(boolName, isTrue);
     }
 
     private IEnumerator FaceAnimationRoutine(FaceAnimation animation) {

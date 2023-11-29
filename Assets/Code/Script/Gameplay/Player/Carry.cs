@@ -15,11 +15,18 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private Transform _carriedObject;
 
+        private PlayerAnimationHandler _handler;
+        [SerializeField] private string _animationBool;
+
 #if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
 #endif
+
+        private void Awake() {
+            _handler = GetComponentInChildren<PlayerAnimationHandler>();
+        }
 
         public override void DoAction(Ray cameraRay) {
             if (!_carriedObject) {
@@ -28,6 +35,7 @@ namespace ProjectMultiplayer.Player.Actions {
                     if (col.transform != transform) {
                         sizeCache = col.GetComponent<Size>();
                         if (sizeCache) {
+                            _handler.SetBool(_animationBool, true);
                             _carriedObject = sizeCache.transform;
                             _carriedObject.transform.parent = transform;
                             _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
@@ -45,6 +53,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 PlayAudio(_actionFailed);
             }
             else {
+                _handler.SetBool(_animationBool, false);
                 _carriedObject.transform.parent = null;
                 _carriedObject = null;
                 PlayAudio(_actionSuccess);
