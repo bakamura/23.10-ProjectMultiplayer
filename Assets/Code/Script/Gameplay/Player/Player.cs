@@ -80,7 +80,8 @@ namespace ProjectMultiplayer.Player
 
             public void ResetCooldown()
             {
-                CurrentCooldownTime = _animation.length;
+                if (_animation) CurrentCooldownTime = _animation.length;
+                else CurrentCooldownTime = 0;
             }
         }
 
