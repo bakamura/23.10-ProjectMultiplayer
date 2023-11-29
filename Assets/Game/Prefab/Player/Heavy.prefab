@@ -391,7 +391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _type: 0
-  _movementSpeed: 3.5
+  _movementSpeed: 17.5
   _checkGroundOffset: {x: 0, y: 0, z: 0}
   _checkGroundBox: {x: 1, y: 0.25, z: 1}
   _checkGroundLayer:
@@ -418,7 +418,7 @@ MonoBehaviour:
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
   _movmentAudioSource: {fileID: 3628449481466134262}
-  _randomizePicth: 1
+  _randomizePicth: 0
   _randomizeRange: {x: -0.1, y: 0.1}
   _debugLogs: 0
 --- !u!114 &-3646401761837570568
@@ -447,6 +447,7 @@ MonoBehaviour:
   - {fileID: 1289702765922453596}
   - {fileID: 8731267189884099451}
   - {fileID: 3932481180723045919}
+  - {fileID: 4528221714184371136}
   SimulationBehaviours: []
 --- !u!114 &7863089885790155227
 MonoBehaviour:
@@ -557,7 +558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
+  InterpolationTarget: {fileID: 495975141931986796}
   InterpolateErrorCorrection: 1
   InterpolatedErrorCorrectionSettings:
     MinRate: 3.3
@@ -580,7 +581,7 @@ Rigidbody:
   m_GameObject: {fileID: 8407137057985038263}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 1.5
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -719,6 +720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52068faeb896b6468ba1469ceca6992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _faceAnimations:
   - animationName: Walk/idle
     faceSprite:

@@ -21,6 +21,8 @@ namespace ProjectMultiplayer.Player {
         [SerializeField] private Vector3 _checkGroundOffset;
         [SerializeField] private Vector3 _checkGroundBox;
         [SerializeField] private LayerMask _checkGroundLayer;
+        private float _currentTurnVelocity;
+        [SerializeField] private float _turnDuration;
 
         [Header("Action")]
 
@@ -178,8 +180,12 @@ namespace ProjectMultiplayer.Player {
                 }
             }
 
-            if (_inputV2ToV3.sqrMagnitude > 0) _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y, 0)
-                                                          * Vector3.forward).normalized, ForceMode.Acceleration);
+            if (_inputV2ToV3.sqrMagnitude > 0) {
+                float targetAngle = Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y
+                _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, targetAngle, 0) * Vector3.forward).normalized, ForceMode.Acceleration);
+                transform.rotation = Quaternion.Euler(0, Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentTurnVelocity, _turnDuration), 0);
+
+            }
         }
 
         public void TryDamage() {
