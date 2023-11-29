@@ -14,6 +14,7 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private Vector3 _shootPoint;
         private TickTimer _tickTimer;
         private Vector3 _initialPosition;
+        private AudioSource _audioSource;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -23,8 +24,9 @@ namespace ProjectMultiplayer.ObjectCategory
 
         public override void Spawned()
         {
+            _audioSource = GetComponent<AudioSource>();
             if (Runner.IsServer)
-            {
+            {                
                 _initialPosition = transform.position;
                 _tickTimer = TickTimer.CreateFromSeconds(Runner, _shootDelay);
             }
@@ -40,8 +42,24 @@ namespace ProjectMultiplayer.ObjectCategory
                 }
                 );
                 _tickTimer = TickTimer.CreateFromSeconds(Runner, _shootDelay);
+                Rpc_OnShoot();
             }
         }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_OnShoot()
+        {
+            UpdateVisuals();
+        }
+
+        /// <summary>
+        /// This method will play any feedbacks that needs to hapen when this object changes ex: particles, materias, sounds etc
+        /// </summary>
+        private void UpdateVisuals()
+        {
+            if (_audioSource.clip) _audioSource.Play();
+        }
+
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
