@@ -159,13 +159,13 @@ namespace ProjectMultiplayer.Player {
             _inputV2ToV3[0] = direction.x;
             _inputV2ToV3[2] = direction.y;
             if (_movmentAudioSource.clip) {
-                if (_movmentAudioSource.clip && direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying) {
+                if (_movmentAudioSource.clip && _inputV2ToV3.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying) {
                     if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
                     _movmentAudioSource.Play();
                 }
             }
 
-            _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y, 0)
+            if(_inputV2ToV3.sqrMagnitude > 0) _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y, 0)
                                                           * Vector3.forward).normalized, ForceMode.Acceleration);
         }
 
