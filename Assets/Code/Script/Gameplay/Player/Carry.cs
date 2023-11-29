@@ -62,7 +62,7 @@ namespace ProjectMultiplayer.Player.Actions {
             Gizmos.color = Color.cyan;
             Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(transform.position + _liftOffset, _liftBox);
+            Gizmos.DrawWireCube(_liftOffset, _liftBox);
             Gizmos.matrix = prevMatrix;
         }
 #endif

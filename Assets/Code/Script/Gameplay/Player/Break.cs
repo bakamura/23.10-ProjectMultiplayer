@@ -52,7 +52,7 @@ namespace ProjectMultiplayer.Player.Actions {
             Gizmos.color = Color.yellow;
             Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(transform.localPosition + _actionOffset, _actionBox);
+            Gizmos.DrawWireCube(_actionOffset, _actionBox);
             Gizmos.matrix = prevMatrix;
         }
 #endif
