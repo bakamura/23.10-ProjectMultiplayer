@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 3941674507016598937}
   - component: {fileID: 3628449481466134262}
   m_Layer: 0
-  m_Name: MovmentAudio
+  m_Name: MovementAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,7 +250,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2649807462790791762, guid: dd4c72b0a972fdf46bb2113e7c24e8b0, type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: e50aa6ff5623ac54b939985f7aea3b04, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -404,17 +404,17 @@ MonoBehaviour:
     UseCheckGroundInstead: 1
   _action1:
     Action: {fileID: 4541591849879484853}
-    _animation: {fileID: 0}
+    _animation: {fileID: 2917318281195987965, guid: 4e2631345147f6d499334510b1f05d73, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
   _action2:
     Action: {fileID: 571833973339913280}
-    _animation: {fileID: 0}
+    _animation: {fileID: 8423843431349565185, guid: 4e2631345147f6d499334510b1f05d73, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
   _action3:
     Action: {fileID: 1411086493647162598}
-    _animation: {fileID: 0}
+    _animation: {fileID: 7176276558078528791, guid: 4e2631345147f6d499334510b1f05d73, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
   _movmentAudioSource: {fileID: 3628449481466134262}
@@ -497,7 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8041054eccc8f644babf9c4b61b1eed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioSource: {fileID: 0}
+  _audioSource: {fileID: 7629891120456832127}
   _liftOffset: {x: 0, y: 0.5, z: 1}
   _liftBox: {x: 1.5, y: 1.5, z: 1.5}
   _liftObjectSuccess: {fileID: 0}
