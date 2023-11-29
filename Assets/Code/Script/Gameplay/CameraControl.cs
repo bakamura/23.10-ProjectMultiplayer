@@ -13,6 +13,7 @@ public class CameraControl : MonoBehaviour {
 
     [Header("Cache")]
 
+    private Transform _playerTarget;
     private Transform _followTarget;
     private Vector2 _deltaInputCache;
     private float _deltaInputCacheUnit;
@@ -32,6 +33,7 @@ public class CameraControl : MonoBehaviour {
         _deltaInputCacheUnit = _deltaInputCache.x * _sensitivityX;
         _deltaInputCache[0] = _deltaInputCache.y * _sensitivityY;
         _deltaInputCache[1] = _deltaInputCacheUnit;
+        _followTarget.position = _playerTarget.position + _followTargetOffset;
         _followTarget.eulerAngles += (Vector3)_deltaInputCache;
     }
 
@@ -50,8 +52,8 @@ public class CameraControl : MonoBehaviour {
         if (players != null) {
             foreach (Player player in players)
                 if (player.Type == NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType) {
-                    _followTarget.parent = player.transform;
-                    _followTarget.localPosition = _followTargetOffset;
+                    _playerTarget = player.transform;
+                    _followTarget.position = _playerTarget.position + _followTargetOffset;
 #if UNITY_EDITOR
                     if (_debugLogs) Debug.Log("Camera found active Player");
 #endif

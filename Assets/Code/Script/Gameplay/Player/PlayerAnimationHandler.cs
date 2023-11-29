@@ -1,8 +1,9 @@
+using Fusion;
 using ProjectMultiplayer.Player;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerAnimationHandler : MonoBehaviour {
+public class PlayerAnimationHandler : NetworkBehaviour {
 
     [System.Serializable]
     struct FaceAnimation {
@@ -19,27 +20,32 @@ public class PlayerAnimationHandler : MonoBehaviour {
 
     [Header("Cache")]
 
-    protected Animator _animator;
+    protected NetworkMecanimAnimator _animator;
     protected Player _player;
     protected SpriteRenderer _faceSpriteRenderer;
 
-    protected void Awake() {
-        _animator = GetComponent<Animator>();
-        _player = GetComponent<Player>();
+    public override void Spawned() {
+        _animator = GetComponent<NetworkMecanimAnimator>();
+        _player = transform.parent.GetComponent<Player>();
         _faceSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
-    }
-
-    protected void Start() {
         StartCoroutine(FaceAnimationRoutine(_faceAnimations[_faceAnimationCurrent]));
     }
 
-    protected void Update() {
-        _animator.SetBool("isMoving", Mathf.Abs(_player.NRigidbody.Rigidbody.velocity.x) + Mathf.Abs(_player.NRigidbody.Rigidbody.velocity.z) > 0.1f);
-        _animator.SetBool("onAir ", Mathf.Abs(_player.NRigidbody.Rigidbody.velocity.y) > 0.1f);
+    public override void FixedUpdateNetwork() {
+        _animator
+            .Animator
+            .SetBool("isMoving", Mathf.Abs(
+                _player
+                .NRigidbody
+                .Rigidbody.velocity.x) + Mathf.Abs(
+                    _player
+                    .NRigidbody
+                    .Rigidbody.velocity.z) > 0.1f);
+        _animator.Animator.SetBool("onAir ", Mathf.Abs(_player.NRigidbody.Rigidbody.velocity.y) > 0.1f);
 
-        if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != _faceAnimations[0].animationName) {
+        if (_animator.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != _faceAnimations[0].animationName) {
             for (int i = 0; i < _faceAnimations.Length; i++) {
-                if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == _faceAnimations[i].animationName) {
+                if (_animator.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == _faceAnimations[i].animationName) {
                     _faceAnimationCurrent = i;
                     StopAllCoroutines();
                     StartCoroutine(FaceAnimationRoutine(_faceAnimations[_faceAnimationCurrent]));
