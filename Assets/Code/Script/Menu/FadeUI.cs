@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Fusion;
-using Fusion.Sockets;
-using ProjectMultiplayer.Connection;
 
 namespace ProjectMultiplayer.UI
 {
@@ -19,7 +16,6 @@ namespace ProjectMultiplayer.UI
         private Coroutine _fadeCoroutine;
         private WaitForSeconds _delay;
         public Action OnFadeEnd;
-        private bool _initialFadOutDone;
 
         public enum FadeTypes
         {
@@ -33,14 +29,19 @@ namespace ProjectMultiplayer.UI
             _delay = new WaitForSeconds(_fadeUpdateFrequency);
         }
 
-        public override void FixedUpdateNetwork()
+        public override void Spawned()
         {
-            if (_startWithFadeOut && !_initialFadOutDone)
-            {
-                _initialFadOutDone = true;
-                Rpc_ChangeFade(FadeTypes.FADEOUT);
-            }
+            if (_startWithFadeOut)
+                UpdateFade(FadeTypes.FADEOUT);
         }
+        //public override void FixedUpdateNetwork()
+        //{
+        //    if (_startWithFadeOut && !_initialFadOutDone)
+        //    {
+        //        _initialFadOutDone = true;
+        //        Rpc_ChangeFade(FadeTypes.FADEOUT);
+        //    }
+        //}
 
         private void UpdateFade(FadeTypes fadeType, /*Action OnFadeEnd = null,*/ float fadeDuration = 0)
         {
@@ -55,23 +56,16 @@ namespace ProjectMultiplayer.UI
         {
             float delta = 0;
             float durationFactor = fadeDuration > 0 ? fadeDuration : _defaultFadeDuration;
-            Color currentColor = fadeType == FadeTypes.FADEIN ? Color.clear : Color.black;
+            Color currentColor = _fadeImage.color;
             while (delta < 1)
             {
-                _fadeImage.color = Color.Lerp(currentColor, fadeType == FadeTypes.FADEIN ? Color.black : Color.clear, delta);
                 delta += _fadeUpdateFrequency / durationFactor;
+                _fadeImage.color = Color.Lerp(currentColor, fadeType == FadeTypes.FADEIN ? Color.black : Color.clear, delta);
                 yield return _delay;
             }
             _fadeImage.raycastTarget = fadeType == FadeTypes.FADEIN;
             _fadeCoroutine = null;
             OnFadeEnd?.Invoke();
-            //OnFadeEnd?.Invoke();
-        }
-
-        private void RemoveInitialFadeOut()
-        {
-            NetworkManagerReference.Instance.OnFixedNetworkUpdate -= RemoveInitialFadeOut;
-            Rpc_ChangeFade(FadeTypes.FADEOUT);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
