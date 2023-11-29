@@ -418,7 +418,7 @@ MonoBehaviour:
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
   _movmentAudioSource: {fileID: 3628449481466134262}
-  _randomizePicth: 0
+  _randomizePicth: 1
   _randomizeRange: {x: -0.1, y: 0.1}
   _debugLogs: 0
 --- !u!114 &-3646401761837570568
