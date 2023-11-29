@@ -20,6 +20,7 @@ namespace ProjectMultiplayer.ObjectCategory
         private PistonPositionData _currentPosition;
         private AudioSource _audioSource;
         private Coroutine _pistonMovmentCoroutine = null;
+        private WaitForSeconds _delay;
 
         [System.Serializable]
         private struct PistonPositionData
@@ -37,7 +38,12 @@ namespace ProjectMultiplayer.ObjectCategory
         {
             _audioSource = GetComponentInChildren<AudioSource>();
         }
-        [ContextMenu("Activate")]
+
+        public override void Spawned()
+        {
+            _delay = new WaitForSeconds(Runner.DeltaTime);
+        }
+
         public void Activate()
         {
             if (_pistonMovmentCoroutine == null /*&& !_isActive*/)
@@ -47,7 +53,7 @@ namespace ProjectMultiplayer.ObjectCategory
                 if (GetPositionData()) Rpc_OnInteractedChanged(_currentPosition.TravelDistance, _directionSign);
             }
         }
-        [ContextMenu("Deactivate")]
+
         public void Deactivate()
         {
             if (_pistonMovmentCoroutine == null /*&& _isActive*/)
@@ -72,13 +78,12 @@ namespace ProjectMultiplayer.ObjectCategory
 
         private IEnumerator MovePiston(float distance, float direction)
         {
-            WaitForFixedUpdate delay = new WaitForFixedUpdate();
             Vector3 initialPos = _movablePart.position;
             while (Vector3.Distance(_movablePart.position, initialPos) < distance)
             {
                 _movablePart.position += _speed * direction * Time.fixedDeltaTime * transform.up;
                 _middlePart.localScale += _middleSizePartScaleMultiplier * _speed * direction * Time.fixedDeltaTime * transform.up;
-                yield return delay;
+                yield return _delay;
             }
             if (_audioSource.clip) _audioSource.Stop();
             _pistonMovmentCoroutine = null;
