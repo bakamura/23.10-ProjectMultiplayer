@@ -19,6 +19,7 @@ namespace ProjectMultiplayer.ObjectCategory
         {
             _activableInterfaceArray = new IActivable[_activablesListReference.Count];
             _baseMovablepartPosition = _movablePart.localPosition;
+            _audioSource = GetComponent<AudioSource>();
             for (int i = 0; i < _activablesListReference.Count; i++)
             {
                 _activableInterfaceArray[i] = _activablesListReference[i].GetComponent<IActivable>();

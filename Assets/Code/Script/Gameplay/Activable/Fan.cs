@@ -173,7 +173,7 @@ namespace ProjectMultiplayer.ObjectCategory
             WaitForFixedUpdate delay = new WaitForFixedUpdate();
             while (true)
             {
-                _objectToRotate.Rotate(transform.forward, _turnCounterClokwise ? -_fanRotationSpeed * Time.fixedDeltaTime : _fanRotationSpeed * Time.fixedDeltaTime);
+                _objectToRotate.Rotate(Vector3.right, _turnCounterClokwise ? -_fanRotationSpeed * Time.fixedDeltaTime : _fanRotationSpeed * Time.fixedDeltaTime);
                 yield return delay;
             }
         }

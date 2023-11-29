@@ -12,14 +12,18 @@ namespace ProjectMultiplayer.ObjectCategory
         [SerializeField] private Size.Size.SizeType _sizeDesired;
         [SerializeField] private Transform _movablePart;
         [SerializeField] private float _buttonDistance;
+        [SerializeField] private Color[] _buttonColors = new Color[2];
         private AudioSource _audioSource;
         private Vector3 _baseMovablepartPosition;
         private bool _hasBeenPressed;
+        private Material _movableMaterial;
 
         private void Awake()
         {
             _activableInterfaceArray = new IActivable[_activablesListReference.Count];
             _baseMovablepartPosition = _movablePart.localPosition;
+            _audioSource = GetComponent<AudioSource>();
+            _movableMaterial = _movablePart.GetComponent<MeshRenderer>().material;
             for (int i = 0; i < _activablesListReference.Count; i++)
             {
                 _activableInterfaceArray[i] = _activablesListReference[i].GetComponent<IActivable>();
@@ -65,6 +69,7 @@ namespace ProjectMultiplayer.ObjectCategory
         private void UpdateVisuals()
         {
             _movablePart.localPosition = _hasBeenPressed ? _movablePart.localPosition + transform.up * _buttonDistance : _baseMovablepartPosition;
+            _movableMaterial.color = _hasBeenPressed ? _buttonColors[1] : _buttonColors[0];
             if (_audioSource.clip) _audioSource.Play();
         }
 

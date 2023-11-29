@@ -216,6 +216,9 @@ MonoBehaviour:
   _sizeDesired: 0
   _movablePart: {fileID: 3801873433389406190}
   _buttonDistance: -0.05
+  _buttonColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &3337376396487165413
 MonoBehaviour:
   m_ObjectHideFlags: 0
