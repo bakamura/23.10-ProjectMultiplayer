@@ -13,13 +13,21 @@ namespace ProjectMultiplayer.Player.Actions {
         [SerializeField] private AudioClip _actionSuccess;
         [SerializeField] private AudioClip _actionFailed;
 
+        private PlayerAnimationHandler _handler;
+        [SerializeField] private string _animationTrigger;
+
 #if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
 #endif
 
+        private void Awake() {
+            _handler = GetComponentInChildren<PlayerAnimationHandler>();
+        }
+
         public override void DoAction(Ray cameraRay) {
+            _handler.SetTrigger(_animationTrigger);
             if (Physics.Raycast(cameraRay, out RaycastHit hit, Mathf.Infinity, _sizedObjectLayer) && Vector3.Distance(transform.position, hit.point) < _actionRange) {
                 Size hitSize = hit.transform.GetComponent<Size>();
 #if UNITY_EDITOR

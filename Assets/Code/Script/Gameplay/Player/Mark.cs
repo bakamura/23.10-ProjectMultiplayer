@@ -2,10 +2,8 @@ using UnityEngine;
 
 using ProjectMultiplayer.ObjectCategory.Recall;
 
-namespace ProjectMultiplayer.Player.Actions
-{
-    public class Mark : PlayerAction
-    {
+namespace ProjectMultiplayer.Player.Actions {
+    public class Mark : PlayerAction {
 
         [Header("Parameters")]
 
@@ -14,19 +12,24 @@ namespace ProjectMultiplayer.Player.Actions
         [SerializeField] private AudioClip _actionSuccess;
         [SerializeField] private AudioClip _actionFailed;
 
+        private PlayerAnimationHandler _handler;
+        [SerializeField] private string _animationTrigger;
+
 #if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
 #endif
 
-        public override void DoAction(Ray cameraRay)
-        {
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, Mathf.Infinity, _actionLayer) && Vector3.Distance(transform.position, hit.point) < _actionRange)
-            {
+        private void Awake() {
+            _handler = GetComponentInChildren<PlayerAnimationHandler>();
+        }
+
+        public override void DoAction(Ray cameraRay) {
+            _handler.SetTrigger(_animationTrigger);
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, Mathf.Infinity, _actionLayer) && Vector3.Distance(transform.position, hit.point) < _actionRange) {
                 Recallable temp = hit.transform.GetComponent<Recallable>();
-                if (temp)
-                {
+                if (temp) {
                     temp.Mark();
                     PlayAudio(_actionSuccess);
                 }

@@ -31,7 +31,7 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void FixedUpdate() {
             if (_isGliding && _player.NRigidbody.Rigidbody.velocity.y < 0) {
-                _player.NRigidbody.Rigidbody.AddForce(_glideForce, ForceMode.Acceleration);
+                _player.NRigidbody.Rigidbody.AddForce(_glideForce, ForceMode.VelocityChange);
                 PlayAudio(_glideSound, false);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} is gliding");

@@ -17,13 +17,21 @@ namespace ProjectMultiplayer.Player.Actions {
 
         [SerializeField] private float _friendPushForce;
 
+        private PlayerAnimationHandler _handler;
+        [SerializeField] private string _animationTrigger;
+
 #if UNITY_EDITOR
         [Header("Debug")]
 
         [SerializeField] private bool _debugLogs;
 #endif
 
+        private void Awake() {
+            _handler = GetComponentInChildren<PlayerAnimationHandler>();
+        }
+
         public override void DoAction(Ray cameraRay) {
+            _handler.SetTrigger(_animationTrigger);
             foreach (Collider collider in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _actionOffset, _actionBox / 2)) {
                 Breakable breakScript = collider.GetComponent<Breakable>();
                 if (breakScript && breakScript.TryBreak(_player.Size.Type)) PlayAudio(_breakSuccess);
