@@ -26,9 +26,8 @@ namespace ProjectMultiplayer.ObjectCategory
         private Dictionary<int, MovableObjectData> _objectsInsideArea = new Dictionary<int, MovableObjectData>();
         private Coroutine _moveObjectsCoroutine = null;
         private Coroutine _fanRotationCoroutine = null;
-        private WaitForSeconds _delay = new WaitForSeconds(_tickDelay);
-        private const float _tickDelay = .02f;
         private AudioSource _audioSource;
+        private WaitForSeconds _delay;
 
         [Serializable]
         private struct SpeedValueData
@@ -50,13 +49,14 @@ namespace ProjectMultiplayer.ObjectCategory
             }
         }
 
-        //public override void Spawned()
-        //{
-        //    _hasBeenActivated = true;
-        //}
+        public override void Spawned()
+        {
+            _delay = new WaitForSeconds(Runner.DeltaTime);
+        }
+
         private void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
+            _audioSource = GetComponent<AudioSource>();            
         }
 
         private void OnTriggerEnter(Collider other)
@@ -129,7 +129,7 @@ namespace ProjectMultiplayer.ObjectCategory
             }
             return false;
         }
-        [ContextMenu("Activate")]
+
         public void Activate()
         {
             Rpc_OnInteractedChanged(true);

@@ -16,6 +16,7 @@ namespace ProjectMultiplayer.ObjectCategory
         private float _lastTimeUsed;
         private AudioSource _audioSource;
         private float _baseLeverRotation;
+        private WaitForSeconds _delay;
         private void Awake()
         {
             _activableInterfaceArray = new IActivable[_activablesListReference.Count];
@@ -27,7 +28,12 @@ namespace ProjectMultiplayer.ObjectCategory
             }
         }
 
-        [ContextMenu("Test")]
+        public override void Spawned()
+        {
+            _delay = new WaitForSeconds(Runner.DeltaTime);
+        }
+
+
         public void Interact()
         {
             if (_lastTimeUsed >= _internalCooldown)
@@ -64,14 +70,14 @@ namespace ProjectMultiplayer.ObjectCategory
         {
             float step = 0;
             float initialRotation = _movablePart.localEulerAngles.x;
-            WaitForFixedUpdate delay = new WaitForFixedUpdate();
+            //WaitForSeconds delay = new WaitForSeconds(Runner.DeltaTime);
             float finalRotation = _movablePart.localEulerAngles.x == _baseLeverRotation ? _leverAngle : _baseLeverRotation;
             while (step < 1)
             {
-                step += Time.fixedDeltaTime / _internalCooldown;
+                step += Runner.DeltaTime / _internalCooldown;
                 float val = Mathf.LerpAngle(initialRotation, finalRotation, step);
                 _movablePart.localEulerAngles = new Vector3(val, _movablePart.localEulerAngles.y, _movablePart.localEulerAngles.z);
-                yield return delay;
+                yield return _delay;
             }
         }
 
