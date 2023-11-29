@@ -464,27 +464,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _faceAnimations:
-  - animationName: 
-    faceSprite: []
+  - animationName: Idle
+    faceSprite:
+    - {fileID: 8910985729558439675, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    faceTime:
+    - 0
+    loop: 0
+  - animationName: Walk
+    faceSprite:
+    - {fileID: 8910985729558439675, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
     faceTime: []
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Jump
+    faceSprite:
+    - {fileID: 8910985729558439675, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Activate
+    faceSprite:
+    - {fileID: 8910985729558439675, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Break
+    faceSprite:
+    - {fileID: 8910985729558439675, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    faceTime:
+    - 0
     loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
-    loop: 0
-  - animationName: 
-    faceSprite: []
-    faceTime: []
+  - animationName: Death
+    faceSprite:
+    - {fileID: 3567485440293780597, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    - {fileID: 9078686915219656174, guid: 32e1ef12ed1651a44baa27e547134502, type: 3}
+    faceTime:
+    - 0
+    - 0.5
     loop: 0
