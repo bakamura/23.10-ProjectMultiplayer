@@ -23,15 +23,17 @@ namespace ProjectMultiplayer.Player.Actions {
             if (Physics.Raycast(cameraRay, out RaycastHit hit, Mathf.Infinity, _sizedObjectLayer) && Vector3.Distance(transform.position, hit.point) < _actionRange) {
                 Size hitSize = hit.transform.GetComponent<Size>();
 #if UNITY_EDITOR
-            if (_debugLogs) Debug.Log($"Size change Cast, hitting { hit.transform.name }, that { (hitSize ? (hitSize.TriPhase ? "Is TriPhase" : "Is NOT TriPhase") : "Does NOT have Size") } ");
-#endif
-                if (hitSize && hitSize.TriPhase)
-                {
+                if (_debugLogs) Debug.Log($"Size change Cast, hitting {hit.transform.name}, that {(hitSize ? (hitSize.TriPhase ? "Is TriPhase" : "Is NOT TriPhase") : "Does NOT have Size")} ");
+#endif 
+                if (hitSize && hitSize.TriPhase) {
                     PlayAudio(_actionSuccess);
                     hitSize.ChangeSize(_isGrowing);
                     return;
                 }
             }
+#if UNITY_EDITOR
+            else if (_debugLogs) Debug.Log($"{gameObject.name}'s SizeChange did not hit any relevant colliders");
+#endif
             PlayAudio(_actionFailed);
         }
 

@@ -38,6 +38,9 @@ namespace ProjectMultiplayer.Player.Actions {
 #endif
                 return;
             }
+#if UNITY_EDITOR
+            if (_debugLogs) Debug.Log("Break did not hit any relevant colliders");
+#endif
             PlayAudio(_breakFailed);
         }
 

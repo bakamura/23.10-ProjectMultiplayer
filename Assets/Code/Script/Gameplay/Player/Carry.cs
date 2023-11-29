@@ -2,7 +2,6 @@ using System.Linq;
 using UnityEngine;
 
 using ProjectMultiplayer.ObjectCategory.Size;
-using ProjectMultiplayer.ObjectCategory.Recall;
 
 namespace ProjectMultiplayer.Player.Actions {
     public class Carry : PlayerAction {
@@ -40,10 +39,10 @@ namespace ProjectMultiplayer.Player.Actions {
                         }
                     }
                 }
-                PlayAudio(_actionFailed);
 #if UNITY_EDITOR
-                if (_debugLogs && !_carriedObject) Debug.Log($"{gameObject.name} failed to carry anything");
+                if (_debugLogs) Debug.Log("Carry did not hit any relevant colliders");
 #endif
+                PlayAudio(_actionFailed);
             }
             else {
                 _carriedObject.transform.parent = null;

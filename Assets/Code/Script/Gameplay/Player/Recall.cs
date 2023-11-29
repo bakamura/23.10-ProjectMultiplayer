@@ -22,6 +22,9 @@ namespace ProjectMultiplayer.Player.Actions {
 #endif
                 return;
             }
+#if UNITY_EDITOR
+            else if(_debugLogs) Debug.Log("Recall did not hit any relevant colliders");
+#endif
             PlayAudio(_actionFailed);
         }
 
