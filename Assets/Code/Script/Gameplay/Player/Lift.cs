@@ -52,7 +52,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 }
                 PlayAudio(_liftObjectFailed);
 #if UNITY_EDITOR
-                if (_debugLogs && !_liftedObject) Debug.Log($"{gameObject.name} failed to lift anything");
+                if (_debugLogs) Debug.Log($"{gameObject.name} failed to lift anything");
 #endif
             }
             else {

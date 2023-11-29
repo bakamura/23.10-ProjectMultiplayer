@@ -4,11 +4,10 @@ using UnityEngine;
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
+using UnityEngine.InputSystem;
 
-namespace ProjectMultiplayer.Player
-{
-    public class Player : NetworkBehaviour, IPlayerLeft
-    {
+namespace ProjectMultiplayer.Player {
+    public class Player : NetworkBehaviour, IPlayerLeft {
 
         private bool _canAct = true;
 
@@ -30,7 +29,7 @@ namespace ProjectMultiplayer.Player
         [SerializeField] private PlayerActionData _action2;
         [SerializeField] private PlayerActionData _action3;
 
-        [Header("Audio")] 
+        [Header("Audio")]
         [SerializeField] private AudioSource _movmentAudioSource;
         [SerializeField] private bool _randomizePicth;
         [SerializeField] private Vector2 _randomizeRange;
@@ -70,22 +69,19 @@ namespace ProjectMultiplayer.Player
         private PlayerActionData[] _playerActions;
 
         [System.Serializable]
-        private struct PlayerActionData
-        {
+        private struct PlayerActionData {
             public PlayerAction Action;
             [SerializeField] private AnimationClip _animation;
             [HideInInspector] public float CurrentCooldownTime;
             public bool UseCheckGroundInstead;
             public AnimationClip AnimClip => _animation;
 
-            public void ResetCooldown()
-            {
+            public void ResetCooldown() {
                 CurrentCooldownTime = _animation.length;
             }
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             _nRigidbody = GetComponent<NetworkRigidbody>();
             _size = GetComponent<Size>();
             _shieldAbility = GetComponent<Shield>();
@@ -97,31 +93,25 @@ namespace ProjectMultiplayer.Player
             Debug.Log($"Spawned {gameObject.name}");
         }
 
-        public override void FixedUpdateNetwork()
-        {
+        public override void FixedUpdateNetwork() {
             _isGrounded = Physics.OverlapBox(transform.position + _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
 
-            if (GetInput(out DataPackInput inputData))
-            {
+            if (GetInput(out DataPackInput inputData)) {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 Movement(inputData.Movement);
-                if (inputData.Jump != _alreadyJumped && inputData.Jump)
-                {
+                if (inputData.Jump != _alreadyJumped && inputData.Jump) {
                     _actionJump.Action.DoAction(_rayCache);
                     LockPlayerAction(_actionJump);
                 }
-                if (inputData.Action1 != _alreadyAction1 && inputData.Action1)
-                {
+                if (inputData.Action1 != _alreadyAction1 && inputData.Action1) {
                     _action1.Action.DoAction(_rayCache);
                     LockPlayerAction(_action1);
                 }
-                if (inputData.Action2 != _alreadyAction2 && inputData.Action2)
-                {
+                if (inputData.Action2 != _alreadyAction2 && inputData.Action2) {
                     _action2.Action.DoAction(_rayCache);
                     LockPlayerAction(_action2);
                 }
-                if (inputData.Action3 != _alreadyAction3 && inputData.Action3)
-                {
+                if (inputData.Action3 != _alreadyAction3 && inputData.Action3) {
                     _action3.Action.DoAction(_rayCache);
                     LockPlayerAction(_action3);
                 }
@@ -131,8 +121,7 @@ namespace ProjectMultiplayer.Player
                 _alreadyAction3 = inputData.Action3;
             }
 
-            if (_respawnTimer.Expired(Runner))
-            {
+            if (_respawnTimer.Expired(Runner)) {
                 _respawnTimer = TickTimer.None;
 
                 transform.position = FindObjectOfType<SpawnAnchor>().GetSpawnPosition(_type);
@@ -143,22 +132,17 @@ namespace ProjectMultiplayer.Player
             }
 
             // check to unlock player actions
-            for (int i = 0; i < _playerActions.Length; i++)
-            {
-                if ((_playerActions[i].UseCheckGroundInstead || _playerActions[i].AnimClip) && _playerActions[i].CurrentCooldownTime > 0)
-                {
-                    if (_playerActions[i].UseCheckGroundInstead)
-                    {
-                        if (!_recentlyJumped) _recentlyJumped = !_isGrounded;                        
-                        if (_recentlyJumped && _isGrounded)
-                        {
+            for (int i = 0; i < _playerActions.Length; i++) {
+                if ((_playerActions[i].UseCheckGroundInstead || _playerActions[i].AnimClip) && _playerActions[i].CurrentCooldownTime > 0) {
+                    if (_playerActions[i].UseCheckGroundInstead) {
+                        if (!_recentlyJumped) _recentlyJumped = !_isGrounded;
+                        if (_recentlyJumped && _isGrounded) {
                             _playerActions[i].CurrentCooldownTime = 0;
                             _recentlyJumped = false;
                             UpdateCanAct(true);
                         }
                     }
-                    else
-                    {
+                    else {
                         _playerActions[i].CurrentCooldownTime -= Runner.DeltaTime;
                         if (_playerActions[i].CurrentCooldownTime <= 0) UpdateCanAct(true);
                     }
@@ -167,33 +151,28 @@ namespace ProjectMultiplayer.Player
 
         }
 
-        private void Movement(Vector2 direction)
-        {
+        private void Movement(Vector2 direction) {
             _inputV2ToV3[0] = direction.x;
             _inputV2ToV3[2] = direction.y;
-            if (_movmentAudioSource.clip)
-            {
-                if (_movmentAudioSource.clip && direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
-                {
+            if (_movmentAudioSource.clip) {
+                if (_movmentAudioSource.clip && direction.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying) {
                     if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
                     _movmentAudioSource.Play();
                 }
             }
 
-            _nRigidbody.Rigidbody.AddForce(_inputV2ToV3 * _movementSpeed, ForceMode.Acceleration);
+            _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y, 0)
+                                                          * Vector3.forward).normalized, ForceMode.Acceleration);
         }
 
-        public void TryDamage()
-        {
-            if (_shieldAbility != null || !_shieldAbility.IsShielded)
-            {
+        public void TryDamage() {
+            if (_shieldAbility != null || !_shieldAbility.IsShielded) {
                 Damaged();
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} took damage");
 #endif
             }
-            else
-            {
+            else {
                 _shieldAbility.onBlockBullet.Invoke();
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} blocked damage with shield");
@@ -201,32 +180,27 @@ namespace ProjectMultiplayer.Player
             }
         }
 
-        private void Damaged()
-        {
+        private void Damaged() {
             // Damaged Animation
 
             _respawnTimer = TickTimer.CreateFromSeconds(Runner, 3f);
         }
 
-        public void PlayerLeft(PlayerRef player)
-        {
+        public void PlayerLeft(PlayerRef player) {
 
         }
 
-        public void UpdateCanAct(bool canAct)
-        {
+        public void UpdateCanAct(bool canAct) {
             _canAct = canAct;
         }
 
-        private void LockPlayerAction(PlayerActionData currentActionGoing)
-        {
+        private void LockPlayerAction(PlayerActionData currentActionGoing) {
             UpdateCanAct(false);
             currentActionGoing.ResetCooldown();
         }
 
 #if UNITY_EDITOR
-        private void OnDrawGizmosSelected()
-        {
+        private void OnDrawGizmosSelected() {
             Gizmos.color = _isGrounded ? Color.green : Color.red;
             Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
         }
