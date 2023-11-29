@@ -4357,7 +4357,7 @@ MonoBehaviour:
   _clientInputField: {fileID: 1499047108}
   _clientUI: {fileID: 1435078980}
   _feedbackText: {fileID: 1429267786}
-  _levelToLoad: BaseContentScene
+  _levelToLoad: BaseContentSceneNaka
 --- !u!114 &1023507669
 MonoBehaviour:
   m_ObjectHideFlags: 0
