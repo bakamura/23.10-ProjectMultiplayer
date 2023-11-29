@@ -228,7 +228,7 @@ namespace ProjectMultiplayer.Player {
             Gizmos.color = _isGrounded ? Color.green : Color.red;
             Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(transform.position + _checkGroundOffset, _checkGroundBox);
+            Gizmos.DrawWireCube(_checkGroundOffset, _checkGroundBox);
             Gizmos.matrix = prevMatrix;
         }
 #endif
