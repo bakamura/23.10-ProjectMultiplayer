@@ -991,7 +991,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2900879024029585029
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1335,7 +1335,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4583916241009161561
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2492,22 +2492,34 @@ MonoBehaviour:
   _iconsData:
   - PlayerType: 0
     TextAction1: Size
-    TextAction2: Carry
+    IconAction1: {fileID: 21300000, guid: 864c8f836d432ba4ba19092b1e32650f, type: 3}
+    TextAction2: Lift
+    IconAction2: {fileID: 21300000, guid: 411b7ea39eb95964eb07006e5a875d49, type: 3}
     TextAction3: Shield
+    IconAction3: {fileID: 21300000, guid: 6d0c0e01b8143ad4cb1fa515d0fb6d31, type: 3}
   - PlayerType: 1
     TextAction1: Recall
+    IconAction1: {fileID: 21300000, guid: 5926ca890dd149e458b27f1e6f7a3b67, type: 3}
     TextAction2: Interact
+    IconAction2: {fileID: 21300000, guid: 26f2207614fc92e4baed32247220e063, type: 3}
     TextAction3: Break
+    IconAction3: {fileID: 21300000, guid: e72208a9da3461642b987f6c4f673c1e, type: 3}
   - PlayerType: 2
-    TextAction1: Carry
-    TextAction2: Size
+    TextAction1: Size
+    IconAction1: {fileID: 21300000, guid: b11eb9b9fdbb4504fbc65785bc016b57, type: 3}
+    TextAction2: Carry
+    IconAction2: {fileID: 21300000, guid: 411b7ea39eb95964eb07006e5a875d49, type: 3}
     TextAction3: Mark
+    IconAction3: {fileID: 21300000, guid: 0e4836843c0690b43b7ea45d121a2c78, type: 3}
   _action1Text: {fileID: 2058192390569911012}
   _action2Text: {fileID: 789259555418177021}
   _action3Text: {fileID: 1948448084653239119}
   _action1Name: {fileID: 7868040147880591766}
+  _action1Icon: {fileID: 311244512405288504}
   _action2Name: {fileID: 708934611803304130}
+  _action2Icon: {fileID: 6941140102542820934}
   _action3Name: {fileID: 408809498473716611}
+  _action3Icon: {fileID: 7562127757273902092}
   _canPause: 1
 --- !u!114 &5497760251993958282
 MonoBehaviour:
@@ -5860,7 +5872,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8797366224131688669
 RectTransform:
   m_ObjectHideFlags: 0
