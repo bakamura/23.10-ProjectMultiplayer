@@ -336,9 +336,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7146521406498821007, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
+      propertyPath: m_Name
+      value: Door 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3542852092398272455, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1255605710908113952, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
       propertyPath: m_Name
       value: Lab_Interno
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
+      propertyPath: m_Name
+      value: Door 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
@@ -1936,9 +1952,9 @@ PlayableDirector:
   - key: {fileID: -814255654164880891, guid: 395e7bba5d0b0424f883d4f4b5901bb2, type: 2}
     value: {fileID: 705417738}
   - key: {fileID: -544199816862350383, guid: 395e7bba5d0b0424f883d4f4b5901bb2, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 493756473}
   - key: {fileID: -5937880058056104744, guid: 395e7bba5d0b0424f883d4f4b5901bb2, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 493756474}
   - key: {fileID: -8508226415647149810, guid: 395e7bba5d0b0424f883d4f4b5901bb2, type: 2}
     value: {fileID: 1256900052}
   - key: {fileID: 2548766796069583944, guid: 395e7bba5d0b0424f883d4f4b5901bb2, type: 2}
