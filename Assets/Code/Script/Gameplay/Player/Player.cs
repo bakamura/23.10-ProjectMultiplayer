@@ -79,6 +79,7 @@ namespace ProjectMultiplayer.Player
             [SerializeField] private AnimationClip _animation;
             [HideInInspector] public float CurrentCooldownTime;
             public bool UseCheckGroundInstead;
+            public bool CanLockActions;
             public AnimationClip AnimClip => _animation;
 
             public void ResetCooldown()
@@ -246,8 +247,11 @@ namespace ProjectMultiplayer.Player
 
         private void LockPlayerAction(int currentActionGoingIndex)
         {
-            UpdateCanAct(false);
-            _playerActions[currentActionGoingIndex].ResetCooldown();
+            if (_playerActions[currentActionGoingIndex].CanLockActions)
+            {
+                UpdateCanAct(false);
+                _playerActions[currentActionGoingIndex].ResetCooldown();
+            }
         }
 
 #if UNITY_EDITOR

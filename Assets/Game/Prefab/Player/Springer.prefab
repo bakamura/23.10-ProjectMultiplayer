@@ -393,7 +393,7 @@ MonoBehaviour:
   _type: 1
   _movementSpeed: 22.5
   _checkGroundOffset: {x: 0, y: 0, z: 0}
-  _checkGroundBox: {x: 0.6, y: 0.25, z: 0.6}
+  _checkGroundBox: {x: 0.6, y: 0.05, z: 0.6}
   _checkGroundLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -404,21 +404,25 @@ MonoBehaviour:
     _animation: {fileID: 0}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 1
+    CanLockActions: 1
   _action1:
     Action: {fileID: 1650789184706367615}
     _animation: {fileID: 2917318281195987965, guid: 42f1be8555040a745bcc06601f07dbab, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _action2:
     Action: {fileID: 4397504978718732112}
     _animation: {fileID: 2917318281195987965, guid: 42f1be8555040a745bcc06601f07dbab, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _action3:
     Action: {fileID: 8823390516947465460}
     _animation: {fileID: 60455795499551850, guid: 42f1be8555040a745bcc06601f07dbab, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _movmentAudioSource: {fileID: 5881826778055325118}
   _randomizePicth: 0
   _randomizeRange: {x: -0.01, y: 0.01}
@@ -446,10 +450,6 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1826411923759499281}
-  - {fileID: 5535785193188092347}
-  - {fileID: 1650789184706367615}
-  - {fileID: 4397504978718732112}
-  - {fileID: 8823390516947465460}
   - {fileID: 5925315652806545037}
   - {fileID: 3878690806424562483}
   - {fileID: 333907544670715345}
@@ -467,7 +467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a223227c966d24095b397f0b831f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   _audioSource: {fileID: 0}
   _jumpHeight: 2
   _soundEffect: {fileID: 0}
@@ -484,7 +483,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e26dfaf610d1b4bb8eec1232ce851c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   _audioSource: {fileID: 1873699948295939992}
   _actionSuccess: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
   _actionFailed: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
@@ -502,7 +500,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f031e98cb03b694fb2ac549d3a14433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   _audioSource: {fileID: 1873699948295939992}
   _actionRange: 2
   _actionLayer:
@@ -524,7 +521,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995d39771c40b334ab70dd83dbe65b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   _audioSource: {fileID: 1873699948295939992}
   _actionOffset: {x: 0, y: 0.5, z: 0.5}
   _actionBox: {x: 1.25, y: 1.25, z: 1.25}
