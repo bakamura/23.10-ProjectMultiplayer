@@ -404,21 +404,25 @@ MonoBehaviour:
     _animation: {fileID: 0}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 1
+    CanLockActions: 0
   _action1:
     Action: {fileID: 4541591849879484853}
     _animation: {fileID: 2917318281195987965, guid: 4e2631345147f6d499334510b1f05d73, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _action2:
     Action: {fileID: 571833973339913280}
     _animation: {fileID: 8423843431349565185, guid: 4e2631345147f6d499334510b1f05d73, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _action3:
     Action: {fileID: 1411086493647162598}
     _animation: {fileID: 7176276558078528791, guid: 4e2631345147f6d499334510b1f05d73, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _movmentAudioSource: {fileID: 3628449481466134262}
   _randomizePicth: 0
   _randomizeRange: {x: -0.01, y: 0.01}

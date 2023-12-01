@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 namespace ProjectMultiplayer.Player.Actions {
@@ -32,7 +33,7 @@ namespace ProjectMultiplayer.Player.Actions {
         private void FixedUpdate() {
             if (_isGliding && _player.NRigidbody.Rigidbody.velocity.y < 0) {
                 _player.NRigidbody.Rigidbody.AddForce(_glideForce, ForceMode.VelocityChange);
-                PlayAudio(_glideSound, false);
+                Rpc_UpdateVisuals(1, false);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} is gliding");
 #endif
@@ -42,7 +43,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
-                PlayAudio(_jumpSound);
+                Rpc_UpdateVisuals(0);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has jumped");
 #endif
@@ -51,6 +52,17 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log($"{gameObject.name} started gliding");
 #endif
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(byte soundType, bool overrideCurrentAudio = true)
+        {
+            UpdateVisuals(soundType, overrideCurrentAudio);
+        }
+
+        private void UpdateVisuals(byte soundType, bool overrideCurrentAudio = true)
+        {
+            PlayAudio(soundType == 0 ? _jumpSound : _glideSound, overrideCurrentAudio);
         }
 
         public override void StopAction() {
