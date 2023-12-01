@@ -32,7 +32,7 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private CanvasGroup _clientUI;
 
         [Header("Debug")]
-        [SerializeField] private Text _feedbackText;
+        [SerializeField] private TMP_Text _feedbackText;
         [SerializeField] private string _levelToLoad = "MatchTestScene";
 
         private bool _updatePlayerDataDictionary;
