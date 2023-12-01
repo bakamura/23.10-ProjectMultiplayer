@@ -1,10 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using ProjectMultiplayer.Player;
 using UnityEngine.InputSystem;
 using TMPro;
 using ProjectMultiplayer.Connection;
+using UnityEngine.UI;
 
 namespace ProjectMultiplayer.UI
 {
@@ -21,10 +21,14 @@ namespace ProjectMultiplayer.UI
         [SerializeField] private TMP_Text _action2Text;
         [SerializeField] private TMP_Text _action3Text;
 
-        [Header("Test")]
+        [Header("Ability Display Components")]
         [SerializeField] private TMP_Text _action1Name;
+        [SerializeField] private Image _action1Icon;
         [SerializeField] private TMP_Text _action2Name;
+        [SerializeField] private Image _action2Icon;
         [SerializeField] private TMP_Text _action3Name;
+        [SerializeField] private Image _action3Icon;
+
 #if UNITY_EDITOR
         [SerializeField] private bool _canPause = true;
 #endif
@@ -38,8 +42,11 @@ namespace ProjectMultiplayer.UI
         {
             public NetworkManager.PlayerType PlayerType;
             public string TextAction1;
+            public Sprite IconAction1;
             public string TextAction2;
+            public Sprite IconAction2;
             public string TextAction3;
+            public Sprite IconAction3;
         }
 
         protected override void Awake()
@@ -122,8 +129,11 @@ namespace ProjectMultiplayer.UI
                     if (_iconsData[i].PlayerType == temp)
                     {
                         _action1Name.text = _iconsData[i].TextAction1;
+                        _action1Icon.sprite = _iconsData[i].IconAction1;
                         _action2Name.text = _iconsData[i].TextAction2;
+                        _action2Icon.sprite = _iconsData[i].IconAction2;
                         _action3Name.text = _iconsData[i].TextAction3;
+                        _action3Icon.sprite = _iconsData[i].IconAction3;
                         return true;
                     }
                 }
@@ -142,8 +152,11 @@ namespace ProjectMultiplayer.UI
                 if (_iconsData[i].PlayerType == type)
                 {
                     _action1Name.text = _iconsData[i].TextAction1;
+                    _action1Icon.sprite = _iconsData[i].IconAction1;
                     _action2Name.text = _iconsData[i].TextAction2;
+                    _action2Icon.sprite = _iconsData[i].IconAction2;
                     _action3Name.text = _iconsData[i].TextAction3;
+                    _action3Icon.sprite = _iconsData[i].IconAction3;
                 }
             }
         }
