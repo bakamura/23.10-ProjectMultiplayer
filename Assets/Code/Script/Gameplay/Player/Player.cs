@@ -103,7 +103,7 @@ namespace ProjectMultiplayer.Player
 
         public override void FixedUpdateNetwork()
         {
-            _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
+            _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer).Length > 0;
 
             if (GetInput(out DataPackInput inputData) && _canAct)
             {
@@ -253,12 +253,12 @@ namespace ProjectMultiplayer.Player
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
-            Matrix4x4 prevMatrix = Gizmos.matrix;
+            //Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.color = _isGrounded ? Color.green : Color.red;
-            Gizmos.matrix = transform.localToWorldMatrix;
+            //Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(_checkGroundOffset, _checkGroundBox);
-            Gizmos.matrix = prevMatrix;
+            Gizmos.DrawWireCube(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox);
+            //Gizmos.matrix = prevMatrix;
         }
 #endif
     }
