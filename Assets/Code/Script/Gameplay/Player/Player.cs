@@ -194,10 +194,13 @@ namespace ProjectMultiplayer.Player
             _inputV2ToV3[2] = direction.y;
             if (_movmentAudioSource.clip)
             {
-                if (_movmentAudioSource.clip && _inputV2ToV3.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
+                if(_inputV2ToV3.sqrMagnitude > 0)
                 {
-                    if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
-                    _movmentAudioSource.Play();
+                    if(!_movmentAudioSource.isPlaying) Rpc_UpdateMovementAudio(true);
+                }
+                else
+                {
+                    Rpc_UpdateMovementAudio(false);
                 }
             }
 
@@ -252,6 +255,22 @@ namespace ProjectMultiplayer.Player
                 UpdateCanAct(false);
                 _playerActions[currentActionGoingIndex].ResetCooldown();
             }
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateMovementAudio(bool updatePlayingState)
+        {
+            UpdateMovementAudio(updatePlayingState);
+        }
+
+        /// <summary>
+        /// This method will play any feedbacks that needs to hapen when this object changes ex: particles, materias, sounds etc
+        /// </summary>
+        private void UpdateMovementAudio(bool updatePlayingState)
+        {
+            if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
+            if (updatePlayingState) _movmentAudioSource.Play();
+            else _movmentAudioSource.Stop();
         }
 
 #if UNITY_EDITOR
