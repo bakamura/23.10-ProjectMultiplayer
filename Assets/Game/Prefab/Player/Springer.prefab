@@ -393,7 +393,7 @@ MonoBehaviour:
   _type: 1
   _movementSpeed: 22.5
   _checkGroundOffset: {x: 0, y: 0, z: 0}
-  _checkGroundBox: {x: 0.6, y: 0.25, z: 0.6}
+  _checkGroundBox: {x: 0.6, y: 0.05, z: 0.6}
   _checkGroundLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -404,21 +404,25 @@ MonoBehaviour:
     _animation: {fileID: 0}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 1
+    CanLockActions: 1
   _action1:
     Action: {fileID: 1650789184706367615}
     _animation: {fileID: 2917318281195987965, guid: 42f1be8555040a745bcc06601f07dbab, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _action2:
     Action: {fileID: 4397504978718732112}
     _animation: {fileID: 2917318281195987965, guid: 42f1be8555040a745bcc06601f07dbab, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _action3:
     Action: {fileID: 8823390516947465460}
     _animation: {fileID: 60455795499551850, guid: 42f1be8555040a745bcc06601f07dbab, type: 3}
     CurrentCooldownTime: 0
     UseCheckGroundInstead: 0
+    CanLockActions: 1
   _movmentAudioSource: {fileID: 5881826778055325118}
   _randomizePicth: 0
   _randomizeRange: {x: -0.01, y: 0.01}

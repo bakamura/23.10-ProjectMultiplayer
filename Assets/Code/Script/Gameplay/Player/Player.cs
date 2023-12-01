@@ -79,6 +79,7 @@ namespace ProjectMultiplayer.Player
             [SerializeField] private AnimationClip _animation;
             [HideInInspector] public float CurrentCooldownTime;
             public bool UseCheckGroundInstead;
+            public bool CanLockActions;
             public AnimationClip AnimClip => _animation;
 
             public void ResetCooldown()
@@ -103,7 +104,7 @@ namespace ProjectMultiplayer.Player
 
         public override void FixedUpdateNetwork()
         {
-            _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer) != null;
+            _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer).Length > 0;
 
             if (GetInput(out DataPackInput inputData) && _canAct)
             {
@@ -193,10 +194,13 @@ namespace ProjectMultiplayer.Player
             _inputV2ToV3[2] = direction.y;
             if (_movmentAudioSource.clip)
             {
-                if (_movmentAudioSource.clip && _inputV2ToV3.sqrMagnitude > 0 && !_movmentAudioSource.isPlaying)
+                if(_inputV2ToV3.sqrMagnitude > 0)
                 {
-                    if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
-                    _movmentAudioSource.Play();
+                    if(!_movmentAudioSource.isPlaying) Rpc_UpdateMovementAudio(true);
+                }
+                else
+                {
+                    Rpc_UpdateMovementAudio(false);
                 }
             }
 
@@ -246,19 +250,38 @@ namespace ProjectMultiplayer.Player
 
         private void LockPlayerAction(int currentActionGoingIndex)
         {
-            UpdateCanAct(false);
-            _playerActions[currentActionGoingIndex].ResetCooldown();
+            if (_playerActions[currentActionGoingIndex].CanLockActions)
+            {
+                UpdateCanAct(false);
+                _playerActions[currentActionGoingIndex].ResetCooldown();
+            }
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateMovementAudio(bool updatePlayingState)
+        {
+            UpdateMovementAudio(updatePlayingState);
+        }
+
+        /// <summary>
+        /// This method will play any feedbacks that needs to hapen when this object changes ex: particles, materias, sounds etc
+        /// </summary>
+        private void UpdateMovementAudio(bool updatePlayingState)
+        {
+            if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
+            if (updatePlayingState) _movmentAudioSource.Play();
+            else _movmentAudioSource.Stop();
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
-            Matrix4x4 prevMatrix = Gizmos.matrix;
+            //Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.color = _isGrounded ? Color.green : Color.red;
-            Gizmos.matrix = transform.localToWorldMatrix;
+            //Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(_checkGroundOffset, _checkGroundBox);
-            Gizmos.matrix = prevMatrix;
+            Gizmos.DrawWireCube(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox);
+            //Gizmos.matrix = prevMatrix;
         }
 #endif
     }
