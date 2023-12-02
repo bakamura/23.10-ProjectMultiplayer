@@ -96,7 +96,7 @@ namespace ProjectMultiplayer.Player
             _shieldAbility = GetComponent<Shield>();
             _playerActions = new PlayerActionData[] { _actionJump, _action1, _action2, _action3 };
 
-            _camera = Camera.main;
+            if(NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType == _type)_camera = Camera.main;
             _screenSize[0] = Screen.width;
             _screenSize[1] = Screen.height;
             Debug.Log($"Spawned {gameObject.name}");
