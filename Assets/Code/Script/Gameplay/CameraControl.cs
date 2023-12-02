@@ -29,12 +29,17 @@ public class CameraControl : MonoBehaviour {
     }
 
     private void Update() {
-        _deltaInputCache = InitializeInputPlayer.Instance.PlayerActions.actions["MoveCamera"].ReadValue<Vector2>();
-        _deltaInputCacheUnit = _deltaInputCache.x * _sensitivityX;
-        _deltaInputCache[0] = _deltaInputCache.y * _sensitivityY;
-        _deltaInputCache[1] = _deltaInputCacheUnit;
-        _followTarget.position = _playerTarget.position + _followTargetOffset;
-        _followTarget.eulerAngles += (Vector3)_deltaInputCache;
+        if (_playerTarget) {
+            _deltaInputCache = InitializeInputPlayer.Instance.PlayerActions.actions["MoveCamera"].ReadValue<Vector2>();
+            _deltaInputCacheUnit = _deltaInputCache.x * _sensitivityX;
+            _deltaInputCache[0] = _deltaInputCache.y * _sensitivityY;
+            _deltaInputCache[1] = _deltaInputCacheUnit;
+            _followTarget.position = _playerTarget.position + _followTargetOffset;
+            _followTarget.eulerAngles += (Vector3)_deltaInputCache;
+        }
+#if UNITY_EDITOR
+        else if (_debugLogs) Debug.Log("Camera hasn't found player yet");
+#endif
     }
 
     private IEnumerator KeepTryingGetPlayer() {
