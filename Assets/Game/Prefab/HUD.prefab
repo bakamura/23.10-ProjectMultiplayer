@@ -589,8 +589,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+      - m_Target: {fileID: 5497760251993958282}
+        m_TargetAssemblyTypeName: ProjectMultiplayer.UI.Settings, Assembly-CSharp
         m_MethodName: UpdateColorScheme
         m_Mode: 0
         m_Arguments:
@@ -601,7 +601,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2761915141989483940}
         m_TargetAssemblyTypeName: SfxHandler, Assembly-CSharp
         m_MethodName: UiClickSfx
         m_Mode: 1
@@ -2513,8 +2513,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+      - m_Target: {fileID: 5497760251993958282}
+        m_TargetAssemblyTypeName: ProjectMultiplayer.UI.Settings, Assembly-CSharp
         m_MethodName: ChangeVolumeMusic
         m_Mode: 0
         m_Arguments:
@@ -4623,8 +4623,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+      - m_Target: {fileID: 5497760251993958282}
+        m_TargetAssemblyTypeName: ProjectMultiplayer.UI.Settings, Assembly-CSharp
         m_MethodName: ToggleFullScreen
         m_Mode: 1
         m_Arguments:
@@ -4635,7 +4635,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2761915141989483940}
         m_TargetAssemblyTypeName: SfxHandler, Assembly-CSharp
         m_MethodName: UiClickSfx
         m_Mode: 1
@@ -5992,8 +5992,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+      - m_Target: {fileID: 5497760251993958282}
+        m_TargetAssemblyTypeName: ProjectMultiplayer.UI.Settings, Assembly-CSharp
         m_MethodName: ChangeVolumeSFX
         m_Mode: 0
         m_Arguments:
@@ -6004,7 +6004,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2761915141989483940}
         m_TargetAssemblyTypeName: SfxHandler, Assembly-CSharp
         m_MethodName: UiClickSfx
         m_Mode: 1
