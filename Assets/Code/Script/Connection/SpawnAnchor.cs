@@ -69,6 +69,11 @@ namespace ProjectMultiplayer.Connection
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void Rpc_PlayerLeft()
         {
+            QuitMatch();
+        }
+
+        private void QuitMatch()
+        {
             Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("MainMenu");
         }
@@ -110,7 +115,7 @@ namespace ProjectMultiplayer.Connection
 
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
-            SceneManager.LoadScene("MainMenu");
+            QuitMatch();
         }
 
         public void OnConnectedToServer(NetworkRunner runner)
@@ -120,7 +125,7 @@ namespace ProjectMultiplayer.Connection
 
         public void OnDisconnectedFromServer(NetworkRunner runner)
         {
-            SceneManager.LoadScene("MainMenu");
+            QuitMatch();
         }
 
         public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
