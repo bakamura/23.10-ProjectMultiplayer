@@ -549,9 +549,9 @@ MonoBehaviour:
   _triPhase: 0
   _triPhaseTransitionDuration: 1
   _sizeScales:
-  - 0.5
   - 1
-  - 2
+  - 1
+  - 1
   _debugLogs: 0
 --- !u!114 &8731267189884099451
 MonoBehaviour:
