@@ -196,11 +196,11 @@ namespace ProjectMultiplayer.Player
             {
                 if(_inputV2ToV3.sqrMagnitude > 0)
                 {
-                    if(!_movmentAudioSource.isPlaying) Rpc_UpdateMovementAudio(true);
+                    if(!_movmentAudioSource.isPlaying && Runner.IsServer) Rpc_UpdateMovementAudio(true);
                 }
                 else
                 {
-                    Rpc_UpdateMovementAudio(false);
+                    if (Runner.IsServer) Rpc_UpdateMovementAudio(false);
                 }
             }
 
