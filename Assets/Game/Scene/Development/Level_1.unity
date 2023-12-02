@@ -7930,6 +7930,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 5497760251993958293, guid: d2133966b8369944daa32c1983842d26, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5497760252131951113, guid: d2133966b8369944daa32c1983842d26, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -37892,6 +37896,10 @@ PrefabInstance:
     - target: {fileID: 6435089144575858275, guid: 6040f044901bdf34ba8760f859f8e508, type: 3}
       propertyPath: m_Name
       value: DebugHUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 6435089144575858275, guid: 6040f044901bdf34ba8760f859f8e508, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7252644015942167840, guid: 6040f044901bdf34ba8760f859f8e508, type: 3}
       propertyPath: m_Pivot.x
