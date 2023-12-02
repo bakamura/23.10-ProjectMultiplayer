@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.12107852, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414738, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3715,8 +3715,8 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 916293260}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
+  m_Alpha: 0
+  m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &928853002
@@ -4112,7 +4112,7 @@ MonoBehaviour:
   _clientInputField: {fileID: 1499047108}
   _clientUI: {fileID: 1435078980}
   _feedbackText: {fileID: 1130706264}
-  _levelToLoad: BaseContentSceneNaka
+  _levelToLoad: BaseContentSceneAllMechanics
 --- !u!114 &1023507669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5512,7 +5512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.77893, y: -158.47058}
+  m_AnchoredPosition: {x: 124.77881, y: -158.47058}
   m_SizeDelta: {x: 255.05882, y: 133.41176}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1218545731
@@ -6307,7 +6307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.77893, y: -158.47058}
+  m_AnchoredPosition: {x: 124.77881, y: -158.47058}
   m_SizeDelta: {x: 255.05882, y: 133.41176}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1401190160
@@ -9034,7 +9034,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!225 &1771838620
 CanvasGroup:
   m_ObjectHideFlags: 0
