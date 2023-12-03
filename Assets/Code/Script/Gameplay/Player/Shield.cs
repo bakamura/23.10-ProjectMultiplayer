@@ -24,7 +24,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             _handler.SetBool(_animationBool, true);
             _isShielded = true;
             if (Runner.IsServer) Rpc_UpdateVisuals(true);

@@ -22,7 +22,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             _handler.SetTrigger(_animationTrigger);
             if (RecallMark.Instance.markCurrent) {
                 Recallable.Recall();

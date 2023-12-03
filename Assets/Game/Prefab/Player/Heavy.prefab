@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9be14a218f68f4682fe4514b5bd38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sensitivityX: 0
-  _sensitivityY: 0
   _followTargetOffset: {x: 0, y: 0, z: 0}
   _debugLogs: 0
 --- !u!1 &312128217639683571
@@ -1244,7 +1242,8 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _audioSource: {fileID: 7629891120456832127}
   _isGrowing: 1
-  _actionRange: 5
+  _sizeChangeOffset: {x: 0, y: 0.5, z: 0.75}
+  _sizeChangeBox: {x: 2, y: 1.5, z: 1.5}
   _sizedObjectLayer:
     serializedVersion: 2
     m_Bits: 192

@@ -123,7 +123,7 @@ namespace ProjectMultiplayer.Player
                 {
                     if (inputData.Jump)
                     {
-                        _actionJump.Action.DoAction(_rayCache);
+                        _actionJump.Action.DoAction();
                         LockPlayerAction(0);
                     }
                     else _actionJump.Action.StopAction();
@@ -133,7 +133,7 @@ namespace ProjectMultiplayer.Player
                 {
                     if (inputData.Action1)
                     {
-                        _action1.Action.DoAction(_rayCache);
+                        _action1.Action.DoAction();
                         LockPlayerAction(1);
                     }
                     else _action1.Action.StopAction();
@@ -142,7 +142,7 @@ namespace ProjectMultiplayer.Player
                 {
                     if (inputData.Action2)
                     {
-                        _action2.Action.DoAction(_rayCache);
+                        _action2.Action.DoAction();
                         LockPlayerAction(2);
                     }
                     else _action2.Action.StopAction();
@@ -151,7 +151,7 @@ namespace ProjectMultiplayer.Player
                 {
                     if (inputData.Action3)
                     {
-                        _action3.Action.DoAction(_rayCache);
+                        _action3.Action.DoAction();
                         LockPlayerAction(3);
                     }
                     else _action3.Action.StopAction();

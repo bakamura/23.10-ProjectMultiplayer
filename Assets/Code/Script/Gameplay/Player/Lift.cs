@@ -35,7 +35,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _friendThrowupForce = Vector3.up * _friendThrowupVelocity;
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             _handler.SetBool(_animationBool, true);
             if (!_liftedObject) {
                 Size sizeCache;

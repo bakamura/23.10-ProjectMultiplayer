@@ -22,7 +22,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _jumpForce = Vector3.up * Mathf.Sqrt(2 * -Physics.gravity.y * _jumpHeight);
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
                 if (Runner.IsServer) Rpc_UpdateVisuals();
