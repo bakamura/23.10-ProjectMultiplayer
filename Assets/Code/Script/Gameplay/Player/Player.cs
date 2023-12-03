@@ -1,6 +1,6 @@
 using Fusion;
 using UnityEngine;
-
+using Cinemachine;
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
@@ -45,6 +45,7 @@ namespace ProjectMultiplayer.Player
         private Vector3 _screenSize;
         private Size _size;
         private Shield _shieldAbility;
+        private CinemachineFreeLook _vFreelokCam;
 
         private bool _alreadyJumped;
         private bool _alreadyAction1;
@@ -94,7 +95,13 @@ namespace ProjectMultiplayer.Player
             _nRigidbody = GetComponent<NetworkRigidbody>();
             _size = GetComponent<Size>();
             _shieldAbility = GetComponent<Shield>();
+            _vFreelokCam = GetComponentInChildren<CinemachineFreeLook>();
             _playerActions = new PlayerActionData[] { _actionJump, _action1, _action2, _action3 };
+
+            if (!Object.HasInputAuthority)
+            {
+                _vFreelokCam.Priority = 0;
+            }
 
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
