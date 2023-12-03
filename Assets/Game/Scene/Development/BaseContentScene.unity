@@ -158,7 +158,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -741,6 +741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ae3baf6918a524eadfe1919124fd29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _playersPrefabList: {fileID: 11400000, guid: 348af4f45fcb7b544baf8ec9f7dbf37b, type: 2}
   _spawnPoints:
   - PlayerType: 0
