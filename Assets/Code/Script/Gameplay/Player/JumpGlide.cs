@@ -62,8 +62,7 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void UpdateVisuals(byte soundType, bool overrideCurrentAudio = true)
         {
-            AudioClip clip = soundType == 0 ? _jumpSound : _glideSound;
-            if(clip) PlayAudio(clip, overrideCurrentAudio);
+            PlayAudio(soundType == 0 ? _jumpSound : _glideSound, overrideCurrentAudio);
         }
 
         public override void StopAction() {

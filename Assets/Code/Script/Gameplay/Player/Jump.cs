@@ -42,7 +42,7 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void UpdateVisuals()
         {
-            if(_soundEffect) PlayAudio(_soundEffect);
+            PlayAudio(_soundEffect);
         }
 
 
