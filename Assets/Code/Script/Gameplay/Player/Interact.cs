@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using ProjectMultiplayer.ObjectCategory;
+using Fusion;
 
 namespace ProjectMultiplayer.Player.Actions {
     public class Interact : PlayerAction {
@@ -31,7 +32,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 IInteractable temp = hit.transform.GetComponent<IInteractable>();
                 if(temp != null)
                 {
-                    PlayAudio(_actionSuccess);
+                    Rpc_UpdateVisuals(true);
                     temp.Interact();
                 }
 
@@ -43,7 +44,18 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log("Interact did not hit any relevant colliders");
 #endif
-            PlayAudio(_actionFailed);
+            Rpc_UpdateVisuals(false);
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(bool actionSuccess)
+        {
+            UpdateVisuals(actionSuccess);
+        }
+
+        private void UpdateVisuals(bool actionSuccess)
+        {
+            PlayAudio(actionSuccess ? _actionSuccess : _actionFailed);
         }
 
         public override void StopAction() { }

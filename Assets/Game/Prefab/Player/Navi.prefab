@@ -250,6 +250,10 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -8610974669089112299}
+  - {fileID: 5733168522873637007}
+  - {fileID: 322104195487087942}
+  - {fileID: 5819210551799558472}
+  - {fileID: 3529934112086954632}
   - {fileID: 4338670505153219735}
   - {fileID: 8013813967320261173}
   - {fileID: 3996776240122360717}
@@ -267,9 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e992a7173c56e2842b117e30a04368c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _jumpHeight: 4
-  _jumpSound: {fileID: 0}
+  _jumpSound: {fileID: 8300000, guid: 2461c13deae13514fae022b2d3b67f55, type: 3}
   _glideSound: {fileID: 0}
   _glideSpeed: 0.05
   _debugLogs: 1
@@ -285,14 +290,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875d4f61e42b14149b4977425ea60d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _isGrowing: 0
   _actionRange: 5
   _sizedObjectLayer:
     serializedVersion: 2
     m_Bits: 192
-  _actionSuccess: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
-  _actionFailed: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
+  _actionSuccess: {fileID: 8300000, guid: 2e27f02b308e53d4e930b4bb29480c4e, type: 3}
+  _actionFailed: {fileID: 0}
   _animationTrigger: onActivate
   _debugLogs: 0
 --- !u!114 &5819210551799558472
@@ -307,11 +313,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8dad6f77d1dc564896acebfe0d29ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _liftOffset: {x: 0, y: 0.25, z: 0.25}
   _liftBox: {x: 1, y: 1.5, z: 1}
-  _actionSuccess: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
-  _actionFailed: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
+  _actionSuccess: {fileID: 8300000, guid: 5d8ba535e669f5448af27ed1000ccfac, type: 3}
+  _actionFailed: {fileID: 0}
   _animationBool: 
   _debugLogs: 0
 --- !u!114 &3529934112086954632
@@ -326,13 +333,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95955aeb9cf29084e92668fc0b4e2835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
   _actionRange: 5
   _actionLayer:
     serializedVersion: 2
     m_Bits: 64
-  _actionSuccess: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
-  _actionFailed: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
+  _actionSuccess: {fileID: 8300000, guid: d4564cca62fb2af4d93a3dc2acd6499d, type: 3}
+  _actionFailed: {fileID: 0}
   _animationTrigger: onActivate
   _debugLogs: 0
 --- !u!114 &4338670505153219735

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Fusion;
 using ProjectMultiplayer.ObjectCategory.Size;
 
 namespace ProjectMultiplayer.Player.Actions {
@@ -34,7 +34,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 if (_debugLogs) Debug.Log($"Size change Cast, hitting {hit.transform.name}, that {(hitSize ? (hitSize.TriPhase ? "Is TriPhase" : "Is NOT TriPhase") : "Does NOT have Size")} ");
 #endif 
                 if (hitSize && hitSize.TriPhase) {
-                    PlayAudio(_actionSuccess);
+                    Rpc_UpdateVisuals(true);
                     hitSize.ChangeSize(_isGrowing);
                     return;
                 }
@@ -42,7 +42,18 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             else if (_debugLogs) Debug.Log($"{gameObject.name}'s SizeChange did not hit any relevant colliders");
 #endif
-            PlayAudio(_actionFailed);
+            Rpc_UpdateVisuals(false);
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(bool actionSuccess)
+        {
+            UpdateVisuals(actionSuccess);
+        }
+
+        private void UpdateVisuals(bool actionSuccess)
+        {
+            PlayAudio(actionSuccess ? _actionSuccess : _actionFailed);
         }
 
         public override void StopAction() { }
