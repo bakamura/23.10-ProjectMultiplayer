@@ -91,20 +91,22 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void UpdateVisuals(byte audioType)
         {
+            AudioClip clip = null; 
             switch (audioType)
             {
                 case 0:
-                    PlayAudio(_liftObjectSuccess);
+                    clip = _liftObjectSuccess;
                     break;
                 case 1:
-                    PlayAudio(_liftObjectFailed);
+                    clip = _liftObjectFailed;
                     break;
                 case 2:
-                    PlayAudio(_liftPlayer);
+                    clip = _liftPlayer;
                     break;
                 default:
                     break;
-            }            
+            }
+            if (clip) PlayAudio(clip);
         }
 
 

@@ -64,20 +64,22 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void UpdateVisuals(byte audioType)
         {
+            AudioClip clip = null;
             switch (audioType)
             {
                 case 0:
-                    PlayAudio(_breakSuccess);
+                    clip = _breakSuccess;
                     break;
                 case 1:
-                    PlayAudio(_breakFailed);
+                    clip = _breakFailed;
                     break;
                 case 2:
-                    PlayAudio(_pushPlayer);
+                    clip = _pushPlayer;
                     break;
                 default:
                     break;
             }
+            if (clip) PlayAudio(clip);
         }
 
         public override void StopAction() { }
