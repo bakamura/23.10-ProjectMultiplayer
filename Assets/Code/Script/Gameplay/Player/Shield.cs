@@ -2,8 +2,10 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.Events;
 
-namespace ProjectMultiplayer.Player.Actions {
-    public class Shield : PlayerAction {
+namespace ProjectMultiplayer.Player.Actions
+{
+    public class Shield : PlayerAction
+    {
 
         private bool _isShielded = false;
         public bool IsShielded { get { return _isShielded; } }
@@ -20,11 +22,13 @@ namespace ProjectMultiplayer.Player.Actions {
         [SerializeField] private bool _debugLogs;
 #endif
 
-        private void Awake() {
+        private void Awake()
+        {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction(Ray cameraRay)
+        {
             _handler.SetBool(_animationBool, true);
             _isShielded = true;
             if (Runner.IsServer) Rpc_UpdateVisuals(true);
@@ -41,10 +45,12 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void UpdateVisuals(bool actionSuccess)
         {
-            PlayAudio(actionSuccess ? _shieldUp : _shieldDown);
+            AudioClip clip = actionSuccess ? _shieldUp : _shieldDown;
+            if (clip) PlayAudio(clip);
         }
 
-        public override void StopAction() {
+        public override void StopAction()
+        {
             _handler.SetBool(_animationBool, false);
             _isShielded = false;
             if (Runner.IsServer) Rpc_UpdateVisuals(false);
