@@ -1,6 +1,6 @@
 using Fusion;
 using UnityEngine;
-
+using Cinemachine;
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
@@ -45,6 +45,7 @@ namespace ProjectMultiplayer.Player
         private Vector3 _screenSize;
         private Size _size;
         private Shield _shieldAbility;
+        private CinemachineFreeLook _vFreelokCam;
 
         private bool _alreadyJumped;
         private bool _alreadyAction1;
@@ -71,6 +72,7 @@ namespace ProjectMultiplayer.Player
         public Size Size { get { return _size; } }
         public bool IsGrounded => _isGrounded;
         private PlayerActionData[] _playerActions;
+        private float _cameraYAngle;
 
         [System.Serializable]
         private struct PlayerActionData
@@ -94,7 +96,13 @@ namespace ProjectMultiplayer.Player
             _nRigidbody = GetComponent<NetworkRigidbody>();
             _size = GetComponent<Size>();
             _shieldAbility = GetComponent<Shield>();
+            _vFreelokCam = GetComponentInChildren<CinemachineFreeLook>();
             _playerActions = new PlayerActionData[] { _actionJump, _action1, _action2, _action3 };
+
+            if (!Object.HasInputAuthority)
+            {
+                _vFreelokCam.Priority = 0;
+            }
 
             _camera = Camera.main;
             _screenSize[0] = Screen.width;
@@ -109,6 +117,7 @@ namespace ProjectMultiplayer.Player
             if (GetInput(out DataPackInput inputData) && _canAct)
             {
                 _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
+                _cameraYAngle = inputData.CameraYAngle;
                 Movement(inputData.Movement);
                 if (inputData.Jump != _alreadyJumped)
                 {
@@ -206,7 +215,7 @@ namespace ProjectMultiplayer.Player
 
             if (_inputV2ToV3.sqrMagnitude > 0)
             {
-                float targetAngle = Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y;
+                float targetAngle = Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _cameraYAngle;
                 _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, targetAngle, 0) * Vector3.forward).normalized, ForceMode.Acceleration);
                 transform.rotation = Quaternion.Euler(0, Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentTurnVelocity, _turnDuration), 0);
 

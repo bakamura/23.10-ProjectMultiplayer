@@ -40,7 +40,7 @@ namespace ProjectMultiplayer.Player.Actions {
                             _carriedObject = sizeCache.transform;
                             _carriedObject.transform.parent = transform;
                             _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
-                            Rpc_UpdateVisuals(true);
+                            if (Runner.IsServer) Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
                             if (_debugLogs) Debug.Log($"{_carriedObject.name} is now being carried by {gameObject.name}");
 #endif
@@ -51,13 +51,13 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log("Carry did not hit any relevant colliders");
 #endif
-                Rpc_UpdateVisuals(false);
+                if (Runner.IsServer) Rpc_UpdateVisuals(false);
             }
             else {
                 _handler.SetBool(_animationBool, false);
                 _carriedObject.transform.parent = null;
                 _carriedObject = null;
-                Rpc_UpdateVisuals(true);
+                if (Runner.IsServer) Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{_carriedObject.name} STOPED being carried by {gameObject.name}");
 #endif

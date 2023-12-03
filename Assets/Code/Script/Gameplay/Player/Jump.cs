@@ -25,7 +25,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
-                Rpc_UpdateVisuals();
+                if (Runner.IsServer) Rpc_UpdateVisuals();
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has jumped");
 #endif

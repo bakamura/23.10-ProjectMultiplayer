@@ -32,7 +32,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 IInteractable temp = hit.transform.GetComponent<IInteractable>();
                 if(temp != null)
                 {
-                    Rpc_UpdateVisuals(true);
+                    if (Runner.IsServer) Rpc_UpdateVisuals(true);
                     temp.Interact();
                 }
 
@@ -44,7 +44,7 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log("Interact did not hit any relevant colliders");
 #endif
-            Rpc_UpdateVisuals(false);
+            if (Runner.IsServer) Rpc_UpdateVisuals(false);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
