@@ -31,7 +31,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             _handler.SetTrigger(_animationTrigger);
             foreach (Collider collider in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _actionOffset, _actionBox / 2)) {
                 Breakable breakScript = collider.GetComponent<Breakable>();

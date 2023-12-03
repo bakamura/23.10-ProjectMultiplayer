@@ -40,7 +40,7 @@ namespace ProjectMultiplayer.Player.Actions {
             }
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
                 if (Runner.IsServer) Rpc_UpdateVisuals(0);

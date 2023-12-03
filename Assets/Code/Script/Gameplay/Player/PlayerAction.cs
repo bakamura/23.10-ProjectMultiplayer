@@ -11,7 +11,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _player = GetComponent<Player>();
         }
 
-        public abstract void DoAction(Ray cameraRay);
+        public abstract void DoAction();
 
         public abstract void StopAction();
 
