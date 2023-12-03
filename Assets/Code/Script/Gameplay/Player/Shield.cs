@@ -27,7 +27,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             _handler.SetBool(_animationBool, true);
             _isShielded = true;
-            Rpc_UpdateVisuals(true);
+            if (Runner.IsServer) Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log($"{ gameObject.name } is now shielded");
 #endif
@@ -47,7 +47,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void StopAction() {
             _handler.SetBool(_animationBool, false);
             _isShielded = false;
-            Rpc_UpdateVisuals(false);
+            if (Runner.IsServer) Rpc_UpdateVisuals(false);
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log($"{gameObject.name} is now NOT shielded");
 #endif

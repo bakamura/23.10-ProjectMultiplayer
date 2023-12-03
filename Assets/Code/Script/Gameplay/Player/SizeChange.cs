@@ -34,7 +34,7 @@ namespace ProjectMultiplayer.Player.Actions {
                 if (_debugLogs) Debug.Log($"Size change Cast, hitting {hit.transform.name}, that {(hitSize ? (hitSize.TriPhase ? "Is TriPhase" : "Is NOT TriPhase") : "Does NOT have Size")} ");
 #endif 
                 if (hitSize && hitSize.TriPhase) {
-                    Rpc_UpdateVisuals(true);
+                    if (Runner.IsServer) Rpc_UpdateVisuals(true);
                     hitSize.ChangeSize(_isGrowing);
                     return;
                 }
@@ -42,7 +42,7 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             else if (_debugLogs) Debug.Log($"{gameObject.name}'s SizeChange did not hit any relevant colliders");
 #endif
-            Rpc_UpdateVisuals(false);
+            if (Runner.IsServer) Rpc_UpdateVisuals(false);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

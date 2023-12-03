@@ -35,12 +35,15 @@ namespace ProjectMultiplayer.Player.Actions {
             _handler.SetTrigger(_animationTrigger);
             foreach (Collider collider in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _actionOffset, _actionBox / 2)) {
                 Breakable breakScript = collider.GetComponent<Breakable>();
-                if (breakScript && breakScript.TryBreak(_player.Size.Type)) Rpc_UpdateVisuals(0);
+                if (breakScript && breakScript.TryBreak(_player.Size.Type))
+                {
+                    if (Runner.IsServer) Rpc_UpdateVisuals(0);
+                }
                 Player playerScript = collider.GetComponent<Player>();
                 if (playerScript)
                 {
                     playerScript.NRigidbody.Rigidbody.AddForce((collider.transform.position - transform.position).normalized * _friendPushForce, ForceMode.VelocityChange); ;
-                    Rpc_UpdateVisuals(2);
+                    if (Runner.IsServer) Rpc_UpdateVisuals(2);
                 }
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{collider.name} was Asked to break");
@@ -50,7 +53,7 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log("Break did not hit any relevant colliders");
 #endif
-            Rpc_UpdateVisuals(1);
+            if (Runner.IsServer) Rpc_UpdateVisuals(1);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

@@ -48,7 +48,7 @@ namespace ProjectMultiplayer.Player.Actions {
                             _liftedObject.transform.parent = transform;
                             _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
                             _liftedObject.transform.localRotation = Quaternion.identity; // Test Out
-                            Rpc_UpdateVisuals(0);
+                            if (Runner.IsServer) Rpc_UpdateVisuals(0);
 #if UNITY_EDITOR
                             if (_debugLogs) Debug.Log($"{_liftedObject.name} is now being lifted by {gameObject.name}");
 #endif
@@ -56,7 +56,7 @@ namespace ProjectMultiplayer.Player.Actions {
                         }
                     }
                 }
-                Rpc_UpdateVisuals(1);
+                if (Runner.IsServer) Rpc_UpdateVisuals(1);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} failed to lift anything");
 #endif
@@ -67,12 +67,15 @@ namespace ProjectMultiplayer.Player.Actions {
                 if (_liftedObject.GetComponent<Player>())
                 {
                     _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);
-                    Rpc_UpdateVisuals(2);
+                    if (Runner.IsServer) Rpc_UpdateVisuals(2);
 #if UNITY_EDITOR
                     if (_debugLogs) Debug.Log($"{_liftedObject.name} was thrown up by {gameObject.name}");
 #endif
                 }
-                else Rpc_UpdateVisuals(2);
+                else
+                {
+                    if (Runner.IsServer) Rpc_UpdateVisuals(2);
+                }
                 _liftedObject = null;
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{_liftedObject.name} STOPED being lifted by {gameObject.name}");

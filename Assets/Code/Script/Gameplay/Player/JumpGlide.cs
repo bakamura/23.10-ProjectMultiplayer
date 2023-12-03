@@ -33,7 +33,7 @@ namespace ProjectMultiplayer.Player.Actions {
         private void FixedUpdate() {
             if (_isGliding && _player.NRigidbody.Rigidbody.velocity.y < 0) {
                 _player.NRigidbody.Rigidbody.AddForce(_glideForce, ForceMode.VelocityChange);
-                Rpc_UpdateVisuals(1, false);
+                if (Runner.IsServer) Rpc_UpdateVisuals(1, false);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} is gliding");
 #endif
@@ -43,7 +43,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
-                Rpc_UpdateVisuals(0);
+                if (Runner.IsServer) Rpc_UpdateVisuals(0);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has jumped");
 #endif
