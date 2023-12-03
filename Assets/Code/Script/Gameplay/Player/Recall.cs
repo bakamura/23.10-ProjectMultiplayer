@@ -46,8 +46,7 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private void UpdateVisuals(bool actionSuccess)
         {
-            AudioClip clip = actionSuccess ? _actionSuccess : _actionFailed;
-            if(clip)PlayAudio(clip);
+            PlayAudio(actionSuccess ? _actionSuccess : _actionFailed);
         }
 
         public override void StopAction() { }

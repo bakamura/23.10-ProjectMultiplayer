@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7390963803875083125}
   - component: {fileID: 2619955220135301036}
+  - component: {fileID: 8634238051298555161}
   m_Layer: 0
   m_Name: Freelook Camera
   m_TagString: Untagged
@@ -51,9 +52,9 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 504703770804059616}
-  m_Follow: {fileID: 504703770804059616}
+  m_StandbyUpdate: 0
+  m_LookAt: {fileID: 0}
+  m_Follow: {fileID: 0}
   m_CommonLens: 1
   m_Lens:
     FieldOfView: 40
@@ -135,6 +136,20 @@ MonoBehaviour:
   - {fileID: 4814494160269213686}
   - {fileID: 2407313241926669241}
   - {fileID: 4040330555539603522}
+--- !u!114 &8634238051298555161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207572057760299043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9be14a218f68f4682fe4514b5bd38d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _followTargetOffset: {x: 0, y: 0, z: 0}
+  _debugLogs: 0
 --- !u!1 &904079906752238337
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +619,7 @@ MonoBehaviour:
   m_LockStageInInspector: 00000000
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 0
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -678,7 +693,7 @@ MonoBehaviour:
   m_LockStageInInspector: 00000000
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 0
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -1340,7 +1355,7 @@ MonoBehaviour:
   m_LockStageInInspector: 00000000
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 0
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:

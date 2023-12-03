@@ -56,7 +56,7 @@ MonoBehaviour:
   m_LockStageInInspector: 00000000
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 0
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -84,6 +84,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1710888337671234210}
   - component: {fileID: 4278037952768536573}
+  - component: {fileID: 7497642895862549841}
   m_Layer: 0
   m_Name: Freelook Camera
   m_TagString: Untagged
@@ -125,9 +126,9 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 7081206811307604924}
-  m_Follow: {fileID: 7081206811307604924}
+  m_StandbyUpdate: 0
+  m_LookAt: {fileID: 0}
+  m_Follow: {fileID: 0}
   m_CommonLens: 1
   m_Lens:
     FieldOfView: 40
@@ -209,6 +210,22 @@ MonoBehaviour:
   - {fileID: 5209365451084480883}
   - {fileID: 513753725177171781}
   - {fileID: 714066037993889470}
+--- !u!114 &7497642895862549841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208840938655596087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9be14a218f68f4682fe4514b5bd38d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sensitivityX: 0
+  _sensitivityY: 0
+  _followTargetOffset: {x: 0, y: 0, z: 0}
+  _debugLogs: 0
 --- !u!1 &604148760939616129
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +617,7 @@ MonoBehaviour:
   m_LockStageInInspector: 00000000
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 0
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -674,7 +691,7 @@ MonoBehaviour:
   m_LockStageInInspector: 00000000
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 0
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -1208,7 +1225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _audioSource: {fileID: 0}
+  _audioSource: {fileID: 1873699948295939992}
   _jumpHeight: 2
   _soundEffect: {fileID: 8300000, guid: 1aa5d627be1af7c44830fea79931eb17, type: 3}
   _debugLogs: 0
