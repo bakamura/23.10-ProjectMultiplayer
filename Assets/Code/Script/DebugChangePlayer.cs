@@ -11,12 +11,12 @@ public class DebugChangePlayer : MonoBehaviour
     [SerializeField] private PlayersPrefabList _playersPrefabList;
     private Hud _hud;
     private SpawnAnchor _spawnAnchor;
-    private CameraControl _cameraControl;
+    //private CameraControl _cameraControl;
 
     private void Awake()
     {
         _spawnAnchor = FindObjectOfType<SpawnAnchor>();
-        _cameraControl = FindObjectOfType<CameraControl>();
+        //_cameraControl = FindObjectOfType<CameraControl>();
         _hud = FindObjectOfType<Hud>();
     }
 
@@ -31,7 +31,7 @@ public class DebugChangePlayer : MonoBehaviour
                 Quaternion.identity,
                 NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerRef).GetComponent<Transform>();
             if (_hud) _hud.UpdateIcons((NetworkManager.PlayerType)index);
-            if (_cameraControl) _cameraControl.ResetCameraTracking(obj);
+            //if (_cameraControl) _cameraControl.ResetCameraTracking(obj);
         }
         else
         {
