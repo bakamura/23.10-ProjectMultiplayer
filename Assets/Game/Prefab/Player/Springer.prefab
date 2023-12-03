@@ -1208,7 +1208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _audioSource: {fileID: 0}
+  _audioSource: {fileID: 1873699948295939992}
   _jumpHeight: 2
   _soundEffect: {fileID: 8300000, guid: 1aa5d627be1af7c44830fea79931eb17, type: 3}
   _debugLogs: 0
