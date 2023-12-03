@@ -1,7 +1,8 @@
 using UnityEngine;
+using Fusion;
 
 namespace ProjectMultiplayer.Player.Actions {
-    public abstract class PlayerAction : MonoBehaviour {
+    public abstract class PlayerAction : NetworkBehaviour {
 
         protected Player _player;        
         [SerializeField] private AudioSource _audioSource;

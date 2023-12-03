@@ -1,6 +1,6 @@
 using System.Linq;
 using UnityEngine;
-
+using Fusion;
 using ProjectMultiplayer.ObjectCategory.Size;
 
 namespace ProjectMultiplayer.Player.Actions {
@@ -10,9 +10,9 @@ namespace ProjectMultiplayer.Player.Actions {
 
         [SerializeField] private Vector3 _liftOffset;
         [SerializeField] private Vector3 _liftBox;
-        [SerializeField] private AudioClip _liftObjectSuccess;
-        [SerializeField] private AudioClip _liftObjectFailed;
-        [SerializeField] private AudioClip _liftPlayer;
+        [SerializeField] private AudioClip _liftObjectSuccess;// index 0
+        [SerializeField] private AudioClip _liftObjectFailed;// index 1
+        [SerializeField] private AudioClip _liftPlayer;// index 2
 
         [Space(16)]
 
@@ -48,7 +48,7 @@ namespace ProjectMultiplayer.Player.Actions {
                             _liftedObject.transform.parent = transform;
                             _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
                             _liftedObject.transform.localRotation = Quaternion.identity; // Test Out
-                            PlayAudio(_liftObjectSuccess);
+                            Rpc_UpdateVisuals(0);
 #if UNITY_EDITOR
                             if (_debugLogs) Debug.Log($"{_liftedObject.name} is now being lifted by {gameObject.name}");
 #endif
@@ -56,7 +56,7 @@ namespace ProjectMultiplayer.Player.Actions {
                         }
                     }
                 }
-                PlayAudio(_liftObjectFailed);
+                Rpc_UpdateVisuals(1);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} failed to lift anything");
 #endif
@@ -67,17 +67,41 @@ namespace ProjectMultiplayer.Player.Actions {
                 if (_liftedObject.GetComponent<Player>())
                 {
                     _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);
-                    PlayAudio(_liftPlayer);
+                    Rpc_UpdateVisuals(2);
 #if UNITY_EDITOR
                     if (_debugLogs) Debug.Log($"{_liftedObject.name} was thrown up by {gameObject.name}");
 #endif
                 }
-                else PlayAudio(_liftObjectFailed);
+                else Rpc_UpdateVisuals(2);
                 _liftedObject = null;
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{_liftedObject.name} STOPED being lifted by {gameObject.name}");
 #endif
             }
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(byte audioType)
+        {
+            UpdateVisuals(audioType);
+        }
+
+        private void UpdateVisuals(byte audioType)
+        {
+            switch (audioType)
+            {
+                case 0:
+                    PlayAudio(_liftObjectSuccess);
+                    break;
+                case 1:
+                    PlayAudio(_liftObjectFailed);
+                    break;
+                case 2:
+                    PlayAudio(_liftPlayer);
+                    break;
+                default:
+                    break;
+            }            
         }
 
 

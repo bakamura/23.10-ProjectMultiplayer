@@ -51,7 +51,7 @@ namespace ProjectMultiplayer.Player
         private InputAction _action1;
         private InputAction _action2;
         private InputAction _action3;
-
+        private Camera _camera;
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -59,6 +59,7 @@ namespace ProjectMultiplayer.Player
                 Destroy(this);
                 return;
             }
+            _camera = Camera.main;
             NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
             _playerMove = PlayerActions.actions["MovePlayer"];
             _jump = PlayerActions.actions["Jump"];
@@ -80,6 +81,7 @@ namespace ProjectMultiplayer.Player
 
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
+            _dataPackInputCached.CameraYAngle = _camera.transform.eulerAngles.y;
             _dataPackInputCached.Movement = _playerMove.ReadValue<Vector2>();
             _dataPackInputCached.Jump = _jump.IsPressed();
             _dataPackInputCached.Action1 = _action1.IsPressed();

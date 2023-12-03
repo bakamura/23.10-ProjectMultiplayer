@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 using ProjectMultiplayer.ObjectCategory.Size;
+using Fusion;
 
 namespace ProjectMultiplayer.Player.Actions {
     public class Carry : PlayerAction {
@@ -39,7 +40,7 @@ namespace ProjectMultiplayer.Player.Actions {
                             _carriedObject = sizeCache.transform;
                             _carriedObject.transform.parent = transform;
                             _carriedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
-                            PlayAudio(_actionSuccess);
+                            Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
                             if (_debugLogs) Debug.Log($"{_carriedObject.name} is now being carried by {gameObject.name}");
 #endif
@@ -50,17 +51,28 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log("Carry did not hit any relevant colliders");
 #endif
-                PlayAudio(_actionFailed);
+                Rpc_UpdateVisuals(false);
             }
             else {
                 _handler.SetBool(_animationBool, false);
                 _carriedObject.transform.parent = null;
                 _carriedObject = null;
-                PlayAudio(_actionSuccess);
+                Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{_carriedObject.name} STOPED being carried by {gameObject.name}");
 #endif
             }
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(bool actionSuccess)
+        {
+            UpdateVisuals(actionSuccess);
+        }
+
+        private void UpdateVisuals(bool actionSuccess)
+        {
+            PlayAudio(actionSuccess ? _actionSuccess : _actionFailed);
         }
 
         public override void StopAction() { }

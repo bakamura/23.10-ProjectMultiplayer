@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 namespace ProjectMultiplayer.Player.Actions {
@@ -24,7 +25,7 @@ namespace ProjectMultiplayer.Player.Actions {
         public override void DoAction(Ray cameraRay) {
             if (_player.IsGrounded) {
                 _player.NRigidbody.Rigidbody.AddForce(_jumpForce, ForceMode.VelocityChange);
-                PlayAudio(_soundEffect);
+                Rpc_UpdateVisuals();
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} has jumped");
 #endif
@@ -33,6 +34,17 @@ namespace ProjectMultiplayer.Player.Actions {
             else if (_debugLogs) Debug.Log($"{gameObject.name} tried jumping but is NOT in ground");
 #endif
         }
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals()
+        {
+            UpdateVisuals();
+        }
+
+        private void UpdateVisuals()
+        {
+            PlayAudio(_soundEffect);
+        }
+
 
         public override void StopAction() { }
 
