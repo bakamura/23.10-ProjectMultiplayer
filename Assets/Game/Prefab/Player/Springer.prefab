@@ -1308,8 +1308,8 @@ MonoBehaviour:
   _triPhaseTransitionDuration: 1
   _sizeScales:
   - 1
-  - 1
-  - 1
+  - 2
+  - 3
   _debugLogs: 0
 --- !u!114 &3878690806424562483
 MonoBehaviour:
