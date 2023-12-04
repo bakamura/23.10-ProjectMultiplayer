@@ -26,12 +26,12 @@ namespace ProjectMultiplayer.ObjectCategory.Size
         [SerializeField] private float[] _sizeScales = new float[3];
         private Vector3[] _sizeScalesVector = new Vector3[3];
 
-        [Header("Cache")]
+        //[Header("Cache")]
 
-        private float _progressC;
-        private Vector3 _sizeInitialC;
-        private Vector3 _sizeFinalC;
-        [Networked] private TickTimer _sizeChangeTimer { get; set; }
+        //private float _progressC;
+        //private Vector3 _sizeInitialC;
+        //private Vector3 _sizeFinalC;
+        //[Networked] private TickTimer _sizeChangeTimer { get; set; }
 
 
 #if UNITY_EDITOR
@@ -70,19 +70,26 @@ namespace ProjectMultiplayer.ObjectCategory.Size
         //            }
         //        }
 
-        private IEnumerator ChangingSize()
+        private IEnumerator ChangingSize(Vector3 initialSize, Vector3 finalSize)
         {
             WaitForFixedUpdate delay = new WaitForFixedUpdate();
-            while (_progressC < 1)
+            float progress = 0;
+            while (progress < 1)
             {
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{gameObject.name} currently changing size to {_sizeType}");
 #endif
-                _progressC += Time.fixedDeltaTime / _triPhaseTransitionDuration;
-                transform.localScale = Vector3.Lerp(_sizeInitialC, _sizeFinalC, _progressC);
+                progress += Time.fixedDeltaTime / _triPhaseTransitionDuration;
+                transform.localScale = Vector3.Lerp(initialSize, finalSize, progress);
                 yield return delay;
             }
             _isTransitioning = false;
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateSize(Vector3 initialSize, Vector3 finalSize)
+        {
+            StartCoroutine(ChangingSize(initialSize, finalSize));
         }
 
         public void ChangeSize(bool isGrowing)
@@ -103,11 +110,12 @@ namespace ProjectMultiplayer.ObjectCategory.Size
                 if (_debugLogs) Debug.Log($"{gameObject.name} trying to change size to {_sizeType}");
 #endif
 
-                _progressC = 0;
-                _sizeInitialC = transform.localScale;
-                _sizeFinalC = _sizeScalesVector[(int)_sizeType];
-                StartCoroutine(ChangingSize());
+                //_progressC = 0;
+                //_sizeInitialC = transform.localScale;
+                //_sizeFinalC = _sizeScalesVector[(int)_sizeType];
+                //StartCoroutine(ChangingSize(transform.localScale, _sizeScalesVector[(int)_sizeType]));
                 //_sizeChangeTimer = TickTimer.CreateFromSeconds(Runner, _triPhaseTransitionDuration);
+                Rpc_UpdateSize(transform.localScale, _sizeScalesVector[(int)_sizeType]);
             }
         }
 
