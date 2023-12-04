@@ -1000,7 +1000,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2649807462790791762, guid: dd4c72b0a972fdf46bb2113e7c24e8b0, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 2a2f9aadfd4a26e419c0a95a6bf72192, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 2666e7b2aae199442a32f2711ee1767a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1241,8 +1241,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _audioSource: {fileID: 1873699948295939992}
-  _actionSuccess: {fileID: 8300000, guid: fa5ae01ed29d426429d8143b7767595e, type: 3}
-  _actionFailed: {fileID: 0}
+  _actionSuccess: {fileID: 8300000, guid: e52ea212f1a117f4392d44a738436814, type: 3}
+  _actionFailed: {fileID: 8300000, guid: fa5ae01ed29d426429d8143b7767595e, type: 3}
   _animationTrigger: onActivate
   _debugLogs: 0
 --- !u!114 &4397504978718732112
@@ -1264,8 +1264,8 @@ MonoBehaviour:
   _actionLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  _actionSuccess: {fileID: 8300000, guid: d9de7c74f1b11aa49a9b53c90298e357, type: 3}
-  _actionFailed: {fileID: 0}
+  _actionSuccess: {fileID: 8300000, guid: 5251dba0c512fca49ba899749d277528, type: 3}
+  _actionFailed: {fileID: 8300000, guid: fa5ae01ed29d426429d8143b7767595e, type: 3}
   _animationTrigger: onActivate
   _debugLogs: 0
 --- !u!114 &8823390516947465460
@@ -1285,8 +1285,8 @@ MonoBehaviour:
   _actionOffset: {x: 0, y: 0.5, z: 0}
   _actionBox: {x: 3, y: 1.5, z: 3}
   _breakSuccess: {fileID: 8300000, guid: 249b8c5750b5bc84cb7f1afbd0a10735, type: 3}
-  _breakFailed: {fileID: 0}
-  _pushPlayer: {fileID: 0}
+  _breakFailed: {fileID: 8300000, guid: fa5ae01ed29d426429d8143b7767595e, type: 3}
+  _pushPlayer: {fileID: 8300000, guid: d9de7c74f1b11aa49a9b53c90298e357, type: 3}
   _friendPushForce: 50
   _animationTrigger: onBreak
   _debugLogs: 0

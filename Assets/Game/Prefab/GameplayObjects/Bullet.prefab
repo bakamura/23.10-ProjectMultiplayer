@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _movementSpeed: 1
+  _hitSound: {fileID: 8300000, guid: 6ba5cb0111050ee40bcec978ce6cecd3, type: 3}
 --- !u!114 &4948545213250771328
 MonoBehaviour:
   m_ObjectHideFlags: 0

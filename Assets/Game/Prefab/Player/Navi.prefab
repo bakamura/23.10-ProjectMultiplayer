@@ -290,7 +290,7 @@ MonoBehaviour:
   _audioSource: {fileID: 4830237144359027201}
   _jumpHeight: 4
   _jumpSound: {fileID: 8300000, guid: 2461c13deae13514fae022b2d3b67f55, type: 3}
-  _glideSound: {fileID: 0}
+  _glideSound: {fileID: 8300000, guid: 568fd0a1cecfa6247b2c19fccb119430, type: 3}
   _glideSpeed: 0.05
   _debugLogs: 1
 --- !u!114 &322104195487087942
@@ -313,8 +313,8 @@ MonoBehaviour:
   _sizedObjectLayer:
     serializedVersion: 2
     m_Bits: 192
-  _actionSuccess: {fileID: 8300000, guid: 1b898f610a17d0442b97766f502508e5, type: 3}
-  _actionFailed: {fileID: 0}
+  _actionSuccess: {fileID: 8300000, guid: 2e27f02b308e53d4e930b4bb29480c4e, type: 3}
+  _actionFailed: {fileID: 8300000, guid: d4564cca62fb2af4d93a3dc2acd6499d, type: 3}
   _animationTrigger: onActivate
   _debugLogs: 0
 --- !u!114 &5819210551799558472
@@ -334,7 +334,7 @@ MonoBehaviour:
   _liftOffset: {x: 0, y: 0.5, z: 0}
   _liftBox: {x: 3, y: 1.5, z: 3}
   _actionSuccess: {fileID: 8300000, guid: 5d8ba535e669f5448af27ed1000ccfac, type: 3}
-  _actionFailed: {fileID: 0}
+  _actionFailed: {fileID: 8300000, guid: d4564cca62fb2af4d93a3dc2acd6499d, type: 3}
   _animationBool: 
   _debugLogs: 0
 --- !u!114 &3529934112086954632
@@ -356,8 +356,8 @@ MonoBehaviour:
   _actionLayer:
     serializedVersion: 2
     m_Bits: 64
-  _actionSuccess: {fileID: 8300000, guid: d4564cca62fb2af4d93a3dc2acd6499d, type: 3}
-  _actionFailed: {fileID: 0}
+  _actionSuccess: {fileID: 8300000, guid: 2dc5378a06182254a818bbe16fd3ac49, type: 3}
+  _actionFailed: {fileID: 8300000, guid: d4564cca62fb2af4d93a3dc2acd6499d, type: 3}
   _animationTrigger: onActivate
   _debugLogs: 0
 --- !u!114 &4338670505153219735
@@ -880,7 +880,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2649807462790791762, guid: dd4c72b0a972fdf46bb2113e7c24e8b0, type: 2}
-  m_audioClip: {fileID: 8300000, guid: e50aa6ff5623ac54b939985f7aea3b04, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

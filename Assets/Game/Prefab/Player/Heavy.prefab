@@ -1000,7 +1000,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2649807462790791762, guid: dd4c72b0a972fdf46bb2113e7c24e8b0, type: 2}
-  m_audioClip: {fileID: 8300000, guid: e50aa6ff5623ac54b939985f7aea3b04, type: 3}
+  m_audioClip: {fileID: 8300000, guid: cbf58968456fa4b44a0b0c54345054a1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1225,7 +1225,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _audioSource: {fileID: 7629891120456832127}
   _jumpHeight: 0.1
-  _soundEffect: {fileID: 0}
+  _soundEffect: {fileID: 8300000, guid: 5bf6ba988806ece45a634cbd5edb9dcb, type: 3}
   _debugLogs: 0
 --- !u!114 &4541591849879484853
 MonoBehaviour:
