@@ -99,9 +99,9 @@ namespace ProjectMultiplayer.Player
             _vFreelokCam = GetComponentInChildren<CinemachineFreeLook>();
             _playerActions = new PlayerActionData[] { _actionJump, _action1, _action2, _action3 };
 
-            if (!Object.HasInputAuthority)
+            if (Object.HasInputAuthority)
             {
-                _vFreelokCam.Priority = 0;
+                _vFreelokCam.Priority = 1;
             }
 
             _camera = Camera.main;
