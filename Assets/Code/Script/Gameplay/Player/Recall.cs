@@ -22,11 +22,11 @@ namespace ProjectMultiplayer.Player.Actions {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             _handler.SetTrigger(_animationTrigger);
             if (RecallMark.Instance.markCurrent) {
                 Recallable.Recall();
-                Rpc_UpdateVisuals(true);
+                if (Runner.IsServer) Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
                 if (_debugLogs) Debug.Log($"{RecallMark.Instance.markCurrent} was Asked to recall");
 #endif
@@ -35,7 +35,7 @@ namespace ProjectMultiplayer.Player.Actions {
 #if UNITY_EDITOR
             else if(_debugLogs) Debug.Log("Recall did not hit any relevant colliders");
 #endif
-            Rpc_UpdateVisuals(true);
+            if (Runner.IsServer) Rpc_UpdateVisuals(true);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

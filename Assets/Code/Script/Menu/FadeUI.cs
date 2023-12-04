@@ -11,6 +11,7 @@ namespace ProjectMultiplayer.UI
         [SerializeField, Min(0f)] private float _defaultFadeDuration = 1f;
         [SerializeField] private bool _startWithFadeOut = true;
 
+        private AudioSource _musicToFade;
         private Image _fadeImage;
         private const float _fadeUpdateFrequency = .02f;
         private Coroutine _fadeCoroutine;
@@ -25,6 +26,7 @@ namespace ProjectMultiplayer.UI
 
         private void Awake()
         {
+            _musicToFade = GetComponent<AudioSource>();
             _fadeImage = GetComponent<Image>();
             _delay = new WaitForSeconds(_fadeUpdateFrequency);
         }
@@ -61,6 +63,7 @@ namespace ProjectMultiplayer.UI
             {
                 delta += _fadeUpdateFrequency / durationFactor;
                 _fadeImage.color = Color.Lerp(currentColor, fadeType == FadeTypes.FADEIN ? Color.black : Color.clear, delta);
+                if (_musicToFade.clip) _musicToFade.volume = fadeType == FadeTypes.FADEIN ? 1f - delta : delta;                
                 yield return _delay;
             }
             _fadeImage.raycastTarget = fadeType == FadeTypes.FADEIN;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Fusion;
 using UnityEngine.Events;
 
 namespace ProjectMultiplayer.Player.Actions {
@@ -10,6 +11,8 @@ namespace ProjectMultiplayer.Player.Actions {
 
         private PlayerAnimationHandler _handler;
         [SerializeField] private string _animationBool;
+        [SerializeField] private AudioClip _shieldUp;
+        [SerializeField] private AudioClip _shieldDown;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -21,17 +24,30 @@ namespace ProjectMultiplayer.Player.Actions {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
         }
 
-        public override void DoAction(Ray cameraRay) {
+        public override void DoAction() {
             _handler.SetBool(_animationBool, true);
             _isShielded = true;
+            if (Runner.IsServer) Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log($"{ gameObject.name } is now shielded");
 #endif
         }
 
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void Rpc_UpdateVisuals(bool actionSuccess)
+        {
+            UpdateVisuals(actionSuccess);
+        }
+
+        private void UpdateVisuals(bool actionSuccess)
+        {
+            PlayAudio(actionSuccess ? _shieldUp : _shieldDown);
+        }
+
         public override void StopAction() {
             _handler.SetBool(_animationBool, false);
             _isShielded = false;
+            if (Runner.IsServer) Rpc_UpdateVisuals(false);
 #if UNITY_EDITOR
             if (_debugLogs) Debug.Log($"{gameObject.name} is now NOT shielded");
 #endif

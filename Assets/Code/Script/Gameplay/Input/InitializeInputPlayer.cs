@@ -51,14 +51,14 @@ namespace ProjectMultiplayer.Player
         private InputAction _action1;
         private InputAction _action2;
         private InputAction _action3;
-
+        private Camera _camera;
         private void Awake()
         {
             if (_instance != null && _instance != this)
             {
                 Destroy(this);
                 return;
-            }
+            }            
             NetworkManagerReference.Instance.NetworkRunner.AddCallbacks(this);
             _playerMove = PlayerActions.actions["MovePlayer"];
             _jump = PlayerActions.actions["Jump"];
@@ -80,12 +80,16 @@ namespace ProjectMultiplayer.Player
 
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
-            _dataPackInputCached.Movement = _playerMove.ReadValue<Vector2>();
-            _dataPackInputCached.Jump = _jump.IsPressed();
-            _dataPackInputCached.Action1 = _action1.IsPressed();
-            _dataPackInputCached.Action2 = _action2.IsPressed();
-            _dataPackInputCached.Action3 = _action3.IsPressed();
-            input.Set(_dataPackInputCached);
+            if (_camera)
+            {
+                _dataPackInputCached.CameraYAngle = _camera.transform.eulerAngles.y;
+                _dataPackInputCached.Movement = _playerMove.ReadValue<Vector2>();
+                _dataPackInputCached.Jump = _jump.IsPressed();
+                _dataPackInputCached.Action1 = _action1.IsPressed();
+                _dataPackInputCached.Action2 = _action2.IsPressed();
+                _dataPackInputCached.Action3 = _action3.IsPressed();
+                input.Set(_dataPackInputCached);
+            }
         }
 
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -145,7 +149,7 @@ namespace ProjectMultiplayer.Player
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
-
+            _camera = Camera.main;
         }
 
         public void OnSceneLoadStart(NetworkRunner runner)

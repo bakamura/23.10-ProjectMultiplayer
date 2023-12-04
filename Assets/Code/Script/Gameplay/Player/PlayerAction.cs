@@ -1,7 +1,8 @@
 using UnityEngine;
+using Fusion;
 
 namespace ProjectMultiplayer.Player.Actions {
-    public abstract class PlayerAction : MonoBehaviour {
+    public abstract class PlayerAction : NetworkBehaviour {
 
         protected Player _player;        
         [SerializeField] private AudioSource _audioSource;
@@ -10,7 +11,7 @@ namespace ProjectMultiplayer.Player.Actions {
             _player = GetComponent<Player>();
         }
 
-        public abstract void DoAction(Ray cameraRay);
+        public abstract void DoAction();
 
         public abstract void StopAction();
 
