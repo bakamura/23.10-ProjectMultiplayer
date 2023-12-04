@@ -24,22 +24,23 @@ public class CameraControl : MonoBehaviour {
     [SerializeField] private bool _debugLogs;
 #endif
 
-    //private void Start() {
-    //    StartCoroutine(KeepTryingGetPlayer());
-    //}
+    private void Start()
+    {
+        StartCoroutine(KeepTryingGetPlayer());
+    }
 
     private void Awake()
     {
-        _followTarget = new GameObject("CameraTracker").transform;
-        Cinemachine.CinemachineFreeLook temp = GetComponent<Cinemachine.CinemachineFreeLook>();
-        temp.Follow = _followTarget;
-        temp.LookAt = _followTarget;
-        _playerTarget = transform.parent;
+        //_followTarget = new GameObject("CameraTracker").transform;
+        //Cinemachine.CinemachineFreeLook temp = GetComponent<Cinemachine.CinemachineFreeLook>();
+        //temp.Follow = _followTarget;
+        //temp.LookAt = _followTarget;
+        //_playerTarget = transform.parent;
     }
 
     private void LateUpdate()
     {
-        _followTarget.position = _playerTarget.position + _followTargetOffset;
+        if(_playerTarget) _followTarget.position = _playerTarget.position + _followTargetOffset;
     }
 
     //private void Update() {
@@ -52,38 +53,43 @@ public class CameraControl : MonoBehaviour {
     //_followTarget.eulerAngles += (Vector3)_deltaInputCache;
     //}
 
-//    private IEnumerator KeepTryingGetPlayer() {
-//        _followTarget = new GameObject("CameraTracker").transform;
-//        GetComponent<Cinemachine.CinemachineFreeLook>().Follow = _followTarget;
+    private IEnumerator KeepTryingGetPlayer()
+    {
+        _followTarget = new GameObject("CameraTracker").transform;
+        GetComponent<Cinemachine.CinemachineFreeLook>().LookAt= _followTarget;
+        GetComponent<Cinemachine.CinemachineFreeLook>().Follow = _followTarget;
 
-//        while (TryGetPlayer()) { yield return null; }
-//    }
+        while (TryGetPlayer()) { yield return null; }
+    }
 
-//    private bool TryGetPlayer() {
-//#if UNITY_EDITOR
-//        if (_debugLogs) Debug.Log("Camera trying to find active Player");
-//#endif
-//        Player[] players = FindObjectsOfType<Player>();
-//        if (players != null) {
-//            foreach (Player player in players)
-//                if (player.Type == NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType) {
-//                    _playerTarget = player.transform;
-//                    _followTarget.position = _playerTarget.position + _followTargetOffset;
-//#if UNITY_EDITOR
-//                    if (_debugLogs) Debug.Log("Camera found active Player");
-//#endif
-//                    return false; // Found
-//                }
-//        }
-//        return true; // Keep trying
-//    }
+    private bool TryGetPlayer()
+    {
+#if UNITY_EDITOR
+        if (_debugLogs) Debug.Log("Camera trying to find active Player");
+#endif
+        Player[] players = FindObjectsOfType<Player>();
+        if (players != null)
+        {
+            foreach (Player player in players)
+                if (player.Type == NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType)
+                {
+                    _playerTarget = player.transform;
+                    _followTarget.position = _playerTarget.position + _followTargetOffset;
+#if UNITY_EDITOR
+                    if (_debugLogs) Debug.Log("Camera found active Player");
+#endif
+                    return false; // Found
+                }
+        }
+        return true; // Keep trying
+    }
 
-//#if UNITY_EDITOR
-//    public void ResetCameraTracking(Transform playerTransform)
-//    {
-//        _followTarget.parent = playerTransform;
-//        _followTarget.localPosition = _followTargetOffset;
-//    }
-//#endif
+    //#if UNITY_EDITOR
+    //    public void ResetCameraTracking(Transform playerTransform)
+    //    {
+    //        _followTarget.parent = playerTransform;
+    //        _followTarget.localPosition = _followTargetOffset;
+    //    }
+    //#endif
 
 }
