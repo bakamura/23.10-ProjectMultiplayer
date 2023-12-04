@@ -1,13 +1,17 @@
 using Fusion;
 using UnityEngine;
+using System.Collections;
 
-namespace ProjectMultiplayer.ObjectCategory.Size {
-    public class Size : NetworkBehaviour {
+namespace ProjectMultiplayer.ObjectCategory.Size
+{
+    public class Size : NetworkBehaviour
+    {
 
         [Header("Parameters")]
 
         [SerializeField] private SizeType _sizeType;
-        public enum SizeType {
+        public enum SizeType
+        {
             S,
             M,
             B
@@ -40,7 +44,8 @@ namespace ProjectMultiplayer.ObjectCategory.Size {
         public SizeType Type { get { return _sizeType; } }
         public bool TriPhase { get { return _triPhase; } }
 
-        public override void Spawned() {
+        public override void Spawned()
+        {
             for (int i = 0; i < _sizeScales.Length; i++) _sizeScalesVector[i] = Vector3.one * _sizeScales[i];
 
             transform.localScale = _sizeScalesVector[(int)_sizeType];
@@ -49,30 +54,49 @@ namespace ProjectMultiplayer.ObjectCategory.Size {
 #endif
         }
 
-        public override void FixedUpdateNetwork() {
-            if (_sizeChangeTimer.IsRunning) {
+        //        public override void FixedUpdateNetwork() {
+        //            if (_sizeChangeTimer.IsRunning) {
+        //#if UNITY_EDITOR
+        //                if(_debugLogs) Debug.Log($"{gameObject.name} currently changing size to {_sizeType}");
+        //#endif
+        //                _progressC += Time.fixedDeltaTime / _triPhaseTransitionDuration;
+        //                transform.localScale = Vector3.Lerp(_sizeInitialC, _sizeFinalC, _progressC);
+
+        //                if (_sizeChangeTimer.RemainingTicks(Runner) <= 1) {
+        //                    _sizeChangeTimer = TickTimer.None;
+        //                    transform.localScale = _sizeFinalC;
+        //                    _isTransitioning = false;
+        //                }
+        //            }
+        //        }
+
+        private IEnumerator ChangingSize()
+        {
+            WaitForFixedUpdate delay = new WaitForFixedUpdate();
+            while (_progressC < 1)
+            {
 #if UNITY_EDITOR
-                if(_debugLogs) Debug.Log($"{gameObject.name} currently changing size to {_sizeType}");
+                if (_debugLogs) Debug.Log($"{gameObject.name} currently changing size to {_sizeType}");
 #endif
                 _progressC += Time.fixedDeltaTime / _triPhaseTransitionDuration;
                 transform.localScale = Vector3.Lerp(_sizeInitialC, _sizeFinalC, _progressC);
-
-                if (_sizeChangeTimer.RemainingTicks(Runner) <= 1) {
-                    _sizeChangeTimer = TickTimer.None;
-                    transform.localScale = _sizeFinalC;
-                    _isTransitioning = false;
-                }
+                yield return delay;
             }
+            _isTransitioning = false;
         }
 
-        public void ChangeSize(bool isGrowing) {
-            if (!_isTransitioning) {
+        public void ChangeSize(bool isGrowing)
+        {
+            if (!_isTransitioning)
+            {
                 _isTransitioning = true;
 
-                if (isGrowing) {
+                if (isGrowing)
+                {
                     if (_sizeType != SizeType.B) _sizeType++;
                 }
-                else {
+                else
+                {
                     if (_sizeType != SizeType.S) _sizeType--;
                 }
 #if UNITY_EDITOR
@@ -82,7 +106,8 @@ namespace ProjectMultiplayer.ObjectCategory.Size {
                 _progressC = 0;
                 _sizeInitialC = transform.localScale;
                 _sizeFinalC = _sizeScalesVector[(int)_sizeType];
-                _sizeChangeTimer = TickTimer.CreateFromSeconds(Runner, _triPhaseTransitionDuration);
+                StartCoroutine(ChangingSize());
+                //_sizeChangeTimer = TickTimer.CreateFromSeconds(Runner, _triPhaseTransitionDuration);
             }
         }
 
