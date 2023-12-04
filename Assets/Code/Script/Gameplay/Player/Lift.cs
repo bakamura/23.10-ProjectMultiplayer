@@ -36,7 +36,6 @@ namespace ProjectMultiplayer.Player.Actions {
         }
 
         public override void DoAction() {
-            _handler.SetBool(_animationBool, true);
             if (!_liftedObject) {
                 Size sizeCache;
                 foreach (Collider col in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
