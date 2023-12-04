@@ -2815,7 +2815,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5e9d8a9dccdb59f4b919d0f5f99cdf1b, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5e9d8a9dccdb59f4b919d0f5f99cdf1b, type: 3}
       propertyPath: m_LocalScale.x
@@ -4783,6 +4783,8 @@ PlayableDirector:
     value: {fileID: 2095236770}
   - key: {fileID: 419019385386415205, guid: 693f748338feb60438c90e0d43d268d3, type: 2}
     value: {fileID: 1836391326}
+  - key: {fileID: 284531664839947754, guid: 693f748338feb60438c90e0d43d268d3, type: 2}
+    value: {fileID: 1295536782}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &362415740
@@ -7276,7 +7278,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d4fa9871b2adbe644adcc42a406f165a, type: 3}
       propertyPath: m_LocalScale.x
