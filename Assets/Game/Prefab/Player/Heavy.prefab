@@ -1270,7 +1270,7 @@ MonoBehaviour:
   _liftObjectSuccess: {fileID: 8300000, guid: e4f704495d6e83f4db01b14b1bc4d8a6, type: 3}
   _liftObjectFailed: {fileID: 8300000, guid: 3ee2b731e03ffb540a0c20900b8d0177, type: 3}
   _liftPlayer: {fileID: 0}
-  _friendThrowupVelocity: 0
+  _friendThrowupVelocity: 5
   _animationBool: isLifting
   _debugLogs: 0
 --- !u!114 &1411086493647162598
