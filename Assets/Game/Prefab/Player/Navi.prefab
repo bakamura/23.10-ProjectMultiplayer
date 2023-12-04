@@ -331,8 +331,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
-  _liftOffset: {x: 0, y: 0.25, z: 0.25}
-  _liftBox: {x: 1, y: 1.5, z: 1}
+  _liftOffset: {x: 0, y: 0.5, z: 0}
+  _liftBox: {x: 3, y: 1.5, z: 3}
   _actionSuccess: {fileID: 8300000, guid: 5d8ba535e669f5448af27ed1000ccfac, type: 3}
   _actionFailed: {fileID: 0}
   _animationBool: 
@@ -351,8 +351,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _audioSource: {fileID: 4830237144359027201}
-  _MarkOffset: {x: 0, y: 0, z: 0}
-  _MarkBox: {x: 0, y: 0, z: 0}
+  _MarkOffset: {x: 0, y: 0.5, z: 0}
+  _MarkBox: {x: 3, y: 1.5, z: 3}
   _actionLayer:
     serializedVersion: 2
     m_Bits: 64

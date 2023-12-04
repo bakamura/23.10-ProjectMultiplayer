@@ -1259,8 +1259,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _audioSource: {fileID: 1873699948295939992}
-  _InteractOffset: {x: 0, y: 0.5, z: 1}
-  _InteractBox: {x: 1, y: 1.5, z: 1}
+  _InteractOffset: {x: 0, y: 0.5, z: 0}
+  _InteractBox: {x: 3, y: 1.5, z: 3}
   _actionLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1282,8 +1282,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _audioSource: {fileID: 1873699948295939992}
-  _actionOffset: {x: 0, y: 0.5, z: 0.5}
-  _actionBox: {x: 1.25, y: 1.25, z: 1.25}
+  _actionOffset: {x: 0, y: 0.5, z: 0}
+  _actionBox: {x: 3, y: 1.5, z: 3}
   _breakSuccess: {fileID: 8300000, guid: 249b8c5750b5bc84cb7f1afbd0a10735, type: 3}
   _breakFailed: {fileID: 0}
   _pushPlayer: {fileID: 0}
