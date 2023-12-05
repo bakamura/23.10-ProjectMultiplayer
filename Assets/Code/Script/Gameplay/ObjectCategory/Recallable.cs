@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace ProjectMultiplayer.ObjectCategory.Recall {
+    [RequireComponent(typeof(NetworkRigidbody), typeof(Collider))]
     public class Recallable : NetworkBehaviour {
 
         [Header("Parameters")]
@@ -14,6 +15,14 @@ namespace ProjectMultiplayer.ObjectCategory.Recall {
 
         [SerializeField] private bool _debugLogs;
 #endif
+        private NetworkRigidbody _networkRb;
+        private Collider _collider;
+
+        private void Awake()
+        {
+            _networkRb = GetComponent<NetworkRigidbody>();
+            _collider = GetComponent<Collider>();
+        }
 
         public void Mark() {
             RecallMark.Instance.markCurrent = this;
@@ -35,25 +44,20 @@ namespace ProjectMultiplayer.ObjectCategory.Recall {
         public IEnumerator RecallRoutine() {
             Vector3 initialPosition = transform.position;
             Quaternion initialRotation = transform.rotation;
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            Collider collider = GetComponent<Collider>();
-            rigidbody.isKinematic = true; //
-            collider.enabled = false;
+            _networkRb.Rigidbody.isKinematic = true; //
+            _collider.enabled = false;
 
             float progress = 0;
             while (progress < 1) {
                 progress += Time.deltaTime / _recallDuration;
-                transform.position = Vector3.Lerp(initialPosition, RecallMark.Instance.markPosition, progress);
-                transform.rotation = Quaternion.Lerp(initialRotation, RecallMark.Instance.markRotation, progress);
+                _networkRb.Transform.transform.SetPositionAndRotation(Vector3.Lerp(initialPosition, RecallMark.Instance.markPosition, progress), Quaternion.Lerp(initialRotation, RecallMark.Instance.markRotation, progress));
 
                 yield return null;
             }
+            _networkRb.Transform.transform.SetPositionAndRotation(RecallMark.Instance.markPosition, RecallMark.Instance.markRotation);
 
-            transform.position = RecallMark.Instance.markPosition;
-            transform.rotation = RecallMark.Instance.markRotation;
-
-            rigidbody.isKinematic = false; //
-            collider.enabled = true;
+            _networkRb.Rigidbody.isKinematic = false; //
+            _collider.enabled = true;
 
             RecallMark.Instance.markCurrent = null;
         }

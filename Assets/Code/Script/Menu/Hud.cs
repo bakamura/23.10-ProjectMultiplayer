@@ -36,6 +36,7 @@ namespace ProjectMultiplayer.UI
 
         private InputAction _return;
         private SfxHandler _sfxHandler;
+        private Player.Player _player;
 
         [System.Serializable]
         private struct IconData
@@ -59,7 +60,7 @@ namespace ProjectMultiplayer.UI
             _return = InitializeInputPlayer.Instance.PlayerActions.actions["Cancel"];
             UpdateKeyDisplay();
 #if UNITY_EDITOR
-            if(!_canPause) Cursor.lockState = CursorLockMode.None;
+            if (!_canPause) Cursor.lockState = CursorLockMode.None;
 #endif
         }
 
@@ -90,11 +91,15 @@ namespace ProjectMultiplayer.UI
                 if (!temp)
                 {
                     //_isPaused = true;
+                    _player.Rpc_UpdateLockCharacter(true);
+                    _player.CameraControl.UpdateCameraControl(false);
                     ChangeCurrentCanvas(_settingsUI);
                 }
                 else
                 {
                     //_isPaused = false;
+                    _player.Rpc_UpdateLockCharacter(false);
+                    _player.CameraControl.UpdateCameraControl(true);
                     ChangeCurrentCanvas(temp);
                 }
                 _sfxHandler.UiClickSfx();
@@ -115,34 +120,42 @@ namespace ProjectMultiplayer.UI
 
         private IEnumerator UpdateActionsIcons()
         {
-            while (!CanUpdateIcons()) yield return null;
+            while (!FindPlayer()) yield return null;
         }
 
-        private bool CanUpdateIcons()
+        private bool FindPlayer()
         {
             Player.Player[] players = FindObjectsOfType<Player.Player>();
             if (players != null && players.Length > 0)
             {
-                NetworkManager.PlayerType temp = NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType;
-                for (int i = 0; i < _iconsData.Length; i++)
+                for (int i = 0; i < players.Length; i++)
                 {
-                    if (_iconsData[i].PlayerType == temp)
+                    if (players[i].Type == NetworkManagerReference.Instance.PlayersDictionary[NetworkManagerReference.LocalPlayerIDInServer].PlayerType)
                     {
-                        _action1Name.text = _iconsData[i].TextAction1;
-                        _action1Icon.sprite = _iconsData[i].IconAction1;
-                        _action2Name.text = _iconsData[i].TextAction2;
-                        _action2Icon.sprite = _iconsData[i].IconAction2;
-                        _action3Name.text = _iconsData[i].TextAction3;
-                        _action3Icon.sprite = _iconsData[i].IconAction3;
+                        _player = players[i];
+                        UpdateAbilityDisplay();
                         return true;
                     }
                 }
-                return false;
             }
-            else
+            return false;
+        }
+
+        private void UpdateAbilityDisplay()
+        {
+            for (int i = 0; i < _iconsData.Length; i++)
             {
-                return false;
+                if (_iconsData[i].PlayerType == _player.Type)
+                {
+                    _action1Name.text = _iconsData[i].TextAction1;
+                    _action1Icon.sprite = _iconsData[i].IconAction1;
+                    _action2Name.text = _iconsData[i].TextAction2;
+                    _action2Icon.sprite = _iconsData[i].IconAction2;
+                    _action3Name.text = _iconsData[i].TextAction3;
+                    _action3Icon.sprite = _iconsData[i].IconAction3;
+                }
             }
+
         }
 #if UNITY_EDITOR
         public void UpdateIcons(NetworkManager.PlayerType type)

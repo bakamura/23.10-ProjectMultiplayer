@@ -2,6 +2,7 @@ using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.Player;
 using System.Collections;
 using UnityEngine;
+using Cinemachine;
 
 public class CameraControl : MonoBehaviour {
 
@@ -15,6 +16,9 @@ public class CameraControl : MonoBehaviour {
 
     private Transform _playerTarget;
     private Transform _followTarget;
+    private CinemachineFreeLook _cinemachineFreeLook;
+    private float _baseCamXSpeed;
+    private float _baseCamYSpeed;
     //private Vector2 _deltaInputCache;
     //private float _deltaInputCacheUnit;
 
@@ -31,15 +35,28 @@ public class CameraControl : MonoBehaviour {
     private void Awake()
     {
         _followTarget = new GameObject("CameraTracker").transform;
-        Cinemachine.CinemachineFreeLook temp = GetComponent<Cinemachine.CinemachineFreeLook>();
-        temp.Follow = _followTarget;
-        temp.LookAt = _followTarget;
+        _cinemachineFreeLook = GetComponent<CinemachineFreeLook>();
+        _cinemachineFreeLook.Follow = _followTarget;
+        _cinemachineFreeLook.LookAt = _followTarget;
+        _baseCamXSpeed = _cinemachineFreeLook.m_XAxis.m_MaxSpeed;
+        _baseCamYSpeed = _cinemachineFreeLook.m_YAxis.m_MaxSpeed;
         _playerTarget = transform.parent;
     }
 
     private void LateUpdate()
     {
         _followTarget.position = _playerTarget.position + _followTargetOffset;
+    }
+
+    public void UpdateCameraControl(bool canControl)
+    {
+        _cinemachineFreeLook.m_YAxis.m_MaxSpeed = canControl ? _baseCamYSpeed : 0;
+        _cinemachineFreeLook.m_XAxis.m_MaxSpeed = canControl ? _baseCamXSpeed : 0;
+    }
+
+    public void SetCamPriority(int priority)
+    {
+        _cinemachineFreeLook.Priority = priority;
     }
 
     //private void Update() {

@@ -3,8 +3,10 @@ using UnityEngine;
 using Fusion;
 using ProjectMultiplayer.ObjectCategory.Size;
 
-namespace ProjectMultiplayer.Player.Actions {
-    public class Lift : PlayerAction {
+namespace ProjectMultiplayer.Player.Actions
+{
+    public class Lift : PlayerAction
+    {
 
         [Header("Parameters")]
 
@@ -20,6 +22,8 @@ namespace ProjectMultiplayer.Player.Actions {
         private Vector3 _friendThrowupForce;
 
         private Transform _liftedObject;
+        private NetworkRigidbody _liftedObjectRb;
+        private Player _liftedPlayer;
 
         private PlayerAnimationHandler _handler;
         [SerializeField] private string _animationBool;
@@ -30,19 +34,30 @@ namespace ProjectMultiplayer.Player.Actions {
         [SerializeField] private bool _debugLogs;
 #endif
 
-        private void Awake() {
+        private void Awake()
+        {
             _handler = GetComponentInChildren<PlayerAnimationHandler>();
             _friendThrowupForce = Vector3.up * _friendThrowupVelocity;
         }
 
-        public override void DoAction() {
-            if (!_liftedObject) {
+        public override void DoAction()
+        {
+            if (!_liftedObject)
+            {
                 Size sizeCache;
-                foreach (Collider col in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _liftOffset, _liftBox).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray()) {
-                    if (col.transform != transform) {
+                foreach (Collider col in Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _liftOffset, _liftBox, transform.rotation).OrderBy(col => (transform.position + _liftOffset - col.transform.position).sqrMagnitude).ToArray())
+                {
+                    if (col.transform != transform)
+                    {
                         sizeCache = col.GetComponent<Size>();
-                        if (sizeCache) {
+                        _liftedPlayer = col.GetComponent<Player>();
+                        _liftedObjectRb = col.GetComponent<NetworkRigidbody>();
+                        if (sizeCache)
+                        {
                             _handler.SetBool(_animationBool, true);
+                            if (_liftedPlayer) _liftedPlayer.UpdateLockCharacter(true);
+                            if (_liftedObjectRb && !_liftedObjectRb.Rigidbody.isKinematic) _liftedObjectRb.Rigidbody.isKinematic = true;
+                            else _liftedObjectRb = null;
                             _liftedObject = sizeCache.transform;
                             _liftedObject.transform.parent = transform;
                             _liftedObject.transform.localPosition = _liftOffset; // Test Out, Maybe create empty object
@@ -60,12 +75,17 @@ namespace ProjectMultiplayer.Player.Actions {
                 if (_debugLogs) Debug.Log($"{gameObject.name} failed to lift anything");
 #endif
             }
-            else {
+            else
+            {
                 _handler.SetBool(_animationBool, false);
                 _liftedObject.transform.parent = null;
-                if (_liftedObject.GetComponent<Player>())
+                if (_liftedObjectRb) _liftedObjectRb.Rigidbody.isKinematic = false;
+                if (_liftedPlayer)
                 {
-                    _liftedObject.GetComponent<Rigidbody>().AddForce(_friendThrowupForce, ForceMode.VelocityChange);
+                    _liftedObjectRb.Rigidbody.AddForce(_friendThrowupForce, ForceMode.VelocityChange);
+                    _liftedPlayer.UpdateLockCharacter(false);
+                    _liftedPlayer = null;
+                    _liftedObjectRb = null;
                     if (Runner.IsServer) Rpc_UpdateVisuals(2);
 #if UNITY_EDITOR
                     if (_debugLogs) Debug.Log($"{_liftedObject.name} was thrown up by {gameObject.name}");
@@ -103,7 +123,7 @@ namespace ProjectMultiplayer.Player.Actions {
                     break;
                 default:
                     break;
-            }            
+            }
         }
 
 
@@ -111,7 +131,8 @@ namespace ProjectMultiplayer.Player.Actions {
 
 
 #if UNITY_EDITOR
-        private void OnDrawGizmosSelected() {
+        private void OnDrawGizmosSelected()
+        {
             Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.color = Color.red;
             Gizmos.matrix = transform.localToWorldMatrix;

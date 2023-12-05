@@ -41,11 +41,11 @@ namespace ProjectMultiplayer.Player
         [Header("Cache")]
 
         private NetworkRigidbody _nRigidbody;
-        private Camera _camera;
+        //private Camera _camera;
         private Vector3 _screenSize;
         private Size _size;
         private Shield _shieldAbility;
-        private CinemachineFreeLook _vFreelokCam;
+        private CameraControl _cameraControl;
 
         private bool _alreadyJumped;
         private bool _alreadyAction1;
@@ -68,11 +68,13 @@ namespace ProjectMultiplayer.Player
 
         public NetworkManager.PlayerType Type { get { return _type; } }
         public NetworkRigidbody NRigidbody { get { return _nRigidbody; } }
-        private Ray _rayCache;
+        //private Ray _rayCache;
         public Size Size { get { return _size; } }
         public bool IsGrounded => _isGrounded;
+        public CameraControl CameraControl => _cameraControl;
         private PlayerActionData[] _playerActions;
         private float _cameraYAngle;
+        private bool _lockPlayer;
 
         [System.Serializable]
         private struct PlayerActionData
@@ -96,15 +98,16 @@ namespace ProjectMultiplayer.Player
             _nRigidbody = GetComponent<NetworkRigidbody>();
             _size = GetComponent<Size>();
             _shieldAbility = GetComponent<Shield>();
-            _vFreelokCam = GetComponentInChildren<CinemachineFreeLook>();
+            _cameraControl = GetComponentInChildren<CameraControl>();
+
             _playerActions = new PlayerActionData[] { _actionJump, _action1, _action2, _action3 };
 
             if (Object.HasInputAuthority)
             {
-                _vFreelokCam.Priority = 1;
+                _cameraControl.SetCamPriority(1);
             }
 
-            _camera = Camera.main;
+            //_camera = Camera.main;
             _screenSize[0] = Screen.width;
             _screenSize[1] = Screen.height;
             Debug.Log($"Spawned {gameObject.name}");
@@ -114,9 +117,10 @@ namespace ProjectMultiplayer.Player
         {
             _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer).Length > 0;
 
-            if (GetInput(out DataPackInput inputData) && _canAct)
+            if (GetInput(out DataPackInput inputData) && _canAct && !_lockPlayer)
             {
-                _rayCache = _camera.ScreenPointToRay(_screenSize / 2);
+                if(!Runner.IsServer)Debug.Log("Input collec");
+                //_rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 _cameraYAngle = inputData.CameraYAngle;
                 Movement(inputData.Movement);
                 if (inputData.Jump != _alreadyJumped)
@@ -255,6 +259,17 @@ namespace ProjectMultiplayer.Player
         public void UpdateCanAct(bool canAct)
         {
             _canAct = canAct;
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        public void Rpc_UpdateLockCharacter(bool isLocked)
+        {
+            UpdateLockCharacter(isLocked);
+        }
+
+        public void UpdateLockCharacter(bool isLocked)
+        {
+            _lockPlayer = isLocked;
         }
 
         private void LockPlayerAction(int currentActionGoingIndex)

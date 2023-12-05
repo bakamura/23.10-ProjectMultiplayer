@@ -40,11 +40,10 @@ namespace ProjectMultiplayer.Player.Actions {
                     recallable = col.GetComponent<Recallable>();
                     if (recallable) {
                         recallable.Mark();
-                        Rpc_UpdateVisuals(true);
+                        if (Runner.IsServer) Rpc_UpdateVisuals(true);
 #if UNITY_EDITOR
                         if (_debugLogs) Debug.Log($"{transform.name} is marking {recallable.name}");
-#endif
-                        Rpc_UpdateVisuals(false);
+#endif                      
                         return;
                     }
                 }
@@ -54,7 +53,7 @@ namespace ProjectMultiplayer.Player.Actions {
             if (_debugLogs) Debug.Log($"{transform.name} is trying to mark but didn't hit anything");
 #endif
 
-                Rpc_UpdateVisuals(false);
+            if (Runner.IsServer) Rpc_UpdateVisuals(false);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

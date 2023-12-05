@@ -4112,7 +4112,7 @@ MonoBehaviour:
   _clientInputField: {fileID: 1499047108}
   _clientUI: {fileID: 1435078980}
   _feedbackText: {fileID: 1130706264}
-  _levelToLoad: Level_1
+  _levelToLoad: BaseContentSceneAllMechanics
 --- !u!114 &1023507669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11526,6 +11526,10 @@ PrefabInstance:
     - target: {fileID: 2497153202132820087, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
       value: -1641960560265259123
+      objectReference: {fileID: 0}
+    - target: {fileID: 3859752918639465130, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
+      propertyPath: _debugLogs
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8562592334441707345, guid: 12232c8e50283ee45b465bfebd424afb, type: 3}
       propertyPath: m_RootOrder
