@@ -29,22 +29,27 @@ namespace ProjectMultiplayer.UI
         private void Awake()
         {
             _masterMixer.GetFloat("MusicVolume", out float musicVolume);
-            _musicSlider.value = musicVolume;
+            _musicSlider.value = AudioMixerToSlider(musicVolume);
             _masterMixer.GetFloat("SFXVolume", out float sfxVolume);
-            _sfxSlider.value = sfxVolume;
+            _sfxSlider.value = AudioMixerToSlider(sfxVolume);
 
             _colorSchemeDropdown.onValueChanged.AddListener(UpdateColorScheme);
         }
 
+        private float AudioMixerToSlider(float value)
+        {
+            return Mathf.Log10(value) * 20;
+        }
+
         public void ChangeVolumeMusic(float volume)
         {
-            _masterMixer.SetFloat("MusicVolume", volume);
+            _masterMixer.SetFloat("MusicVolume", AudioMixerToSlider(volume));
             SaveSettings();
         }
 
         public void ChangeVolumeSFX(float volume)
         {
-            _masterMixer.SetFloat("SFXVolume", volume);
+            _masterMixer.SetFloat("SFXVolume", AudioMixerToSlider(volume));
             SaveSettings();
         }
 
@@ -69,9 +74,9 @@ namespace ProjectMultiplayer.UI
         {
             _saveSettings.ColorScheme = _currentColorScheme;
             _masterMixer.GetFloat("MusicVolume", out float musicVolume);
-            _saveSettings.VolumeMusic = musicVolume;
+            _saveSettings.VolumeMusic = AudioMixerToSlider(musicVolume);
             _masterMixer.GetFloat("SFXVolume", out float sfxVolume);
-            _saveSettings.VolumeSfx = sfxVolume;
+            _saveSettings.VolumeSfx = AudioMixerToSlider(sfxVolume);
             _saveSettings.WindowSize = new float[] { Screen.width, Screen.height };
         }
     }
