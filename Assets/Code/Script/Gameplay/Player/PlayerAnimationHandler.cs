@@ -3,10 +3,12 @@ using ProjectMultiplayer.Player;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerAnimationHandler : NetworkBehaviour {
+public class PlayerAnimationHandler : NetworkBehaviour
+{
 
     [System.Serializable]
-    struct FaceAnimation {
+    struct FaceAnimation
+    {
         public string animationName;
         public Sprite[] faceSprite;
         public float[] faceTime;
@@ -24,28 +26,36 @@ public class PlayerAnimationHandler : NetworkBehaviour {
     protected Player _player;
     protected SpriteRenderer _faceSpriteRenderer;
 
-    public override void Spawned() {
+    public override void Spawned()
+    {
         _animator = GetComponent<NetworkMecanimAnimator>();
         _player = transform.parent.GetComponent<Player>();
         _faceSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _player.OnMove += UpdateMovementAnimations;
         StartCoroutine(FaceAnimationRoutine(_faceAnimations[_faceAnimationCurrent]));
     }
 
-    public override void FixedUpdateNetwork() {
-        _animator
-            .Animator
-            .SetBool("isMoving", Mathf.Abs(
-                _player
-                .NRigidbody
-                .Rigidbody.velocity.x) + Mathf.Abs(
-                    _player
-                    .NRigidbody
-                    .Rigidbody.velocity.z) > 0.1f);
-        _animator.Animator.SetBool("onAir ", Mathf.Abs(_player.NRigidbody.Rigidbody.velocity.y) > 0.1f);
+    public override void FixedUpdateNetwork()
+    {
+        //_animator
+        //    .Animator
+        //    .SetBool("isMoving", Mathf.Abs(
+        //        _player
+        //        .NRigidbody
+        //        .Rigidbody.velocity.x) + Mathf.Abs(
+        //            _player
+        //            .NRigidbody
+        //            .Rigidbody.velocity.z) > 0.1f);
+        //_animator.Animator.SetBool("onAir ", Mathf.Abs(_player.NRigidbody.Rigidbody.velocity.y) > 0.1f);
 
-        if (_animator.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != _faceAnimations[0].animationName) {
-            for (int i = 0; i < _faceAnimations.Length; i++) {
-                if (_animator.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == _faceAnimations[i].animationName) {
+        SetBool("onAir", !_player.IsGrounded);
+
+        if (_animator.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != _faceAnimations[0].animationName)
+        {
+            for (int i = 0; i < _faceAnimations.Length; i++)
+            {
+                if (_animator.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == _faceAnimations[i].animationName)
+                {
                     _faceAnimationCurrent = i;
                     StopAllCoroutines();
                     StartCoroutine(FaceAnimationRoutine(_faceAnimations[_faceAnimationCurrent]));
@@ -54,22 +64,33 @@ public class PlayerAnimationHandler : NetworkBehaviour {
         }
     }
 
-    public void SetTrigger(string trigger) {
-        if(trigger.Length > 0) _animator.Animator.SetTrigger(trigger);
+    private void UpdateMovementAnimations(Vector2 direction)
+    {
+        SetBool("isMoving", direction.SqrMagnitude() > 0);        
     }
 
-    public void SetBool(string boolName, bool isTrue) {
+    public void SetTrigger(string trigger)
+    {
+        if (trigger.Length > 0) _animator.Animator.SetTrigger(trigger);
+    }
+
+    public void SetBool(string boolName, bool isTrue)
+    {
         _animator.Animator.SetBool(boolName, isTrue);
     }
 
-    private IEnumerator FaceAnimationRoutine(FaceAnimation animation) {
+    private IEnumerator FaceAnimationRoutine(FaceAnimation animation)
+    {
         _faceSpriteRenderer.sprite = animation.faceSprite[0];
-        if (animation.faceSprite.Length > 1) {
+        if (animation.faceSprite.Length > 1)
+        {
             float faceTimer = 0;
             int faceCurrent = 1;
-            while (true) {
+            while (true)
+            {
                 faceTimer += Time.deltaTime;
-                if(faceTimer > animation.faceTime[faceCurrent]) {
+                if (faceTimer > animation.faceTime[faceCurrent])
+                {
                     faceCurrent++;
                     if (faceCurrent == animation.faceSprite.Length) break;
                     _faceSpriteRenderer.sprite = animation.faceSprite[faceCurrent];
@@ -79,7 +100,7 @@ public class PlayerAnimationHandler : NetworkBehaviour {
             }
         }
 
-        if(animation.loop) StartCoroutine(FaceAnimationRoutine(_faceAnimations[_faceAnimationCurrent]));
+        if (animation.loop) StartCoroutine(FaceAnimationRoutine(_faceAnimations[_faceAnimationCurrent]));
     }
 }
 

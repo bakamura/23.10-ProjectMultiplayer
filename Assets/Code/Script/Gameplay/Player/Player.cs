@@ -1,10 +1,9 @@
 using Fusion;
 using UnityEngine;
-using Cinemachine;
 using ProjectMultiplayer.Player.Actions;
 using ProjectMultiplayer.Connection;
 using ProjectMultiplayer.ObjectCategory.Size;
-using UnityEngine.InputSystem;
+using System;
 
 namespace ProjectMultiplayer.Player
 {
@@ -46,6 +45,8 @@ namespace ProjectMultiplayer.Player
         private Size _size;
         private Shield _shieldAbility;
         private CameraControl _cameraControl;
+
+        public Action<Vector2> OnMove;
 
         private bool _alreadyJumped;
         private bool _alreadyAction1;
@@ -115,11 +116,11 @@ namespace ProjectMultiplayer.Player
 
         public override void FixedUpdateNetwork()
         {
+            //Debug.Log($"Box Position {}");
             _isGrounded = Physics.OverlapBox(transform.position + Quaternion.Euler(0, transform.rotation.y, 0) * _checkGroundOffset, _checkGroundBox / 2, Quaternion.identity, _checkGroundLayer).Length > 0;
 
             if (GetInput(out DataPackInput inputData) && _canAct && !_lockPlayer)
             {
-                if(!Runner.IsServer)Debug.Log("Input collec");
                 //_rayCache = _camera.ScreenPointToRay(_screenSize / 2);
                 _cameraYAngle = inputData.CameraYAngle;
                 Movement(inputData.Movement);
@@ -221,9 +222,10 @@ namespace ProjectMultiplayer.Player
             {
                 float targetAngle = Mathf.Atan2(_inputV2ToV3.x, _inputV2ToV3.z) * Mathf.Rad2Deg + _cameraYAngle;
                 _nRigidbody.Rigidbody.AddForce(_movementSpeed * (Quaternion.Euler(0, targetAngle, 0) * Vector3.forward).normalized, ForceMode.Acceleration);
-                transform.rotation = Quaternion.Euler(0, Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentTurnVelocity, _turnDuration), 0);
-
+                transform.rotation = Quaternion.Euler(0, Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentTurnVelocity, _turnDuration), 0);                                
             }
+
+            OnMove?.Invoke(direction);
         }
 
         public void TryDamage()
@@ -292,7 +294,7 @@ namespace ProjectMultiplayer.Player
         /// </summary>
         private void UpdateMovementAudio(bool updatePlayingState)
         {
-            if (_randomizePicth) _movmentAudioSource.pitch = Random.Range(_randomizeRange.x, _randomizeRange.y);
+            if (_randomizePicth) _movmentAudioSource.pitch = UnityEngine.Random.Range(_randomizeRange.x, _randomizeRange.y);
             if (updatePlayingState) _movmentAudioSource.Play();
             else _movmentAudioSource.Stop();
         }

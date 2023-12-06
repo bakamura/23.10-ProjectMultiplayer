@@ -208,7 +208,7 @@ MonoBehaviour:
   _type: 2
   _movementSpeed: 30
   _checkGroundOffset: {x: 0, y: 0, z: 0}
-  _checkGroundBox: {x: 0.55, y: 0.35, z: -0.225}
+  _checkGroundBox: {x: 0.55, y: 0.35, z: 0.225}
   _checkGroundLayer:
     serializedVersion: 2
     m_Bits: 1
